@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<?page title="Manter Usuários" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+	<groupbox self="@{define(content)}" id="gpBoxUser" width="482px"
+		closable="false" apply="${usuarioComposer}">
+		<caption label="Usuário" />
+		<grid sizedByContent="true" style="border: none;">
+			<columns>
+				<column width="170px" />
+				<column width="300px" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Nome:" />
+					<textbox value="@{controller.fldNome}" />
+				</row>
+				<row>
+					<label value="E-mail:" />
+					<textbox value="@{controller.fldEmail}"/>
+				</row>
+				<row>
+					<label value="Senha:" />
+					<textbox value="@{controller.fldSenha }" type="password" />
+				</row>
+				<row>
+					<label value="Confirmar Senha:" />
+					<textbox value="@{controller.fldConfirmarSenha }" type="password" />
+				</row>
+				<row>
+					<label value="Perfil de Usuário:" />
+					<combobox value="@{controller.fldPerfilAcesso }">
+						<comboitem label="Usuário" value="0" />
+						<comboitem label="Administrador" value="1" />
+						<comboitem label="Gerente" value="2" />
+					</combobox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<button label="Salvar" onClick="controller.teste()"/>
+		<button label="Listar" />
+		<button label="Cancelar" />
+	</groupbox>
+</zk>

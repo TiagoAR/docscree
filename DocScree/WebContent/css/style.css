@@ -1,0 +1,210 @@
+@CHARSET "UTF-8";
+/* -- 1. RESET BROWSER DEFAULTS -- */
+html,body,div,span,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,code,em,i,font,img,small,strike,strong,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td
+	{
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline
+}
+
+:focus {
+	outline: 0
+}
+
+button::-moz-focus-inner,input[type="reset"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="file"]>input[type="button"]::-moz-focus-inner
+	{
+	border: none
+}
+
+/* -- 2. TYPOGRAPHY -- */
+body {
+	margin: 0px auto;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	text-align: left;
+	line-height: 21px;
+	color: #555f6e;
+	background: #fbfdff url(/DocScree/imagens/pattern.jpg)
+}
+
+p,ul,ol {
+	margin-bottom: 21px
+}
+
+ul {
+	list-style: square;
+	margin-left: 21px
+}
+
+ol {
+	list-style: decimal;
+	margin-left: 21px
+}
+
+h1,h2,h3 {
+	font-family: Helvetica, Arial, sans-serif;
+	color: #3e4550;
+	font-weight: bold;
+	margin-bottom: 21px;
+	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5)
+}
+
+h1 {
+	font-size: 36px;
+	line-height: 42px;
+	letter-spacing: -1px;
+	margin-bottom: 0px
+}
+
+h2 {
+	font-size: 26px;
+	line-height: 30px;
+	letter-spacing: 0px;
+	margin-bottom: 12px
+}
+
+h3 {
+	font-size: 16px;
+	margin-bottom: 6px
+}
+
+h4 {
+	font-size: 23px;
+	margin-bottom: 6px
+}
+
+a {
+	color: #009cff;
+	text-decoration: none;
+	border: none;
+	outline: none
+}
+
+a:hover {
+	text-decoration: underline
+}
+
+em,i {
+	font-style: italic
+}
+
+b,strong {
+	font-weight: bold
+}
+
+input,textarea {
+	border: none;
+	outline: none
+}
+
+/* -- 3. CSS ZK sobrescrito -- */
+.z-textbox,.z-combobox-rounded-inp,.z-bandbox-rounded-inp,.z-datebox-rounded-inp,.z-timebox-rounded-inp,.z-spinner-rounded-inp,.z-doublespinner-rounded-inp,.z-combobox-inp,.z-bandbox-inp,.z-datebox-inp,.z-timebox-inp,.z-spinner-inp,.z-doublespinner-inp,input[type="button"],input[type="submit"],input[type="reset"],button
+	{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #87909a;
+	width: 250px;
+	padding: 6px 4px;
+	margin-right: 2px;
+	background: #eceff4;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	border: 1px solid #e0e4ea;
+	-moz-box-shadow: 0px 1px 2px rgba(255, 255, 255, 0.3);
+	-webkit-box-shadow: 0px 2px 2px rgba(255, 255, 255, 0.3);
+	box-shadow: 0px 2px 2px rgba(255, 255, 255, 0.3);
+}
+
+.z-textbox:focus {
+	color: #555f6e
+}
+
+.z-combobox-rounded .z-combobox-rounded-btn,.z-bandbox-rounded .z-bandbox-rounded-btn,.z-datebox-rounded .z-datebox-rounded-btn,.z-timebox-rounded .z-timebox-rounded-btn,.z-spinner-rounded .z-spinner-rounded-btn,.z-doublespinner-rounded .z-doublespinner-rounded-btn,.z-combobox .z-combobox-btn,.z-bandbox .z-bandbox-btn,.z-datebox .z-datebox-btn,.z-timebox .z-timebox-btn,.z-spinner .z-spinner-btn,.z-doublespinner .z-doublespinner-btn
+	{
+	background-image: url(/DocScree/imagens/combobtn.gif);
+	border-left: 1px solid #CCC;
+	width: 23px;
+	height: 27px;
+}
+
+.z-combobox .z-combobox-btn-over,.z-bandbox .z-bandbox-btn-over,.z-datebox .z-datebox-btn-over
+	{
+	background-position: -24px 0;
+}
+
+.z-combobox-focus .z-combobox-btn-clk,.z-combobox .z-combobox-btn-clk,.z-bandbox-focus .z-bandbox-btn-clk,.z-bandbox .z-bandbox-btn-clk,.z-datebox-focus .z-datebox-btn-clk,.z-datebox .z-datebox-btn-clk,.z-timebox-focus .z-timebox-btn-clk,.z-timebox .z-timebox-btn-clk,.z-spinner-focus .z-spinner-btn-clk,.z-spinner .z-spinner-btn-clk,.z-doublespinner-focus .z-doublespinner-btn-clk,.z-doublespinner .z-doublespinner-btn-clk
+	{
+	background-position: -47px 0;
+}
+
+.z-combobox-focus .z-combobox-btn,.z-bandbox-focus .z-bandbox-btn,.z-datebox-focus .z-datebox-btn,.z-timebox-focus .z-timebox-btn,.z-spinner-focus .z-spinner-btn,.z-doublespinner-focus .z-doublespinner-btn
+	{
+	background-position: -70px 0;
+}
+
+/* -- 4. Novos CSS -- */
+input
+	[type="button"],input[type="submit"],input[type="reset"],button {
+	width: 100px;
+	font-family: Helvetica, sans-serif;
+	display: inline-block;
+	padding: 0px 0px;
+	font-size: 20px;
+	line-height: 30px;
+	border: 1px solid #069fed;
+	background: url(/DocScree/imagens/btn.jpg) 0px 0px repeat-x;
+	color: #fff;
+	text-decoration: none;
+	text-shadow: 0px 1px 0px #048ee8;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	cursor: pointer;
+}
+
+input[type="button"]:hover,input[type="submit"]:hover,input[type="reset"]:hover,button:hover
+	{
+	text-decoration: none;
+	background-position: 0px -120px
+}
+
+input[type="button"]:active,input[type="submit"]:active,input[type="reset"]:active,button:active
+	{
+	background-position: 0px -151px;
+	color: #167db2;
+	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
+	border-color: #0088ce;
+	-moz-box-shadow: 0px 2px 2px rgba(255, 255, 255, 0.3);
+	-webkit-box-shadow: 0px 2px 2px rgba(255, 255, 255, 0.3);
+	box-shadow: 0px 2px 2px rgba(255, 255, 255, 0.3);
+}
+
+/* -- CLASSES Template-- */
+div.top {
+	
+}
+
+div.topRight {
+	
+}
+
+div.menu {
+	
+}
+
+div.content {
+	margin-left: 5px;
+}
+
+div.footer {
+	
+}

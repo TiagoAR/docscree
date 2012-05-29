@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page title="DocScree - Documentation on Screen" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:n="native">
+
+	<style src="/css/style.css" />
+
+	<div id="top" sclass="top">
+		<image src="/imagens/topo.png" />
+	</div>
+	<div id="topRight" sclass="topRight">
+
+	</div>
+	<div id="menu" sclass="menu">
+
+	</div>
+	<div id="content" self="@{insert(content)}" sclass="content" />
+	<separator height="4px"></separator>
+	<div id="footer" sclass="footer">
+		Copyright 2012 UEG. All rights reserved.
+		<separator />
+		Developer by Diego Carlos.
+	</div>
+</zk>
