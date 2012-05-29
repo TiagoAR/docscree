@@ -7,13 +7,13 @@ import java.util.HashMap;
 
 import br.ueg.unucet.docscree.annotation.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.SuperControle;
-import br.ueg.unucet.docscree.visao.compositor.SuperComposer;
+import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class Reflexao {
 
 	public static HashMap<String, Object> gerarMapeadorAtributos(
-			SuperComposer<SuperControle> pVisao)
+			SuperCompositor<SuperControle> pVisao)
 			throws InstantiationException, IllegalAccessException,
 			NoSuchMethodException, SecurityException, IllegalArgumentException,
 			InvocationTargetException {

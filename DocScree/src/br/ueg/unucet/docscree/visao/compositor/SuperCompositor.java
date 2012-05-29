@@ -13,7 +13,7 @@ import br.ueg.unucet.docscree.controladores.SuperControle;
 import br.ueg.unucet.quid.extensao.interfaces.IPersistivel;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public abstract class SuperComposer<E extends SuperControle> extends
+public abstract class SuperCompositor<E extends SuperControle> extends
 		GenericForwardComposer {
 
 	/**
