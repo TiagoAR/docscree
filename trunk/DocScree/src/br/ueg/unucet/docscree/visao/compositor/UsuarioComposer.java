@@ -1,4 +1,4 @@
-package br.ueg.unucet.docscree.visao.composer;
+package br.ueg.unucet.docscree.visao.compositor;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -68,6 +68,10 @@ public class UsuarioComposer extends SuperComposer<UsuarioControle> {
 	
 	public void teste() {
 		System.out.println(getFldNome());
+	}
+	
+	public void acaoSalvar() {
+		
 	}
 	
 	/* GETTERS AND SETTERS */

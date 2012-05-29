@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import br.ueg.unucet.docscree.annotation.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.SuperControle;
-import br.ueg.unucet.docscree.visao.composer.SuperComposer;
+import br.ueg.unucet.docscree.visao.compositor.SuperComposer;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class Reflexao {

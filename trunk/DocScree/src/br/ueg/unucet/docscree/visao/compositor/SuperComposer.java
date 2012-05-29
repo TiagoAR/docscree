@@ -1,4 +1,4 @@
-package br.ueg.unucet.docscree.visao.composer;
+package br.ueg.unucet.docscree.visao.compositor;
 
 import java.lang.reflect.Field;
 import java.util.List;
