@@ -19,7 +19,7 @@
 						   http://www.zkoss.org/2008/zkspring/core/zkspring-core.xsd">
 		
 		
-	<context:component-scan base-package="br.ueg.unucet.docscree.visao.composer" />
+	<context:component-scan base-package="br.ueg.unucet.docscree.visao.compositor" />
 	<context:component-scan base-package="br.ueg.unucet.docscree.controladores" />
 	<context:component-scan base-package="org.zkoss.spring.beans.zkcomponents" />
     	

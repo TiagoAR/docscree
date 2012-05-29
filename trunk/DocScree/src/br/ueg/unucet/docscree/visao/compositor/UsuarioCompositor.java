@@ -8,41 +8,46 @@ import br.ueg.unucet.docscree.controladores.UsuarioControle;
 import br.ueg.unucet.quid.dominios.Usuario;
 
 /**
- * Classe da visão que representa o caso de uso Manter usuário;
- * Composer do Usuário no ZK.
+ * Classe da visão que representa o caso de uso Manter usuário; Composer do
+ * Usuário no ZK.
  * 
  * @author Diego
- *
+ * 
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Component
 @Scope("session")
-public class UsuarioComposer extends SuperComposer<UsuarioControle> {
+public class UsuarioCompositor extends SuperCompositor<UsuarioControle> {
 
 	private static final long serialVersionUID = -8506722128070841379L;
-	
+
 	/* Atributos da entidade */
-	@AtributoVisao(isCampoEntidade = true, nome="nome", nomeCampoBundle="usuario_campo_nome")
+	@AtributoVisao(isCampoEntidade = true, nome = "nome", nomeCampoBundle = "usuario_campo_nome")
 	private String fldNome;
 
-	@AtributoVisao(isCampoEntidade = true, nome="senha", nomeCampoBundle="usuario_campo_senha")
+	@AtributoVisao(isCampoEntidade = true, nome = "senha", nomeCampoBundle = "usuario_campo_senha")
 	private String fldSenha;
-	
-	@AtributoVisao(isCampoEntidade = false, nome="confirmarSenha", nomeCampoBundle="usuario_campo_confirmar_senha")
+
+	@AtributoVisao(isCampoEntidade = false, nome = "confirmarSenha", nomeCampoBundle = "usuario_campo_confirmar_senha")
 	private String fldConfirmarSenha;
 
-	@AtributoVisao(isCampoEntidade = true, nome="email", nomeCampoBundle="usuario_campo_email")
+	@AtributoVisao(isCampoEntidade = true, nome = "email", nomeCampoBundle = "usuario_campo_email")
 	private String fldEmail;
 
-	@AtributoVisao(isCampoEntidade = true, nome="perfilAcesso", nomeCampoBundle="usuario_campo_perfil_acesso")
+	@AtributoVisao(isCampoEntidade = true, nome = "perfilAcesso", nomeCampoBundle = "usuario_campo_perfil_acesso")
 	private String fldPerfilAcesso;
 
-	@AtributoVisao(isCampoEntidade = true, nome="status", nomeCampoBundle="usuario_campo_status")
+	@AtributoVisao(isCampoEntidade = true, nome = "status", nomeCampoBundle = "usuario_campo_status")
 	private int fldStatus;
+
 	/* Fim atributos da entidade */
 
-	/* (non-Javadoc)
-	 * @see br.ueg.unucet.docscree.visao.composer.SuperComposer#doAfterCompose(org.zkoss.zk.ui.Component)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.ueg.unucet.docscree.visao.composer.SuperComposer#doAfterCompose(org
+	 * .zkoss.zk.ui.Component)
 	 */
 	@Override
 	public void doAfterCompose(org.zkoss.zk.ui.Component comp) throws Exception {
@@ -63,17 +68,17 @@ public class UsuarioComposer extends SuperComposer<UsuarioControle> {
 	@Override
 	public void setPrimaryKey(Object primaryKey) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void teste() {
-		System.out.println(getFldNome());
-	}
-	
+
 	public void acaoSalvar() {
-		
+		try {
+			this.getControle().fazerAcao("salvar", (SuperCompositor) this);
+		} catch (Exception e) {
+
+		}
 	}
-	
+
 	/* GETTERS AND SETTERS */
 
 	/**
@@ -84,7 +89,8 @@ public class UsuarioComposer extends SuperComposer<UsuarioControle> {
 	}
 
 	/**
-	 * @param String o(a) fldNome a ser setado(a)
+	 * @param String
+	 *            o(a) fldNome a ser setado(a)
 	 */
 	public void setFldNome(String fldNome) {
 		this.fldNome = fldNome;
@@ -98,12 +104,12 @@ public class UsuarioComposer extends SuperComposer<UsuarioControle> {
 	}
 
 	/**
-	 * @param String o(a) fldSenha a ser setado(a)
+	 * @param String
+	 *            o(a) fldSenha a ser setado(a)
 	 */
 	public void setFldSenha(String fldSenha) {
 		this.fldSenha = fldSenha;
 	}
-
 
 	/**
 	 * @return String o(a) fldConfirmarSenha
@@ -113,7 +119,8 @@ public class UsuarioComposer extends SuperComposer<UsuarioControle> {
 	}
 
 	/**
-	 * @param String o(a) fldConfirmarSenha a ser setado(a)
+	 * @param String
+	 *            o(a) fldConfirmarSenha a ser setado(a)
 	 */
 	public void setFldConfirmarSenha(String fldConfirmarSenha) {
 		this.fldConfirmarSenha = fldConfirmarSenha;
@@ -127,7 +134,8 @@ public class UsuarioComposer extends SuperComposer<UsuarioControle> {
 	}
 
 	/**
-	 * @param String o(a) fldEmail a ser setado(a)
+	 * @param String
+	 *            o(a) fldEmail a ser setado(a)
 	 */
 	public void setFldEmail(String fldEmail) {
 		this.fldEmail = fldEmail;
@@ -155,7 +163,8 @@ public class UsuarioComposer extends SuperComposer<UsuarioControle> {
 	}
 
 	/**
-	 * @param String o(a) fldPerfilAcesso a ser setado(a)
+	 * @param String
+	 *            o(a) fldPerfilAcesso a ser setado(a)
 	 */
 	public void setFldPerfilAcesso(String fldPerfilAcesso) {
 		this.fldPerfilAcesso = fldPerfilAcesso;

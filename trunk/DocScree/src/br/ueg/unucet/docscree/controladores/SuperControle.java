@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
-import br.ueg.unucet.docscree.visao.compositor.SuperComposer;
+import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.interfaces.IQUID;
 import br.ueg.unucet.quid.servicos.QuidService;
 
@@ -36,37 +36,65 @@ public abstract class SuperControle {
 	 * @param String
 	 *            acao nome do método que deve ser executado
 	 * @return boolean se ação foi excutada ou não
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public boolean fazerAcao(String pAcao, SuperComposer<SuperControle> pVisao) throws Exception {
+	public boolean fazerAcao(String pAcao, SuperCompositor<SuperControle> pVisao)
+			throws Exception {
 		boolean resultado = false;
 		try {
 			setMapaAtributos(Reflexao.gerarMapeadorAtributos(pVisao));
 			Class classeRef = this.getClass();
-			preAcao();
+			if (preAcao()) {
+				return false;
+			}
 			String nomeAcao = "acao" + pAcao.substring(0, 1).toUpperCase()
 					+ pAcao.substring(1).toLowerCase();
 			Method metodo = classeRef.getMethod(nomeAcao, HashMap.class);
 			resultado = (Boolean) metodo.invoke(this, getMapaAtributos());
+			if (posAcao()) {
+				return false;
+			}
 		} catch (Exception e) {
-			throw new Exception("Erro ao chamar método, contate o administrador do sistema." + "\nExceção: " + e.getMessage());
+			throw new Exception(
+					"Erro ao chamar método, contate o administrador do sistema."
+							+ "\nExceção: " + e.getMessage());
 		}
-		posAcao();
 		return resultado;
 	}
 
-	protected void preAcao() {
-
+	/**
+	 * Método executado antes de chamar a ação principal do controlador, 
+	 * se for retornado false cancela as ações seguintes.
+	 * 
+	 * @return boolean
+	 */
+	protected boolean preAcao() {
+		return true;
 	}
 
-	protected void posAcao() {
-
+	/**
+	 * Método executado depois de chamar a ação principal do controlador.
+	 * 
+	 * @return boolean
+	 */
+	protected boolean posAcao() {
+		return true;
 	}
 
+	/**
+	 * Retorna o mapa de atributos vindo da visão
+	 * 
+	 * @return HashMap<String, Object> mapa de atributos
+	 */
 	protected HashMap<String, Object> getMapaAtributos() {
 		return mapaAtributos;
 	}
 
+	/**
+	 * Seta o mapa de atributos
+	 * 
+	 * @param HashMap<String, Object> mapa de atributos
+	 */
 	protected void setMapaAtributos(HashMap<String, Object> mapaAtributos) {
 		this.mapaAtributos = mapaAtributos;
 	}
