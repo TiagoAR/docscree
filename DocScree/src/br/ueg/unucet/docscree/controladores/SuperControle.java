@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
-import br.ueg.unucet.docscree.visao.composer.SuperComposer;
+import br.ueg.unucet.docscree.visao.compositor.SuperComposer;
 import br.ueg.unucet.quid.interfaces.IQUID;
 import br.ueg.unucet.quid.servicos.QuidService;
 
