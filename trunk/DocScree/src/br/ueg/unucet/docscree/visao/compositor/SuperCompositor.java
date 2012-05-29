@@ -21,7 +21,7 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private E gControle;
+	protected E gControle;
 	private List<?> listaEntidade;
 
 	/**
