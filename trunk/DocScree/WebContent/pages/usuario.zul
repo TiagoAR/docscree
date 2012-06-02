@@ -30,10 +30,8 @@
 				</row>
 				<row>
 					<label value="Perfil de Usuário:" />
-					<combobox value="@{controller.fldPerfilAcesso }">
-						<comboitem label="Usuário" value="0" />
-						<comboitem label="Administrador" value="1" />
-						<comboitem label="Gerente" value="2" />
+					<combobox selectedItem="@{controller.perfilAcesso }" model="@{ controller.listaPerfil}">
+						
 					</combobox>
 				</row>
 			</rows>

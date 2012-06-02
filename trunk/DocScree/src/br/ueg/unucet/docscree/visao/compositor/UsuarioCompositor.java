@@ -1,11 +1,18 @@
 package br.ueg.unucet.docscree.visao.compositor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.zkoss.zul.Messagebox;
 
 import br.ueg.unucet.docscree.annotation.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.UsuarioControle;
+import br.ueg.unucet.docscree.utilitarios.Conversor;
 import br.ueg.unucet.quid.dominios.Usuario;
+import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
+import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 
 /**
  * Classe da visão que representa o caso de uso Manter usuário; Composer do
@@ -14,7 +21,7 @@ import br.ueg.unucet.quid.dominios.Usuario;
  * @author Diego
  * 
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Component
 @Scope("session")
 public class UsuarioCompositor extends SuperCompositor<UsuarioControle> {
@@ -35,10 +42,13 @@ public class UsuarioCompositor extends SuperCompositor<UsuarioControle> {
 	private String fldEmail;
 
 	@AtributoVisao(isCampoEntidade = true, nome = "perfilAcesso", nomeCampoBundle = "usuario_campo_perfil_acesso")
-	private String fldPerfilAcesso;
+	private PerfilAcessoEnum fldPerfilAcesso;
 
 	@AtributoVisao(isCampoEntidade = true, nome = "status", nomeCampoBundle = "usuario_campo_status")
-	private int fldStatus;
+	private StatusEnum fldStatus;
+
+	private String status;
+	private String perfilAcesso;
 
 	/* Fim atributos da entidade */
 
@@ -73,10 +83,55 @@ public class UsuarioCompositor extends SuperCompositor<UsuarioControle> {
 
 	public void acaoSalvar() {
 		try {
-			this.getControle().fazerAcao("salvar", (SuperCompositor) this);
+			if (prepararDados()) {
+				boolean resultado = this.getControle().fazerAcao("salvar", (SuperCompositor) this);
+				if (resultado) {
+					gerarMensagemSucesso();
+				} else {
+					gerarMensagemErro();
+				}
+			}
 		} catch (Exception e) {
 
 		}
+	}
+
+	private boolean prepararDados() {
+		boolean retorno = false;
+		try {
+			setFldPerfilAcesso(Conversor.castParaEnum(PerfilAcessoEnum.class,
+					getPerfilAcesso()));
+			if (getStatus() == null || getStatus().isEmpty()) {
+				setFldStatus(StatusEnum.ATIVO);
+			} else {
+				setFldStatus(Conversor.castParaEnum(StatusEnum.class,
+						getStatus()));
+			}
+			retorno = true;
+		} catch (Exception e) {
+			Messagebox.show("Não foi escolhido um Perfil de Acesso Válido!\nSelecione um perfil!", "Erro", Messagebox.OK, Messagebox.ERROR);
+		} 
+		return retorno;
+	}
+	
+	private void gerarMensagemSucesso() {
+		System.out.println("Deu certo!");
+	}
+	
+	private void gerarMensagemErro() {
+		String mensagem = "";
+		for (String mensagemParcial : super.getControle().getListaMensagensErro()) {
+			mensagem+= mensagemParcial + "\n";
+		}
+		Messagebox.show(mensagem, "Atenção", Messagebox.OK, Messagebox.INFORMATION);
+	}
+
+	public List<String> getListaPerfil() {
+		ArrayList<String> listaPerfil = new ArrayList<>();
+		for (PerfilAcessoEnum perfil : PerfilAcessoEnum.values()) {
+			listaPerfil.add(perfil.toString());
+		}
+		return listaPerfil;
 	}
 
 	/* GETTERS AND SETTERS */
@@ -142,31 +197,62 @@ public class UsuarioCompositor extends SuperCompositor<UsuarioControle> {
 	}
 
 	/**
-	 * @return int o(a) fldStatus
+	 * @return PerfilAcessoEnum o(a) fldPerfilAcesso
 	 */
-	public int getFldStatus() {
-		return fldStatus;
-	}
-
-	/**
-	 * @param int o(a) fldStatus a ser setado(a)
-	 */
-	public void setFldStatus(int fldStatus) {
-		this.fldStatus = fldStatus;
-	}
-
-	/**
-	 * @return String o(a) fldPerfilAcesso
-	 */
-	public String getFldPerfilAcesso() {
+	public PerfilAcessoEnum getFldPerfilAcesso() {
 		return fldPerfilAcesso;
 	}
 
 	/**
-	 * @param String
+	 * @param PerfilAcessoEnum
 	 *            o(a) fldPerfilAcesso a ser setado(a)
 	 */
-	public void setFldPerfilAcesso(String fldPerfilAcesso) {
+	public void setFldPerfilAcesso(PerfilAcessoEnum fldPerfilAcesso) {
 		this.fldPerfilAcesso = fldPerfilAcesso;
+	}
+
+	/**
+	 * @return StatusEnum o(a) fldStatus
+	 */
+	public StatusEnum getFldStatus() {
+		return fldStatus;
+	}
+
+	/**
+	 * @param StatusEnum
+	 *            o(a) fldStatus a ser setado(a)
+	 */
+	public void setFldStatus(StatusEnum fldStatus) {
+		this.fldStatus = fldStatus;
+	}
+
+	/**
+	 * @return String o(a) status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param String
+	 *            o(a) status a ser setado(a)
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return String o(a) perfilAcesso
+	 */
+	public String getPerfilAcesso() {
+		return perfilAcesso;
+	}
+
+	/**
+	 * @param String
+	 *            o(a) perfilAcesso a ser setado(a)
+	 */
+	public void setPerfilAcesso(String perfilAcesso) {
+		this.perfilAcesso = perfilAcesso;
 	}
 }
