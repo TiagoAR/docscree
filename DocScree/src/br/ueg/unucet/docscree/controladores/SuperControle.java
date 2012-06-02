@@ -1,7 +1,9 @@
 package br.ueg.unucet.docscree.controladores;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
@@ -9,7 +11,7 @@ import br.ueg.unucet.quid.interfaces.IQUID;
 import br.ueg.unucet.quid.servicos.QuidService;
 
 /**
- * Classe de controle genérico, tem o Serviço do Quid como principal método que
+ * Classe de controle superior, tem o Serviço do Quid como principal método que
  * é acionado para executar qualquer ação de responsabilidade do framework
  * 
  * @author Diego
@@ -19,6 +21,8 @@ import br.ueg.unucet.quid.servicos.QuidService;
 public abstract class SuperControle {
 
 	private HashMap<String, Object> mapaAtributos;
+
+	protected List<String> listaMensagensErro;
 
 	/**
 	 * Método que retorna instancia do serviço do QUID framework.
@@ -40,31 +44,37 @@ public abstract class SuperControle {
 	 */
 	public boolean fazerAcao(String pAcao, SuperCompositor<SuperControle> pVisao)
 			throws Exception {
+		this.listaMensagensErro = new ArrayList<String>();
 		boolean resultado = false;
 		try {
 			setMapaAtributos(Reflexao.gerarMapeadorAtributos(pVisao));
 			Class classeRef = this.getClass();
-			if (preAcao()) {
+			if (!preAcao()) {
 				return false;
 			}
 			String nomeAcao = "acao" + pAcao.substring(0, 1).toUpperCase()
 					+ pAcao.substring(1).toLowerCase();
-			Method metodo = classeRef.getMethod(nomeAcao, HashMap.class);
-			resultado = (Boolean) metodo.invoke(this, getMapaAtributos());
-			if (posAcao()) {
+			Method metodo = classeRef.getMethod(nomeAcao);
+			resultado = (Boolean) metodo.invoke(this);
+			if (!posAcao()) {
 				return false;
 			}
 		} catch (Exception e) {
-			throw new Exception(
-					"Erro ao chamar método, contate o administrador do sistema."
-							+ "\nExceção: " + e.getMessage());
+			if (listaMensagensErro.isEmpty()) {
+				String mensagemErro = "Erro ao chamar método, contate o administrador do sistema.";
+				if (e.getMessage() != null && !e.getMessage().isEmpty()) {
+					mensagemErro += "\nExceção: " + e.getMessage();
+				}
+				this.listaMensagensErro.add(mensagemErro);
+				e.printStackTrace();
+			}
 		}
 		return resultado;
 	}
 
 	/**
-	 * Método executado antes de chamar a ação principal do controlador, 
-	 * se for retornado false cancela as ações seguintes.
+	 * Método executado antes de chamar a ação principal do controlador, se for
+	 * retornado false cancela as ações seguintes.
 	 * 
 	 * @return boolean
 	 */
@@ -93,10 +103,18 @@ public abstract class SuperControle {
 	/**
 	 * Seta o mapa de atributos
 	 * 
-	 * @param HashMap<String, Object> mapa de atributos
+	 * @param HashMap
+	 *            <String, Object> mapa de atributos
 	 */
 	protected void setMapaAtributos(HashMap<String, Object> mapaAtributos) {
 		this.mapaAtributos = mapaAtributos;
+	}
+
+	/**
+	 * @return List<String> o(a) listaMensagensErro
+	 */
+	public List<String> getListaMensagensErro() {
+		return listaMensagensErro;
 	}
 
 }
