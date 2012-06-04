@@ -2,11 +2,18 @@ package br.ueg.unucet.docscree.controladores;
 
 import br.ueg.unucet.quid.extensao.dominios.Persistivel;
 
+/**
+ * Controle Genérico, extende SuperControle e contém operações básicas de todos os controladores persistíveis
+ * 
+ * @author Diego
+ *
+ * @param <E>
+ */
 @SuppressWarnings("unchecked")
 public class GenericoControle<E extends Persistivel> extends SuperControle {
 
 	/**
-	 * M�todo que retorna a entidade do mapeador de atributos.
+	 * Método que retorna a entidade do mapeador de atributos.
 	 * 
 	 * @return E entidade
 	 */
