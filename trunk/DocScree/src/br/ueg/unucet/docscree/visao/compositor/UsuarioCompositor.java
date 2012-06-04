@@ -195,14 +195,14 @@ public class UsuarioCompositor extends SuperCompositor<UsuarioControle> {
 	}
 
 	/**
-	 * @return o(a) flsPerfilAcesso
+	 * @return o(a) fldPerfilAcesso
 	 */
 	public String getFldPerfilAcesso() {
 		return fldPerfilAcesso;
 	}
 
 	/**
-	 * @param flsPerfilAcesso o(a) flsPerfilAcesso a ser setado(a)
+	 * @param fldPerfilAcesso o(a) flsPerfilAcesso a ser setado(a)
 	 */
 	public void setFldPerfilAcesso(String fldPerfilAcesso) {
 		this.fldPerfilAcesso = fldPerfilAcesso;
