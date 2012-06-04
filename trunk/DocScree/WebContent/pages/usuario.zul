@@ -30,9 +30,13 @@
 				</row>
 				<row>
 					<label value="Perfil de Usuário:" />
-					<combobox selectedItem="@{controller.perfilAcesso }" model="@{ controller.listaPerfil}">
+					<combobox selectedItem="@{controller.fldPerfilAcesso }" model="@{ controller.listaPerfil}">
 						
 					</combobox>
+				</row>
+				<row>
+					<label value="Ativo:" />
+					<checkbox checked="@{controller.fldStatus}" />
 				</row>
 			</rows>
 		</grid>
