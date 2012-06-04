@@ -1,18 +1,18 @@
 package br.ueg.unucet.docscree.controladores;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
+import br.ueg.unucet.docscree.utilitarios.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.interfaces.IQUID;
 import br.ueg.unucet.quid.servicos.QuidService;
 
 /**
- * Classe de controle superior, tem o ServiÁo do Quid como principal mÈtodo que
- * È acionado para executar qualquer aÁ„o de responsabilidade do framework
+ * Classe de controle superior, tem o Servi√ßo do Quid como principal m√©todo que
+ * √© acionado para executar qualquer a√ß√£o de responsabilidade do framework.
+ * Tem m√©todos comuns a todos os controladores, persistiveis ou n√£o.
  * 
  * @author Diego
  * 
@@ -20,31 +20,38 @@ import br.ueg.unucet.quid.servicos.QuidService;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public abstract class SuperControle {
 
+	/**
+	 * Cont√©m os atributos da vis√£o
+	 */
 	private HashMap<String, Object> mapaAtributos;
 
-	protected List<String> listaMensagensErro;
+	/**
+	 * Guarda mensagens de sucessos personalizadas ou de erros da execu√ß√£o da a√ß√£o.
+	 */
+	protected Mensagens mensagens;
 
 	/**
-	 * MÈtodo que retorna instancia do serviÁo do QUID framework.
+	 * M√©todo que retorna instancia do servi√ßo do QUID framework.
 	 * 
-	 * @return IQUID interface que representa o seriÁo do QUID
+	 * @return IQUID interface que representa o seri√ßo do QUID
 	 */
 	public IQUID getFramework() {
 		return (IQUID) QuidService.obterInstancia();
 	}
 
 	/**
-	 * MÈtodo respons·vel por executar qualquer aÁ„o, a partir dele que chama o
-	 * mÈtodo especÌfico para comunicar com o framework.
+	 * M√©todo respons√°vel por executar qualquer a√ß√£o, a partir dele que chama o
+	 * m√©todo espec√≠fico para comunicar com o framework.
 	 * 
-	 * @param String
-	 *            acao nome do mÈtodo que deve ser executado
-	 * @return boolean se aÁ„o foi excutada ou n„o
+	 * @param pAcao
+	 *            nome do m√©todo que deve ser executado
+	 * @param pVisao vis√£o que chamou a a√ß√£o
+	 * @return resultado se a√ß√£o foi excutada ou n√£o
 	 * @throws Exception
 	 */
 	public boolean fazerAcao(String pAcao, SuperCompositor<SuperControle> pVisao)
 			throws Exception {
-		this.listaMensagensErro = new ArrayList<String>();
+		this.mensagens = new Mensagens();
 		boolean resultado = false;
 		try {
 			setMapaAtributos(Reflexao.gerarMapeadorAtributos(pVisao));
@@ -60,12 +67,12 @@ public abstract class SuperControle {
 				return false;
 			}
 		} catch (Exception e) {
-			if (listaMensagensErro.isEmpty()) {
-				String mensagemErro = "Erro ao chamar mÈtodo, contate o administrador do sistema.";
+			if (this.mensagens.getListaMensagens().isEmpty()) {
+				String mensagemErro = "Erro ao chamar mÔøΩtodo, contate o administrador do sistema.";
 				if (e.getMessage() != null && !e.getMessage().isEmpty()) {
-					mensagemErro += "\nExceÁ„o: " + e.getMessage();
+					mensagemErro += "\nExceÔøΩÔøΩo: " + e.getMessage();
 				}
-				this.listaMensagensErro.add(mensagemErro);
+				this.mensagens.getListaMensagens().add(mensagemErro);
 				e.printStackTrace();
 			}
 		}
@@ -73,8 +80,8 @@ public abstract class SuperControle {
 	}
 
 	/**
-	 * MÈtodo executado antes de chamar a aÁ„o principal do controlador, se for
-	 * retornado false cancela as aÁıes seguintes.
+	 * M√©todo executado antes de chamar a a√ß√£o principal do controlador, se for
+	 * retornado false cancela as a√ß√µes seguintes.
 	 * 
 	 * @return boolean
 	 */
@@ -83,7 +90,7 @@ public abstract class SuperControle {
 	}
 
 	/**
-	 * MÈtodo executado depois de chamar a aÁ„o principal do controlador.
+	 * M√©todo executado depois de chamar a a√ß√£o principal do controlador.
 	 * 
 	 * @return boolean
 	 */
@@ -92,7 +99,7 @@ public abstract class SuperControle {
 	}
 
 	/**
-	 * Retorna o mapa de atributos vindo da vis„o
+	 * Retorna o mapa de atributos vindo da vis√£o
 	 * 
 	 * @return HashMap<String, Object> mapa de atributos
 	 */
@@ -103,18 +110,17 @@ public abstract class SuperControle {
 	/**
 	 * Seta o mapa de atributos
 	 * 
-	 * @param HashMap
-	 *            <String, Object> mapa de atributos
+	 * @param mapaAtributos
 	 */
 	protected void setMapaAtributos(HashMap<String, Object> mapaAtributos) {
 		this.mapaAtributos = mapaAtributos;
 	}
 
 	/**
-	 * @return List<String> o(a) listaMensagensErro
+	 * @return o(a) mensagens
 	 */
-	public List<String> getListaMensagensErro() {
-		return listaMensagensErro;
+	public Mensagens getMensagens() {
+		return mensagens;
 	}
 
 }

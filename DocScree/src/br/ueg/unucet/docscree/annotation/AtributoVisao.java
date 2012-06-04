@@ -7,8 +7,8 @@ import java.lang.annotation.Target;
 
 
 /**
- * Annotation para serem associadas aos atributos da vis„o, informando
- * se representam entidades, e assim o controlador fazer a devida leitura das mesmas.
+ * Annotation para serem associadas aos atributos da vis√£o, informando
+ * se representam entidades, e assim o controlador faz a devida leitura das mesmas.
  * 
  * @author Diego
  *
@@ -25,9 +25,9 @@ public @interface AtributoVisao {
 	String nome();
 	
 	/**
-	 * Informa se campo È associado a uma entidade ou n„o.
+	 * Informa se campo √© associado a uma entidade ou n√£o.
 	 * 
-	 * @return boolean isCampoEntidade se È campo de entidade ou n„o
+	 * @return boolean isCampoEntidade se √© campo de entidade ou n√£o
 	 */
 	boolean isCampoEntidade() default false;
 	
