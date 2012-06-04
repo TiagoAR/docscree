@@ -11,14 +11,12 @@ import java.lang.reflect.InvocationTargetException;
 public class Conversor {
 
 	/**
-	 * Metodo respons�vel por converter uma String para um Enum. Essa conversao
-	 * e feita procurando o enum que tenha o mesmo nome do valor a ser
+	 * Método responsável por converter uma String para um Enum. Essa conversão
+	 * é feita procurando o enum que tenha o mesmo nome do valor a ser
 	 * convertido.
 	 * 
-	 * @param Class
-	 *            <T> classField Classe enum.
-	 * @param String
-	 *            value Valor a ser convertido.
+	 * @param classField Classe enum.
+	 * @param value Valor a ser convertido.
 	 * @return Enum do valor string.
 	 */
 	public static <T extends Object> T castParaEnum(Class<T> classField,
