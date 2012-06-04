@@ -5,18 +5,15 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.zkoss.zul.Messagebox;
 
 import br.ueg.unucet.docscree.annotation.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.UsuarioControle;
-import br.ueg.unucet.docscree.utilitarios.Conversor;
 import br.ueg.unucet.quid.dominios.Usuario;
 import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
-import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 
 /**
- * Classe da vis„o que representa o caso de uso Manter usu·rio; Composer do
- * Usu·rio no ZK.
+ * Classe da vis√£o que representa o caso de uso Manter usu√°rio; Composer do
+ * Usu√°rio no ZK.
  * 
  * @author Diego
  * 
@@ -26,31 +23,45 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 @Scope("session")
 public class UsuarioCompositor extends SuperCompositor<UsuarioControle> {
 
+	/**
+	 * Default Serial
+	 */
 	private static final long serialVersionUID = -8506722128070841379L;
 
-	/* Atributos da entidade */
+	/* Atributos para mapeamento/Inicio dos atributos da entidade */
+	/**
+	 * Campo nome
+	 */
 	@AtributoVisao(isCampoEntidade = true, nome = "nome", nomeCampoBundle = "usuario_campo_nome")
 	private String fldNome;
-
+	/**
+	 * Campo senha
+	 */
 	@AtributoVisao(isCampoEntidade = true, nome = "senha", nomeCampoBundle = "usuario_campo_senha")
 	private String fldSenha;
-
+	/**
+	 * Campo confirmar senha
+	 */
 	@AtributoVisao(isCampoEntidade = false, nome = "confirmarSenha", nomeCampoBundle = "usuario_campo_confirmar_senha")
 	private String fldConfirmarSenha;
-
+	/**
+	 * Campo E-mail
+	 */
 	@AtributoVisao(isCampoEntidade = true, nome = "email", nomeCampoBundle = "usuario_campo_email")
 	private String fldEmail;
+	/* Fim dos atributos da entidade */
+	/**
+	 * Campo Status
+	 */
+	@AtributoVisao(isCampoEntidade = false, nome = "status", nomeCampoBundle = "usuario_campo_status")
+	private Boolean fldStatus = new Boolean(true);
+	/**
+	 * Campo Perfil de Acesso
+	 */
+	@AtributoVisao(isCampoEntidade = false, nome = "perfilAcesso", nomeCampoBundle = "usuario_campo_perfil_acesso")
+	private String fldPerfilAcesso;
 
-	@AtributoVisao(isCampoEntidade = true, nome = "perfilAcesso", nomeCampoBundle = "usuario_campo_perfil_acesso")
-	private PerfilAcessoEnum fldPerfilAcesso;
-
-	@AtributoVisao(isCampoEntidade = true, nome = "status", nomeCampoBundle = "usuario_campo_status")
-	private StatusEnum fldStatus;
-
-	private String status;
-	private String perfilAcesso;
-
-	/* Fim atributos da entidade */
+	/* Fim atributos */
 
 	/*
 	 * (non-Javadoc)
@@ -81,51 +92,24 @@ public class UsuarioCompositor extends SuperCompositor<UsuarioControle> {
 
 	}
 
+	/**
+	 * M√©todo que executa a a√ß√£o de Salvar Usu√°rio e mostra mensagem de sucesso ou erro ap√≥s a√ß√£o
+	 */
 	public void acaoSalvar() {
 		try {
-			if (prepararDados()) {
-				boolean resultado = this.getControle().fazerAcao("salvar", (SuperCompositor) this);
-				if (resultado) {
-					gerarMensagemSucesso();
-				} else {
-					gerarMensagemErro();
-				}
-			}
+			boolean resultado = this.getControle().fazerAcao("salvar",
+					(SuperCompositor) this);
+			super.mostrarMensagem(resultado);
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
-
-	private boolean prepararDados() {
-		boolean retorno = false;
-		try {
-			setFldPerfilAcesso(Conversor.castParaEnum(PerfilAcessoEnum.class,
-					getPerfilAcesso()));
-			if (getStatus() == null || getStatus().isEmpty()) {
-				setFldStatus(StatusEnum.ATIVO);
-			} else {
-				setFldStatus(Conversor.castParaEnum(StatusEnum.class,
-						getStatus()));
-			}
-			retorno = true;
-		} catch (Exception e) {
-			Messagebox.show("N„o foi escolhido um Perfil de Acesso V·lido!\nSelecione um perfil!", "Erro", Messagebox.OK, Messagebox.ERROR);
-		} 
-		return retorno;
-	}
 	
-	private void gerarMensagemSucesso() {
-		System.out.println("Deu certo!");
-	}
-	
-	private void gerarMensagemErro() {
-		String mensagem = "";
-		for (String mensagemParcial : super.getControle().getListaMensagensErro()) {
-			mensagem+= mensagemParcial + "\n";
-		}
-		Messagebox.show(mensagem, "AtenÁ„o", Messagebox.OK, Messagebox.INFORMATION);
-	}
-
+	/**
+	 * M√©todo que retorna os tipos de perfis de acesso existentes no enumerador.
+	 * 
+	 * @return listaPerfil
+	 */
 	public List<String> getListaPerfil() {
 		ArrayList<String> listaPerfil = new ArrayList<>();
 		for (PerfilAcessoEnum perfil : PerfilAcessoEnum.values()) {
@@ -137,122 +121,90 @@ public class UsuarioCompositor extends SuperCompositor<UsuarioControle> {
 	/* GETTERS AND SETTERS */
 
 	/**
-	 * @return String o(a) fldNome
+	 * @return the fldNome
 	 */
 	public String getFldNome() {
 		return fldNome;
 	}
 
 	/**
-	 * @param String
-	 *            o(a) fldNome a ser setado(a)
+	 * @param fldNome
+	 *            the fldNome to set
 	 */
 	public void setFldNome(String fldNome) {
 		this.fldNome = fldNome;
 	}
 
 	/**
-	 * @return String o(a) fldSenha
+	 * @return the fldSenha
 	 */
 	public String getFldSenha() {
 		return fldSenha;
 	}
 
 	/**
-	 * @param String
-	 *            o(a) fldSenha a ser setado(a)
+	 * @param fldSenha
+	 *            the fldSenha to set
 	 */
 	public void setFldSenha(String fldSenha) {
 		this.fldSenha = fldSenha;
 	}
 
 	/**
-	 * @return String o(a) fldConfirmarSenha
+	 * @return the fldConfirmarSenha
 	 */
 	public String getFldConfirmarSenha() {
 		return fldConfirmarSenha;
 	}
 
 	/**
-	 * @param String
-	 *            o(a) fldConfirmarSenha a ser setado(a)
+	 * @param fldConfirmarSenha
+	 *            the fldConfirmarSenha to set
 	 */
 	public void setFldConfirmarSenha(String fldConfirmarSenha) {
 		this.fldConfirmarSenha = fldConfirmarSenha;
 	}
 
 	/**
-	 * @return String o(a) fldEmail
+	 * @return the fldEmail
 	 */
 	public String getFldEmail() {
 		return fldEmail;
 	}
 
 	/**
-	 * @param String
-	 *            o(a) fldEmail a ser setado(a)
+	 * @param fldEmail
+	 *            the fldEmail to set
 	 */
 	public void setFldEmail(String fldEmail) {
 		this.fldEmail = fldEmail;
 	}
 
 	/**
-	 * @return PerfilAcessoEnum o(a) fldPerfilAcesso
+	 * @return o(a) fldStatus
 	 */
-	public PerfilAcessoEnum getFldPerfilAcesso() {
-		return fldPerfilAcesso;
-	}
-
-	/**
-	 * @param PerfilAcessoEnum
-	 *            o(a) fldPerfilAcesso a ser setado(a)
-	 */
-	public void setFldPerfilAcesso(PerfilAcessoEnum fldPerfilAcesso) {
-		this.fldPerfilAcesso = fldPerfilAcesso;
-	}
-
-	/**
-	 * @return StatusEnum o(a) fldStatus
-	 */
-	public StatusEnum getFldStatus() {
+	public Boolean getFldStatus() {
 		return fldStatus;
 	}
 
 	/**
-	 * @param StatusEnum
-	 *            o(a) fldStatus a ser setado(a)
+	 * @param fldStatus o(a) fldStatus a ser setado(a)
 	 */
-	public void setFldStatus(StatusEnum fldStatus) {
+	public void setFldStatus(Boolean fldStatus) {
 		this.fldStatus = fldStatus;
 	}
 
 	/**
-	 * @return String o(a) status
+	 * @return o(a) flsPerfilAcesso
 	 */
-	public String getStatus() {
-		return status;
+	public String getFldPerfilAcesso() {
+		return fldPerfilAcesso;
 	}
 
 	/**
-	 * @param String
-	 *            o(a) status a ser setado(a)
+	 * @param flsPerfilAcesso o(a) flsPerfilAcesso a ser setado(a)
 	 */
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	/**
-	 * @return String o(a) perfilAcesso
-	 */
-	public String getPerfilAcesso() {
-		return perfilAcesso;
-	}
-
-	/**
-	 * @param String
-	 *            o(a) perfilAcesso a ser setado(a)
-	 */
-	public void setPerfilAcesso(String perfilAcesso) {
-		this.perfilAcesso = perfilAcesso;
+	public void setFldPerfilAcesso(String fldPerfilAcesso) {
+		this.fldPerfilAcesso = fldPerfilAcesso;
 	}
 }

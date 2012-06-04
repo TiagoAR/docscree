@@ -12,15 +12,16 @@ import org.zkoss.zul.Window;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import br.ueg.unucet.docscree.controladores.SuperControle;
+import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.quid.extensao.interfaces.IPersistivel;
 
 /**
- * Compositor superior, cont�m m�todos comum a todos os compositores
+ * Compositor superior, contém métodos comuns a todos os compositores
  * 
  * @author Diego
  * 
- * @param <SuperControle>
- *            Controle espec�fico de cada compositor, deve herdar SuperControle
+ * @param <E>
+ *            Controle específico de cada compositor, deve herdar SuperControle
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class SuperCompositor<E extends SuperControle> extends
@@ -31,17 +32,29 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public E gControle;
-	private List<?> listaEntidade;
-
-	protected Window modalSucesso;
 
 	/**
-	 * usado para pegar chamar o zk para passar os parametros da vis�o para o
-	 * composer
+	 * Chama e seta valores para a visão.
 	 */
 	protected AnnotateDataBinder binder;
+	/**
+	 * Representa o componente, associado ao apply do componente.
+	 */
 	protected Component component;
+
+	/**
+	 * Controlador específico
+	 */
+	public E gControle;
+	/**
+	 * Lista da entidade
+	 */
+	private List<?> listaEntidade;
+
+	/**
+	 * Janela de exibição de mensagens de sucesso
+	 */
+	protected Window modalSucesso;
 	
 	
 
@@ -78,7 +91,7 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	}
 
 	/**
-	 * M�todo que cria nova instancia da entidade.
+	 * Método que cria nova instancia da entidade.
 	 * 
 	 * @return IPersistivel entidade
 	 * @throws InstantiationException
@@ -89,14 +102,29 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		return (IPersistivel<?>) getTipoEntidade().newInstance();
 	}
 
+	/**
+	 * Retorna a classe que representa a entidade.
+	 * 
+	 * @return Class classe da entidade
+	 */
 	public abstract Class getTipoEntidade();
 
+	/**
+	 * Método que retorna chave primária
+	 * 
+	 * @return Object PK
+	 */
 	public abstract Object getPrimaryKey();
 
+	/**
+	 * Método que seta a chave primária
+	 * 
+	 * @param primaryKey
+	 */
 	public abstract void setPrimaryKey(Object primaryKey);
 
 	/**
-	 * M�todo que retorna o GenericoControle espec�fico da entidade.
+	 * Método que retorna o Controle específico da entidade.
 	 * 
 	 * @return SuperControle controle
 	 * @throws InstantiationException
@@ -118,26 +146,67 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		}
 		return this.gControle;
 	}
+	
+	/**
+	 * Método que gera a mensagem de Erro, varre a lista de mensagens e a joga na visão.
+	 * 
+	 */
+	protected void gerarMensagemErro() {
+		String mensagem = "";
+		List<String> listaMensagens = getControle().getMensagens()
+				.getListaMensagens();
+		for (int i = 0; i < listaMensagens.size() - 1; i++) {
+			mensagem += listaMensagens.get(i) + "\n";
+		}
+		mensagem += listaMensagens.get(listaMensagens.size() - 1);
+		String tipoMessagebox = Messagebox.INFORMATION;
+		if (getControle().getMensagens().getTipoMensagem() == TipoMensagem.ERRO) {
+			tipoMessagebox = Messagebox.ERROR;
+		}
+		Messagebox.show(mensagem, getControle().getMensagens()
+				.getTipoMensagem().getDescricao(), Messagebox.OK,
+				tipoMessagebox);
+	}
+	
+	/**
+	 * Método que instancia janela de mensagens de sucesso e a mostra.
+	 * 
+	 */
+	protected void gerarMensagemSucesso() {
+		System.out.println("Deu Certo!");
+	}
+	
+	/**
+	 * Método mostrar mensagem na tela, ou de sucesso ou de erro.
+	 * 
+	 * @param pResultado o resultado da ação
+	 */
+	protected void mostrarMensagem(boolean pResultado) {
+		if (pResultado) {
+			gerarMensagemSucesso();
+		} else {
+			gerarMensagemErro();
+		}
+	}
 
 	/**
 	 * Seta o contolador
 	 * 
-	 * @param SuperControle pControle
+	 * @param pControle
 	 */
 	protected void setControle(E pControle) {
 		this.gControle = pControle;
 	}
 
 	/**
-	 * @return List<?> o(a) listaEntidade
+	 * @return listaEntidade
 	 */
 	public List<?> getListaEntidade() {
 		return listaEntidade;
 	}
 
 	/**
-	 * @param List
-	 *            <?> o(a) listaEntidade a ser setado(a)
+	 * @param listaEntidade a ser setado(a)
 	 */
 	public void setListaEntidade(List<?> listaEntidade) {
 		this.listaEntidade = listaEntidade;
