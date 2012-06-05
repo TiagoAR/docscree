@@ -1,5 +1,6 @@
 package br.ueg.unucet.docscree.controladores;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -37,7 +38,7 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 		} catch (Exception e) {
 			super.getMensagens()
 					.getListaMensagens()
-					.add("N�o foi escolhido um Perfil de Acesso V�lido!\nSelecione um perfil!");
+					.add("Não foi escolhido um Perfil de Acesso Válido!\nSelecione um perfil!");
 			super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
 			retorno = false;
 		}
@@ -92,6 +93,18 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 				}
 			}
 			super.mensagens.getListaMensagens().add(mensagemErro);
+			return false;
+		}
+	}
+	
+	public boolean acaoListar() {
+		Retorno<String, Collection<Usuario>> retorno = super.getFramework().pesquisarUsuario(new Usuario());
+		if (retorno.isSucesso()) {
+			Collection<Usuario> listaUsuario = retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
+			super.setLista(new ArrayList<Usuario>(listaUsuario));
+			return true;
+		} else {
+			super.mensagens.getListaMensagens().add(retorno.getMensagem());
 			return false;
 		}
 	}

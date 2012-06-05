@@ -8,7 +8,7 @@ package br.ueg.unucet.docscree.utilitarios.enumerador;
  */
 public enum TipoMensagem {
 	
-    ATENCAO(0, "ATEÇÃO"),
+    ATENCAO(0, "ATENÇÃO"),
     ERRO(1, "ERRO"),
     QUESTAO(2, "INFORMAÇÃO"),
     SUCESSO(4, "SUCESSO");
