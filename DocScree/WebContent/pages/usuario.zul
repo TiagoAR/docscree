@@ -42,7 +42,7 @@
 		</grid>
 		<separator />
 		<button label="Salvar" onClick="controller.acaoSalvar()"/>
-		<button label="Listar" />
+		<button label="Listar" onClick="controller.acaoListar()"/>
 		<button label="Cancelar" />
 	</groupbox>
 </zk>

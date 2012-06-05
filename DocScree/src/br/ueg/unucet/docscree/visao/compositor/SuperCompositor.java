@@ -6,6 +6,7 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zkplus.databind.AnnotateDataBinder;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
@@ -54,7 +55,7 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	/**
 	 * Janela de exibição de mensagens de sucesso
 	 */
-	protected Window modalSucesso;
+	protected Window modalSucesso = null;
 	
 	
 
@@ -91,6 +92,13 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	}
 
 	/**
+	 * Retorna a classe que representa a entidade.
+	 * 
+	 * @return Class classe da entidade
+	 */
+	public abstract Class getTipoEntidade();
+
+	/**
 	 * Método que cria nova instancia da entidade.
 	 * 
 	 * @return IPersistivel entidade
@@ -101,27 +109,6 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 			IllegalAccessException {
 		return (IPersistivel<?>) getTipoEntidade().newInstance();
 	}
-
-	/**
-	 * Retorna a classe que representa a entidade.
-	 * 
-	 * @return Class classe da entidade
-	 */
-	public abstract Class getTipoEntidade();
-
-	/**
-	 * Método que retorna chave primária
-	 * 
-	 * @return Object PK
-	 */
-	public abstract Object getPrimaryKey();
-
-	/**
-	 * Método que seta a chave primária
-	 * 
-	 * @param primaryKey
-	 */
-	public abstract void setPrimaryKey(Object primaryKey);
 
 	/**
 	 * Método que retorna o Controle específico da entidade.
@@ -173,6 +160,31 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 * 
 	 */
 	protected void gerarMensagemSucesso() {
+		this.component.getChildren();
+		for (Component window : this.component.getParent().getChildren()) {
+			if (window.getId().equalsIgnoreCase("teste")) {
+				this.modalSucesso = (Window) window;
+				break;
+			}
+		}
+		Label mensagemSucesso = new Label("Deu certo e vai fica certo!!!!");
+		mensagemSucesso.setId("labelTeste");
+	/*	ThreadVisibilidade teste = new ThreadVisibilidade();
+		teste.run();*/
+//		this.modalSucesso = new Window();
+		this.modalSucesso.removeChild(mensagemSucesso);
+		this.modalSucesso.appendChild(mensagemSucesso);
+		this.modalSucesso.setVisible(true);
+	//	this.component.getParent().
+//		this.component.getParent().appendChild(this.modalSucesso);
+//		this.modalSucesso = new Window();
+//		this.modalSucesso.setBorder(true);
+//		this.modalSucesso.setZIndex(99);
+//		this.modalSucesso.setStyle("float: right; text-align: right;");
+//		this.modalSucesso.setWidth("300px");
+////		this.modalSucesso.doModal();
+//		this.modalSucesso.setVisible(true);
+//		this.component.appendChild(modalSucesso);
 		System.out.println("Deu Certo!");
 	}
 	

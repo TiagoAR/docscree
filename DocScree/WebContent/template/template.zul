@@ -14,7 +14,9 @@
 	<div id="menu" sclass="menu">
 
 	</div>
-	<div id="content" self="@{insert(content)}" sclass="content" />
+	<div id="content" self="@{insert(content)}" sclass="content" >
+	<window id="teste" style="float: right;" apply="${mensagemCompositor}" visible="false"/>
+	</div>
 	<separator height="4px"></separator>
 	<div id="footer" sclass="footer">
 		Copyright 2012 UEG. All rights reserved.

@@ -21,7 +21,7 @@ import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Component
 @Scope("session")
-public class UsuarioCompositor extends SuperCompositor<UsuarioControle> {
+public class UsuarioCompositor extends GenericoCompositor<UsuarioControle> {
 
 	/**
 	 * Default Serial
@@ -91,18 +91,24 @@ public class UsuarioCompositor extends SuperCompositor<UsuarioControle> {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	/**
-	 * Método que executa a ação de Salvar Usuário e mostra mensagem de sucesso ou erro após ação
+	 * Método que executa a ação de Desativar Usuário e mostra mensagem de sucesso ou erro após ação.
 	 */
-	public void acaoSalvar() {
+	public void acaoDesativar() {
 		try {
-			boolean resultado = this.getControle().fazerAcao("salvar",
-					(SuperCompositor) this);
+			boolean resultado = super.getControle().fazerAcao("desativar", (SuperCompositor) this);
 			super.mostrarMensagem(resultado);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Método que executa a ação de Listar e mostra mensagem de sucesso ou erro após ação.
+	 */
+	public void acaoEditar() {
+		
 	}
 	
 	/**
