@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import br.ueg.unucet.docscree.annotation.AtributoVisao;
+import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.UsuarioControle;
 import br.ueg.unucet.quid.dominios.Usuario;
 import br.ueg.unucet.quid.enums.PerfilAcessoEnum;

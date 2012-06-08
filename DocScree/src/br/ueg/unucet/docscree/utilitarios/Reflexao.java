@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import br.ueg.unucet.docscree.annotation.AtributoVisao;
+import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.SuperControle;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 
