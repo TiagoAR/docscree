@@ -1,4 +1,4 @@
-package br.ueg.unucet.docscree.annotation;
+package br.ueg.unucet.docscree.anotacao;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

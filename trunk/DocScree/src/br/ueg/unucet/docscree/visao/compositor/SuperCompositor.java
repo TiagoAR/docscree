@@ -7,6 +7,7 @@ import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zkplus.databind.AnnotateDataBinder;
 import org.zkoss.zul.Label;
+import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
@@ -51,6 +52,11 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 * Lista da entidade
 	 */
 	private List<?> listaEntidade;
+	
+	/**
+	 * Lista para preenchimento do ListBox
+	 */
+	private ListModel<?> listModel;
 
 	/**
 	 * Janela de exibição de mensagens de sucesso
@@ -222,6 +228,20 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 */
 	public void setListaEntidade(List<?> listaEntidade) {
 		this.listaEntidade = listaEntidade;
+	}
+
+	/**
+	 * @return o(a) listModel
+	 */
+	public ListModel<?> getListModel() {
+		return listModel;
+	}
+
+	/**
+	 * @param listModel o(a) listModel a ser setado(a)
+	 */
+	public void setListModel(ListModel<?> listModel) {
+		this.listModel = listModel;
 	}
 
 }
