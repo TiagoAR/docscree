@@ -12,12 +12,17 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 
 /**
  * Entidade que representa um projeto dentro do framework.
+ * 
  * @author QUID
- *
+ * 
  */
 @Entity
-@Table(name="projeto")
-public class Projeto extends Identificavel{
+@Table(name = "projeto")
+public class Projeto extends Identificavel {
+	/**
+	 * Nome do projeto
+	 */
+	private String nome;
 	/**
 	 * Modelo base para a o preenchimento do projeto.
 	 */
@@ -33,26 +38,45 @@ public class Projeto extends Identificavel{
 	 */
 	@Enumerated(EnumType.STRING)
 	private StatusEnum status;
-	
-	//GETTERS AND SETTERS
+
+	/**
+	 * @return the nome
+	 */
+	public String getNome() {
+		return nome;
+	}
+
+	/**
+	 * @param nome
+	 *            the nome to set
+	 */
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	// GETTERS AND SETTERS
 	public Modelo getModelo() {
 		return modelo;
 	}
+
 	public void setModelo(Modelo modelo) {
 		this.modelo = modelo;
 	}
+
 	public Equipe getEquipe() {
 		return equipe;
 	}
+
 	public void setEquipe(Equipe equipe) {
 		this.equipe = equipe;
 	}
+
 	public StatusEnum getStatus() {
 		return status;
 	}
+
 	public void setStatus(StatusEnum status) {
 		this.status = status;
 	}
-	
-	
+
 }

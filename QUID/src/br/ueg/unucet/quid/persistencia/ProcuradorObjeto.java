@@ -43,11 +43,25 @@ public class ProcuradorObjeto<T> {
 	 */
 	private List<Criteria> criterias;
 	
+	/**
+	 * Tipo de comparação default usado na criteria
+	 */
+	private String tipoCriteriaDefault;
+	
 	public ProcuradorObjeto(Object objectFinder){
 		this.objectFinder = objectFinder;
 		this.hql = new HQL<T>(objectFinder.getClass());
 		this.mappingClass = ContainerMapeamentoClasse.getInstancia().getMapeamentoClasse(objectFinder.getClass());
 		criterias = new ArrayList<Criteria>();
+		this.tipoCriteriaDefault = null;
+	}
+	
+	public ProcuradorObjeto(Object objectFinder, String tipoCriteriaDefault){
+		this.objectFinder = objectFinder;
+		this.hql = new HQL<T>(objectFinder.getClass());
+		this.mappingClass = ContainerMapeamentoClasse.getInstancia().getMapeamentoClasse(objectFinder.getClass());
+		criterias = new ArrayList<Criteria>();
+		this.tipoCriteriaDefault = tipoCriteriaDefault;
 	}
 	
 	/**
@@ -209,7 +223,12 @@ public class ProcuradorObjeto<T> {
 	 */
 	private void finderField(MappingField mappingField, Object value) {
 		if(mappingField.getFielAncestor() == null){
-			Criteria criteria = new Criteria(aliasTableFather + "." + mappingField.getNameField(), value);
+			Criteria criteria;
+			if (tipoCriteriaDefault != null) {
+				criteria = new Criteria(this.tipoCriteriaDefault, aliasTableFather + "." + mappingField.getNameField(), value);
+			} else {
+				criteria = new Criteria(aliasTableFather + "." + mappingField.getNameField(), value);
+			}
 			criterias.add(criteria);
 		}else{
 			finderFieldAncestor(mappingField, value);
@@ -227,7 +246,12 @@ public class ProcuradorObjeto<T> {
 	 */
 	private void finderFieldAncestor(MappingField mappingField, Object value) {
 		String aliasAncestor = mappingField.getFielAncestor().getNameField();
-		Criteria criteria = new Criteria(Criteria.EQUAL, aliasAncestor.toLowerCase() + "." + mappingField.getNameField(), value);
+		Criteria criteria;
+		if (tipoCriteriaDefault != null) {
+			criteria = new Criteria(tipoCriteriaDefault, aliasAncestor.toLowerCase() + "." + mappingField.getNameField(), value);
+		} else {
+			criteria = new Criteria(Criteria.EQUAL, aliasAncestor.toLowerCase() + "." + mappingField.getNameField(), value);
+		}
 		criterias.add(criteria);
 		while(mappingField.getFielAncestor() != null){
 			mappingField = mappingField.getFielAncestor();
