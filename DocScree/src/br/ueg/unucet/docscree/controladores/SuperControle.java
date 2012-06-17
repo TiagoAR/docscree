@@ -56,21 +56,21 @@ public abstract class SuperControle {
 		try {
 			setMapaAtributos(Reflexao.gerarMapeadorAtributos(pVisao));
 			Class classeRef = this.getClass();
-			if (!preAcao()) {
+			if (!preAcao(pAcao)) {
 				return false;
 			}
 			String nomeAcao = "acao" + pAcao.substring(0, 1).toUpperCase()
 					+ pAcao.substring(1).toLowerCase();
 			Method metodo = classeRef.getMethod(nomeAcao);
 			resultado = (Boolean) metodo.invoke(this);
-			if (!posAcao()) {
+			if (!posAcao(pAcao)) {
 				return false;
 			}
 		} catch (Exception e) {
 			if (this.mensagens.getListaMensagens().isEmpty()) {
-				String mensagemErro = "Erro ao chamar m�todo, contate o administrador do sistema.";
+				String mensagemErro = "Erro ao chamar método, contate o administrador do sistema.";
 				if (e.getMessage() != null && !e.getMessage().isEmpty()) {
-					mensagemErro += "\nExce��o: " + e.getMessage();
+					mensagemErro += "\nExceção: " + e.getMessage();
 				}
 				this.mensagens.getListaMensagens().add(mensagemErro);
 				e.printStackTrace();
@@ -85,7 +85,7 @@ public abstract class SuperControle {
 	 * 
 	 * @return boolean
 	 */
-	protected boolean preAcao() {
+	protected boolean preAcao(String action) {
 		return true;
 	}
 
@@ -94,7 +94,7 @@ public abstract class SuperControle {
 	 * 
 	 * @return boolean
 	 */
-	protected boolean posAcao() {
+	protected boolean posAcao(String action) {
 		return true;
 	}
 

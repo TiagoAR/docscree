@@ -7,7 +7,6 @@ import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zkplus.databind.AnnotateDataBinder;
 import org.zkoss.zul.Label;
-import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
@@ -15,7 +14,6 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import br.ueg.unucet.docscree.controladores.SuperControle;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
-import br.ueg.unucet.quid.extensao.interfaces.IPersistivel;
 
 /**
  * Compositor superior, contém métodos comuns a todos os compositores
@@ -48,15 +46,6 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 * Controlador específico
 	 */
 	public E gControle;
-	/**
-	 * Lista da entidade
-	 */
-	private List<?> listaEntidade;
-	
-	/**
-	 * Lista para preenchimento do ListBox
-	 */
-	private ListModel<?> listModel;
 
 	/**
 	 * Janela de exibição de mensagens de sucesso
@@ -84,7 +73,15 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		this.binder.setLoadOnSave(false);
 		this.binder.loadAll();
 	}
-
+	
+	//verificar se pode tirar
+	/**
+	 * Processa recursivamente os componentes filhos disparando e asscoiando listenner
+	 * e associando os compositores dentro deles.
+	 * 
+	 * @param comp
+	 * @param composer
+	 */
 	protected void processRecursive(Component comp, Object composer) {
 		Selectors.wireComponents(comp, composer, false);
 		Selectors.wireEventListeners(comp, composer);
@@ -95,25 +92,6 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 				processRecursive(vComp, composer);
 			}
 		}
-	}
-
-	/**
-	 * Retorna a classe que representa a entidade.
-	 * 
-	 * @return Class classe da entidade
-	 */
-	public abstract Class getTipoEntidade();
-
-	/**
-	 * Método que cria nova instancia da entidade.
-	 * 
-	 * @return IPersistivel entidade
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	public IPersistivel<?> novaEntidade() throws InstantiationException,
-			IllegalAccessException {
-		return (IPersistivel<?>) getTipoEntidade().newInstance();
 	}
 
 	/**
@@ -214,34 +192,6 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 */
 	protected void setControle(E pControle) {
 		this.gControle = pControle;
-	}
-
-	/**
-	 * @return listaEntidade
-	 */
-	public List<?> getListaEntidade() {
-		return listaEntidade;
-	}
-
-	/**
-	 * @param listaEntidade a ser setado(a)
-	 */
-	public void setListaEntidade(List<?> listaEntidade) {
-		this.listaEntidade = listaEntidade;
-	}
-
-	/**
-	 * @return o(a) listModel
-	 */
-	public ListModel<?> getListModel() {
-		return listModel;
-	}
-
-	/**
-	 * @param listModel o(a) listModel a ser setado(a)
-	 */
-	public void setListModel(ListModel<?> listModel) {
-		this.listModel = listModel;
 	}
 
 }

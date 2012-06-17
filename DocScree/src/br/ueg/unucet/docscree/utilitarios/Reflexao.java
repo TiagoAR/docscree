@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.SuperControle;
+import br.ueg.unucet.docscree.visao.compositor.GenericoCompositor;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 
 /**
@@ -36,15 +37,40 @@ public class Reflexao {
 			throws InstantiationException, IllegalAccessException,
 			NoSuchMethodException, SecurityException, IllegalArgumentException,
 			InvocationTargetException {
+		
+		
+		if (pVisao instanceof GenericoCompositor<?>) {
+			Object entidade = ((GenericoCompositor) pVisao).novaEntidade();
+			return gerarMapeador(true, entidade, pVisao);
+		} else {
+			return gerarMapeador(false, null, pVisao);
+		}
+		
+		
+	}
+	
+	/**
+	 * Método que gera o HashMap dos atributos, verificando se tem geração de entidades persistíveis ou não.
+	 * 
+	 * @param temEntidade
+	 * @param entidade
+	 * @param pVisao
+	 * @return mapeador mapa dos atributos
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
+	private static HashMap<String, Object> gerarMapeador(boolean temEntidade, Object entidade, SuperCompositor<SuperControle> pVisao) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		HashMap<String, Object> mapeador = new HashMap<String, Object>();
-		Object entidade = pVisao.novaEntidade();
 		for (Class classeRefletida = pVisao.getClass(); classeRefletida != null; classeRefletida = classeRefletida
 				.getSuperclass()) {
 			for (Field campo : classeRefletida.getDeclaredFields()) {
 				if (campo.isAnnotationPresent(AtributoVisao.class)) {
 					AtributoVisao anotacao = campo
 							.getAnnotation(AtributoVisao.class);
-					if (anotacao.isCampoEntidade()) {
+					if (temEntidade && anotacao.isCampoEntidade()) {
 						setValorObjeto(anotacao.nome(), campo.getType(),
 								getValorObjeto(pVisao, campo.getName()),
 								entidade);
