@@ -2,6 +2,7 @@ package br.ueg.unucet.docscree.controladores;
 
 import java.util.List;
 
+import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.extensao.dominios.Persistivel;
 
 /**
@@ -11,8 +12,8 @@ import br.ueg.unucet.quid.extensao.dominios.Persistivel;
  *
  * @param <E>
  */
-@SuppressWarnings("unchecked")
-public class GenericoControle<E extends Persistivel> extends SuperControle {
+@SuppressWarnings({"unchecked", "rawtypes"})
+public abstract class GenericoControle<E extends Persistivel> extends SuperControle {
 
 
 	
@@ -43,4 +44,11 @@ public class GenericoControle<E extends Persistivel> extends SuperControle {
 	public void setLista(List<?> lista) {
 		this.lista = lista;
 	}
+
+	/**
+	 * Método que mapeia a entidade selecionada aos campos da visão.
+	 * 
+	 * @param pVisao
+	 */
+	public abstract void setarEntidadeVisao(SuperCompositor pVisao);
 }

@@ -11,27 +11,31 @@
 				<column width="170px" />
 				<column width="300px" />
 			</columns>
-			<rows >
+			<rows>
 				<row>
 					<label value="Nome:" />
 					<textbox value="@{controller.fldNome}" />
 				</row>
 				<row>
 					<label value="E-mail:" />
-					<textbox value="@{controller.fldEmail}"/>
+					<textbox value="@{controller.fldEmail}" />
 				</row>
 				<row>
 					<label value="Senha:" />
-					<textbox value="@{controller.fldSenha }" type="password" />
+					<textbox value="@{controller.fldSenha }"
+						type="password" />
 				</row>
 				<row>
 					<label value="Confirmar Senha:" />
-					<textbox value="@{controller.fldConfirmarSenha }" type="password" />
+					<textbox value="@{controller.fldConfirmarSenha }"
+						type="password" />
 				</row>
 				<row>
 					<label value="Perfil de Usuário:" />
-					<combobox selectedItem="@{controller.fldPerfilAcesso }" model="@{ controller.listaPerfil}">
-						
+					<combobox
+						selectedItem="@{controller.fldPerfilAcesso }"
+						model="@{ controller.listaPerfil}">
+
 					</combobox>
 				</row>
 				<row>
@@ -41,8 +45,66 @@
 			</rows>
 		</grid>
 		<separator />
-		<button label="Salvar" onClick="controller.acaoSalvar()"/>
-		<button label="Listar" onClick="controller.acaoListar()"/>
+		<button label="Salvar" onClick="controller.acaoSalvar()" />
+		<button label="Listar" onClick="controller.acaoListar()" />
 		<button label="Cancelar" />
+
+		<window title="Lista de Usuários" border="normal" closable="false"
+			mode="modal" width="750px" visible="false" id="windowMensagens">
+			<listbox pagingPosition="bottom" mold="paging" pageSize="5"
+				model="@{controller.listaEntidade }" selectedItem="@{controller.entidade }">
+				<auxhead>
+					<auxheader>
+						<textbox value="@{controller.filtroCodigo }" onChange="controller.acaoFiltrar()" instant="true"/>
+					</auxheader>
+					<auxheader>
+						<textbox value="@{controller.filtroNome }" onChange="controller.acaoFiltrar()" instant="true"/>
+					</auxheader>
+					<auxheader>
+						<textbox value="@{controller.filtroEmail }" onChange="controller.acaoFiltrar()" instant="true"/>
+					</auxheader>
+					<auxheader>
+						<textbox value="@{controller.filtroPerfil }" onChange="controller.acaoFiltrar()" instant="true"/>
+					</auxheader>
+					<auxheader colspan="3"></auxheader>
+				</auxhead>
+				<listhead>
+					<listheader label="Código" />
+					<listheader label="Nome" />
+					<listheader label="E-mail" />
+					<listheader label="Perfil de Acesso" />
+					<listheader label="Status" />
+					<listheader />
+					<listheader />
+				</listhead>
+				<listitem self="@{each=item }" value="@{item}">
+					<listcell label="@{item.codigo }" />
+					<listcell label="@{item.nome }" />
+					<listcell label="@{item.email }" />
+					<listcell label="@{item.perfilAcesso }" />
+					<listcell label="@{item.status }" />
+					<listcell>
+						<button label="Editar" > 
+							<attribute name="onClick">
+								self.getParent().getParent().setSelected(true);
+								controller.acaoEditar();
+							</attribute>
+						</button>
+					</listcell>
+					<listcell>
+						<button label="Desativar" >
+							<attribute name="onClick">
+								self.getParent().getParent().setSelected(true);
+								controller.acaoDesativar();
+							</attribute>
+						</button>
+					</listcell>
+				</listitem>
+			</listbox>
+			<checkbox label="Exibir usuários inativos"  checked="@{controler.exibirInativos }" onClick="controller.verificarExibicaoInativos()" />
+
+			<button label="X" onClick="controller.fecharModalLista()" />
+		</window>
 	</groupbox>
+
 </zk>

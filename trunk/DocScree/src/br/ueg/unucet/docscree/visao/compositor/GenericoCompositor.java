@@ -1,13 +1,17 @@
 package br.ueg.unucet.docscree.visao.compositor;
 
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zul.Div;
-import org.zkoss.zul.Listbox;
-import org.zkoss.zul.Listhead;
-import org.zkoss.zul.Listheader;
-import org.zkoss.zul.Window;
+import java.util.List;
 
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zkplus.databind.BindingListModelListModel;
+import org.zkoss.zul.ListModel;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.SimpleListModel;
+
+import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.GenericoControle;
+import br.ueg.unucet.quid.extensao.dominios.Persistivel;
+import br.ueg.unucet.quid.extensao.interfaces.IPersistivel;
 
 /**
  * Compositor Genérico, contém métodos comuns a todos compositores que são caso de uso tipo CRUD.
@@ -24,21 +28,41 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	protected Window modalLista = null;
+	@AtributoVisao(isCampoEntidade = true, nome= "codigo", nomeCampoBundle="codigo")
+	protected Long codigo = null;
+	
+	protected List<?> listaEntidade;
+	
+	protected boolean listando = false;
+	
+	protected Persistivel entidade;
 
 	/**
-	 * Método que retorna chave primária
+	 * Retorna a classe que representa a entidade.
 	 * 
-	 * @return Object PK
+	 * @return Class classe da entidade
 	 */
-	public abstract Object getPrimaryKey();
+	public abstract Class getTipoEntidade();
+	
+	/**
+	 * Método que limpa os campos da tela.
+	 * 
+	 */
+	protected abstract void limparCampos();
+	
+	protected abstract void limparFiltros();
 
 	/**
-	 * Método que seta a chave primária
+	 * Método que cria nova instancia da entidade.
 	 * 
-	 * @param primaryKey
+	 * @return IPersistivel entidade
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
 	 */
-	public abstract void setPrimaryKey(Object primaryKey);
+	public IPersistivel<?> novaEntidade() throws InstantiationException,
+			IllegalAccessException {
+		return (IPersistivel<?>) getTipoEntidade().newInstance();
+	}
 
 	/**
 	 * Método que executa a ação de Salvar Usuário e mostra mensagem de sucesso ou erro após ação
@@ -47,6 +71,9 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 		try {
 			boolean resultado = super.getControle().fazerAcao("salvar",
 					(SuperCompositor) this);
+			if (resultado) {
+				limparCampos();
+			}
 			super.mostrarMensagem(resultado);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,12 +85,92 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	 */
 	public void acaoListar() {
 		try {
+			limparFiltros();
 			boolean resultado = super.getControle().fazerAcao("listar", (SuperCompositor) this);
 			this.setListaEntidade(super.getControle().getLista());
+			List<Component> listaChildren = super.component.getChildren();
+			//super.component.getFellow(id)
+			//getFellow
+			for (Component componente : listaChildren) {
+				if (componente.getId().equalsIgnoreCase("windowMensagens")) {
+					componente.setVisible(true);
+					Listbox listbox = (Listbox) componente.getFirstChild();
+					ListModel listModel = new BindingListModelListModel(new SimpleListModel(super.getControle().getLista()));
+					listbox.setModel(listModel);
+					break;
+				}
+			}
 			super.mostrarMensagem(resultado);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void fecharModalLista() {
+		List<Component> listaChildren = super.component.getChildren();
+		for (Component componente : listaChildren) {
+			if (componente.getId().equalsIgnoreCase("windowMensagens")) {
+				componente.setVisible(false);
+				break;
+			}
+		}
+		limparFiltros();
+	}
+
+	/**
+	 * @return o(a) listaEntidade
+	 */
+	public List<?> getListaEntidade() {
+		return listaEntidade;
+	}
+
+	/**
+	 * @param listaEntidade o(a) listaEntidade a ser setado(a)
+	 */
+	public void setListaEntidade(List<?> listaEntidade) {
+		this.listaEntidade = listaEntidade;
+	}
+
+	/**
+	 * @return o(a) listando
+	 */
+	public boolean isListando() {
+		return listando;
+	}
+
+	/**
+	 * @param listando o(a) listando a ser setado(a)
+	 */
+	public void setListando(boolean listando) {
+		this.listando = listando;
+	}
+
+	/**
+	 * @return o(a) entidade
+	 */
+	public Persistivel getEntidade() {
+		return entidade;
+	}
+
+	/**
+	 * @param entidade o(a) entidade a ser setado(a)
+	 */
+	public void setEntidade(Persistivel entidade) {
+		this.entidade = entidade;
+	}
+
+	/**
+	 * @return o(a) codigo
+	 */
+	public Long getCodigo() {
+		return codigo;
+	}
+
+	/**
+	 * @param codigo o(a) codigo a ser setado(a)
+	 */
+	public void setCodigo(Long codigo) {
+		this.codigo = codigo;
 	}
 	
 	/**
@@ -73,7 +180,7 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	 * @param botoes Contém label dos botões
 	 * @param colunas Contém label das colunas
 	 * @param checkBoxAtivo se deve aparecer checkBox de exibição de entidades ativos.
-	 */
+	 *//*
 	protected void criarModalLista(String titulo, String[] botoes, String[] colunas, boolean checkBoxAtivo) {
 		this.modalLista.setId("modalList");
 		this.modalLista.setTitle(titulo);
@@ -100,6 +207,7 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 		listbox.setParent(pai);
 		//listbox.appendChild(criarAuxHead());
 		listbox.appendChild(criarListHead(listbox, botoes, colunas));
+		listbox.appendChild(criarListItem(listbox, colunas));
 		return listbox;
 	}
 	
@@ -122,20 +230,15 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 		listheader.setLabel(coluna);
 		return listheader;
 	}
-
-	/**
-	 * @return o(a) modalLista
-	 */
-	public Window getModalLista() {
-		return modalLista;
-	}
-
-	/**
-	 * @param modalLista o(a) modalLista a ser setado(a)
-	 */
-	public void setModalLista(Window modalLista) {
-		this.modalLista = modalLista;
-	}
+	
+	protected Listitem criarListItem(Component pai, String[] colunas) {
+		Listitem listitem = new Listitem();
+		listitem.setValue("@{each}");
+		
+		return listitem;
+	}*/
+	
+	
 	
 	
 

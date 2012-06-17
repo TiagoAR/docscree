@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page title="DocScree - Efetuar Login" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:n="native">
+	<style src="/css/style.css" />
+	<div align="center" style="vertical-align: middle;">
+		<window title="Efetuar Login" border="normal" width="50%" apply="${usuarioCompositor}" closable="false">
+			<grid sizedByContent="true" style="border: none;">
+				<columns>
+					<column width="170px" />
+					<column width="300px" />
+				</columns>
+				<rows>
+					<row>
+						<label value="E-mail:" />
+						<textbox value="@{controller.fldEmail}" />
+					</row>
+					<row>
+						<label value="Senha:" />
+						<textbox value="@{controller.fldSenha }"
+							type="password" />
+					</row>
+				</rows>
+			</grid>
+			<separator />
+			<button label="Entrar" onClick="controller.acaoLogar()" />
+		</window>
+	</div>
+</zk>

@@ -58,4 +58,19 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>index.zul</welcome-file>
   </welcome-file-list>
+  <filter>
+  	<filter-name>Filtro Login</filter-name>
+  	<filter-class>br.ueg.unucet.docscree.utilitarios.FiltroLogin</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>Filtro Login</filter-name>
+    <url-pattern>/pages/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+  <session-config>
+    <session-timeout>15</session-timeout>
+  </session-config>
 </web-app>
