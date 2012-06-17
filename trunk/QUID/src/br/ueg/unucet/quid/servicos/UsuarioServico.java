@@ -44,10 +44,10 @@ public class UsuarioServico extends GenericoServico<Usuario> implements IUsuario
 	@Override
 	public Retorno<String, Collection<Usuario>> pesquisar(Usuario usuario) {
 		Retorno<String, Collection<Usuario>> retorno = new Retorno<String, Collection<Usuario>>();
-		Collection<Usuario> lista = this.usuarioControle.pesquisarPorRestricao(usuario, new String[]{"usuario.codigo","usuario.nome", "usuario.email", "usuario.status", "usuario.perfilAcesso"});
+		Collection<Usuario> lista = this.usuarioControle.pesquisarPorRestricao(usuario, new String[]{"usuario.codigo","usuario.senha","usuario.nome", "usuario.email", "usuario.status", "usuario.perfilAcesso"});
 		if(lista == null || lista.isEmpty()){
 			retorno.setSucesso(false);
-			retorno.setMensagem(propertiesMensagensUtil.getValor("laista_vazia"));
+			retorno.setMensagem(propertiesMensagensUtil.getValor("lista_vazia"));
 			retorno.setTipoErro(TipoErroEnum.INFORMATIVO);
 			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA, lista);
 		}else{
@@ -68,6 +68,7 @@ public class UsuarioServico extends GenericoServico<Usuario> implements IUsuario
 		Retorno<String, Collection<String>> retorno = new Retorno<String, Collection<String>>();
 		try {
 			this.usuarioControle.alterar(usuario);
+			retorno.setSucesso(true);
 		} catch (QuidExcessao e) {
 			retorno = (Retorno<String, Collection<String>>) construirRetornoErro(e, TipoErroEnum.ERRO_SIMPLES, retorno);
 			if(UsuarioServico.class.isInstance(e)){

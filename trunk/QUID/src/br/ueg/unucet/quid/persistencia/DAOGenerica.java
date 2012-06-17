@@ -73,7 +73,7 @@ public class DAOGenerica<T, oid> implements IDAO<T, oid>{
 	 */
 	@Override
 	public List<T> pesquisarPorRestricao(T entidade, String... colunas) {
-		ProcuradorObjeto<T> procurador = new ProcuradorObjeto<T>(entidade);
+		ProcuradorObjeto<T> procurador = new ProcuradorObjeto<T>(entidade, Criteria.EQUAL);
 		List<T> list = null;
 		try {
 			list = procurador.getByFinder(this, colunas);

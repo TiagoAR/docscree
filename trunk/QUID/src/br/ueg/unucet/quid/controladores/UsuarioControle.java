@@ -49,6 +49,9 @@ public class UsuarioControle extends GenericControle<Usuario, Long> implements I
 		if(usuario.getSenha() == null || usuario.getSenha().equals("")){
 			camposNaoInformados.add("senha");
 		}
+		if(usuario.getEmail() == null || usuario.getEmail().equals("")){
+			camposNaoInformados.add("e-mail");
+		}
 		if(usuario.getPerfilAcesso() == null){
 			camposNaoInformados.add("Nivel de Acesso");
 		}
@@ -62,7 +65,9 @@ public class UsuarioControle extends GenericControle<Usuario, Long> implements I
 	 */
 	public boolean antesInserir(Usuario usuario) throws QuidExcessao{
 		verificarCamposObrigatorios(usuario);
-		verificarCadastroDuplicado(usuario);
+		Usuario usuarioAnalise = new Usuario();
+		usuarioAnalise.setEmail(usuario.getEmail());
+		verificarCadastroDuplicado(usuarioAnalise);
 		return true;
 	}
 
@@ -73,7 +78,7 @@ public class UsuarioControle extends GenericControle<Usuario, Long> implements I
 	 * @throws UsuarioExcessao Excessao caso o usuario ja esteje cadastrado no framework.
 	 */
 	private void verificarCadastroDuplicado(Usuario usuario) throws UsuarioExcessao {
-		if(isCadastrada(usuario, new String[]{"usuario.codigo", "usuario.nome"} )){
+		if(isCadastrada(usuario, new String[]{"usuario.codigo", "usuario.email"} )){
 			throw new UsuarioExcessao(propertiesMessagesUtil.getValor("usuario_cadastrado"));
 		}
 		
