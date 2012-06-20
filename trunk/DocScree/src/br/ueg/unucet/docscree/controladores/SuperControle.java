@@ -6,6 +6,7 @@ import java.util.HashMap;
 import br.ueg.unucet.docscree.utilitarios.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
+import br.ueg.unucet.quid.dominios.Usuario;
 import br.ueg.unucet.quid.interfaces.IQUID;
 import br.ueg.unucet.quid.servicos.QuidService;
 
@@ -55,6 +56,7 @@ public abstract class SuperControle {
 		boolean resultado = false;
 		try {
 			setMapaAtributos(Reflexao.gerarMapeadorAtributos(pVisao));
+			getMapaAtributos().put("usuarioLogado", (Usuario) pVisao.getUsuarioSessao());
 			Class classeRef = this.getClass();
 			if (!preAcao(pAcao)) {
 				return false;

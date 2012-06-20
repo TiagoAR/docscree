@@ -7,13 +7,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zkplus.databind.BindingListModelListModel;
-import org.zkoss.zul.ListModel;
-import org.zkoss.zul.Listbox;
 import org.zkoss.zul.SimpleListModel;
 
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.UsuarioControle;
-import br.ueg.unucet.docscree.visao.ILogar;
+import br.ueg.unucet.docscree.interfaces.ILogar;
 import br.ueg.unucet.quid.dominios.Usuario;
 import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
 import br.ueg.unucet.quid.extensao.enums.StatusEnum;
@@ -28,7 +26,8 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Component
 @Scope("session")
-public class UsuarioCompositor extends GenericoCompositor<UsuarioControle> implements ILogar {
+public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
+		implements ILogar {
 
 	/**
 	 * Default Serial
@@ -74,7 +73,7 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle> imple
 	private String filtroNome = "";
 	private String filtroEmail = "";
 	private String filtroPerfil = "";
-	
+
 	private Boolean exibirInativos = new Boolean(false);
 
 	/*
@@ -105,49 +104,36 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle> imple
 		setFldStatus(Boolean.TRUE);
 		super.binder.loadAll();
 	}
-	
+
 	@Override
 	protected void limparFiltros() {
 		setFiltroCodigo("");
 		setFiltroEmail("");
 		setFiltroNome("");
 		setFiltroPerfil("");
-		
+
 		super.binder.loadAll();
 	}
 
 	/**
-	 * Método que executa a ação de Desativar Usuário e mostra mensagem de
-	 * sucesso ou erro após ação.
+	 * Atualiza lista de entidade mudando o atributo status da entidade para inativo
+	 * 
+	 * @param index indíce da entidade
 	 */
-	public void acaoDesativar() {
-		try {
-			super.binder.saveAll();
-			super.getControle().setarEntidadeVisao(this);
-			int index = super.getListaEntidade().indexOf(super.getEntidade());
-			setFldStatus(Boolean.FALSE);
-			super.getControle().fazerAcao("salvar", (SuperCompositor) this);
-			((Usuario) super.getListaEntidade().get(index)).setStatus(StatusEnum.INATIVO);
-			acaoFiltrar();
-			super.binder.loadAll();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Método que executa a ação de Listar e mostra mensagem de sucesso ou erro
-	 * após ação.
-	 */
-	public void acaoEditar() {
-		super.binder.saveAll();
-		super.getControle().setarEntidadeVisao(this);
-		super.fecharModalLista();
+	@Override
+	protected void atualizarEntidadeExcluida(int index) {
+		((Usuario)this.getListaEntidade().get(index)).setStatus(StatusEnum.INATIVO);
+		acaoFiltrar();
 		super.binder.loadAll();
 	}
 
+	/**
+	 * @see br.ueg.unucet.docscree.visao.compositor.GenericoCompositor#acaoFiltrar()
+	 */
+	@Override
 	public void acaoFiltrar() {
 		List<Usuario> listaUsuarios = new ArrayList<Usuario>();
+		super.binder.saveAll();
 		for (Object objeto : super.getListaEntidade()) {
 			Usuario usuario = (Usuario) objeto;
 			if (usuario.getCodigo().toString().trim().toLowerCase()
@@ -159,32 +145,19 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle> imple
 					&& usuario.getPerfilAcesso().toString().trim()
 							.toLowerCase()
 							.contains(getFiltroPerfil().trim().toLowerCase())) {
+				if (getExibirInativos() 
+					|| usuario.getStatus().toString().toLowerCase()
+							.equals("ativo"))
 				listaUsuarios.add(usuario);
 			}
 		}
-		List<org.zkoss.zk.ui.Component> listaChildren = super.component.getChildren();
-		for (org.zkoss.zk.ui.Component componente : listaChildren) {
-			if (componente.getId().equalsIgnoreCase("windowMensagens")) {
-				Listbox listbox = (Listbox) componente.getFirstChild();
-				ListModel listModel = new BindingListModelListModel<Usuario>(new SimpleListModel<Usuario>(listaUsuarios));
-				listbox.setModel(listModel);
-				break;
-			}
-		}
+		super.setListaEntidadeModelo(new BindingListModelListModel<Usuario>(
+				new SimpleListModel<Usuario>(listaUsuarios)));
+		super.binder.loadAll();
 	}
-	
-	/* (non-Javadoc)
-	 * @see br.ueg.unucet.docscree.visao.compositor.GenericoCompositor#acaoListar()
-	 */
-	@Override
-	public void acaoListar() {
-		super.acaoListar();
-		setExibirInativos(!getExibirInativos());
-		verificarExibicaoInativos();
-	}
-	
+
 	/**
-	 * @see br.ueg.unucet.docscree.visao.ILogar#acaoLogar()
+	 * @see br.ueg.unucet.docscree.interfaces.ILogar#acaoLogar()
 	 */
 	@Override
 	public void acaoLogar() {
@@ -193,11 +166,14 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle> imple
 		setFldPerfilAcesso(null);
 		setFldStatus(Boolean.TRUE);
 		try {
-			boolean resultado = super.getControle().fazerAcao("logar", (SuperCompositor) this);
+			boolean resultado = super.getControle().fazerAcao("logar",
+					(SuperCompositor) this);
 			if (resultado) {
 				setFldEmail(null);
 				setFldSenha(null);
 				this.salvarSessaoUsuario(super.getControle().getUsuarioLogado());
+			} else {
+				super.mostrarMensagem(resultado);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -206,43 +182,13 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle> imple
 	}
 
 	/**
-	 * @see br.ueg.unucet.docscree.visao.ILogar#salvarSessaoUsuario(Usuario usuario)
+	 * @see br.ueg.unucet.docscree.interfaces.ILogar#salvarSessaoUsuario(Usuario
+	 *      usuario)
 	 */
 	@Override
 	public void salvarSessaoUsuario(Usuario usuario) {
 		Executions.getCurrent().getSession().setAttribute("usuario", usuario);
 		Executions.sendRedirect("pages/usuario.zul");
-	}
-	
-	/**
-	 * Método que verifica se é para exibir os usuários inativos ou não, caso positivo
-	 * percorre a lista de usuários e adiciona a janela de listagem, caso contrário os remove.
-	 * 
-	 */
-	public void verificarExibicaoInativos() {
-		List<Usuario> listaUsuarios = new ArrayList<Usuario>();
-		//fazer savelAll em vez de troca de parametros
-		setExibirInativos(!getExibirInativos());
-		if (!getExibirInativos()) {
-			for (Object objeto : super.getListaEntidade()) {
-				Usuario usuario = (Usuario) objeto;
-				if (usuario.getStatus().equals(StatusEnum.ATIVO)) {
-					listaUsuarios.add(usuario);
-				}
-			}
-		} else {
-			listaUsuarios = (List<Usuario>) super.getListaEntidade();
-		}
-		List<org.zkoss.zk.ui.Component> listaChildren = super.component.getChildren();
-		for (org.zkoss.zk.ui.Component componente : listaChildren) {
-			if (componente.getId().equalsIgnoreCase("windowMensagens")) {
-				Listbox listbox = (Listbox) componente.getFirstChild();
-				ListModel listModel = new BindingListModelListModel<Usuario>(new SimpleListModel<Usuario>(listaUsuarios));
-				listbox.removeAttribute("model");
-				listbox.setModel(listModel);
-				break;
-			}
-		}
 	}
 
 	/**
@@ -418,7 +364,8 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle> imple
 	}
 
 	/**
-	 * @param exibirInativos o(a) exibirInativos a ser setado(a)
+	 * @param exibirInativos
+	 *            o(a) exibirInativos a ser setado(a)
 	 */
 	public void setExibirInativos(Boolean exibirInativos) {
 		this.exibirInativos = exibirInativos;

@@ -3,11 +3,16 @@ package br.ueg.unucet.docscree.visao.compositor;
 import java.util.List;
 
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.SerializableEventListener;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zkplus.databind.AnnotateDataBinder;
+import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Timer;
 import org.zkoss.zul.Window;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
@@ -40,7 +45,7 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	/**
 	 * Representa o componente, associado ao apply do componente.
 	 */
-	protected Component component;
+	private Component component;
 
 	/**
 	 * Controlador específico
@@ -65,7 +70,7 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
 		processRecursive(comp, this);
-		comp.setAttribute("controller", this, true);
+		comp.setAttribute("gerenciador", this, true);
 
 		this.component = comp;
 
@@ -118,58 +123,45 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		return this.gControle;
 	}
 	
+	public Object getUsuarioSessao() {
+		return Executions.getCurrent().getSession().getAttribute("usuario");
+	}
+	
 	/**
 	 * Método que gera a mensagem de Erro, varre a lista de mensagens e a joga na visão.
 	 * 
 	 */
-	protected void gerarMensagemErro() {
-		String mensagem = "";
+	protected void gerarMensagemErro(Window mensagens) {
+		String caminhoImagem = "/imagens/ico_warning_48.png";
+		if (getControle().getMensagens().getTipoMensagem() == TipoMensagem.ERRO) {
+			caminhoImagem = "/imagens/ico_block_48.png";
+		}
+		Image image = new Image(caminhoImagem);
+		image.setParent(mensagens);
+		image.setStyle("float: left;");
+		mensagens.appendChild(image);
 		List<String> listaMensagens = getControle().getMensagens()
 				.getListaMensagens();
-		for (int i = 0; i < listaMensagens.size() - 1; i++) {
-			mensagem += listaMensagens.get(i) + "\n";
+		for (int i = 0; i < listaMensagens.size(); i++) {
+			Label label = new Label(listaMensagens.get(i));
+			label.setStyle("display: block;");
+			label.setParent(mensagens);
+			mensagens.appendChild(label);
 		}
-		mensagem += listaMensagens.get(listaMensagens.size() - 1);
-		String tipoMessagebox = Messagebox.INFORMATION;
-		if (getControle().getMensagens().getTipoMensagem() == TipoMensagem.ERRO) {
-			tipoMessagebox = Messagebox.ERROR;
-		}
-		Messagebox.show(mensagem, getControle().getMensagens()
-				.getTipoMensagem().getDescricao(), Messagebox.OK,
-				tipoMessagebox);
 	}
 	
 	/**
 	 * Método que instancia janela de mensagens de sucesso e a mostra.
 	 * 
 	 */
-	protected void gerarMensagemSucesso() {
-		this.component.getChildren();
-		for (Component window : this.component.getParent().getChildren()) {
-			if (window.getId().equalsIgnoreCase("teste")) {
-				this.modalSucesso = (Window) window;
-				break;
-			}
-		}
-		Label mensagemSucesso = new Label("Deu certo e vai fica certo!!!!");
-		mensagemSucesso.setId("labelTeste");
-	/*	ThreadVisibilidade teste = new ThreadVisibilidade();
-		teste.run();*/
-//		this.modalSucesso = new Window();
-		this.modalSucesso.removeChild(mensagemSucesso);
-		this.modalSucesso.appendChild(mensagemSucesso);
-		this.modalSucesso.setVisible(true);
-	//	this.component.getParent().
-//		this.component.getParent().appendChild(this.modalSucesso);
-//		this.modalSucesso = new Window();
-//		this.modalSucesso.setBorder(true);
-//		this.modalSucesso.setZIndex(99);
-//		this.modalSucesso.setStyle("float: right; text-align: right;");
-//		this.modalSucesso.setWidth("300px");
-////		this.modalSucesso.doModal();
-//		this.modalSucesso.setVisible(true);
-//		this.component.appendChild(modalSucesso);
-		System.out.println("Deu Certo!");
+	protected void gerarMensagemSucesso(Window mensagens) {
+		Image image = new Image("/imagens/ico_success_48.png");
+		image.setParent(mensagens);
+		image.setStyle("float: left;");
+		Label label = new Label("Ação Executada!");
+		label.setParent(mensagens);
+		mensagens.appendChild(image);
+		mensagens.appendChild(label);
 	}
 	
 	/**
@@ -178,11 +170,55 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 * @param pResultado o resultado da ação
 	 */
 	protected void mostrarMensagem(boolean pResultado) {
+		Window mensagens = this.gerarWindowMensagem();
 		if (pResultado) {
-			gerarMensagemSucesso();
+			gerarMensagemSucesso(mensagens);
 		} else {
-			gerarMensagemErro();
+			gerarMensagemErro(mensagens);
 		}
+	}
+	
+	/**
+	 * Método que gerar a Window de mensagens, verificando se já existe um e a fechando e
+	 * criando uma nova.
+	 * 
+	 * @return Window de mensagens
+	 */
+	private Window gerarWindowMensagem() {
+		Window mensagens;
+		if (this.getComponent().hasFellow("windowAvisos")) {
+			mensagens = (Window) this.getComponent().getFellow("windowAvisos");
+			mensagens.detach();
+		}
+		mensagens = new Window();
+		
+		this.aplicarTimerFechamento(mensagens);
+		
+		mensagens.setId("windowAvisos");		
+
+		mensagens.setParent(this.getComponent());
+		mensagens.setPosition("top, right");
+		mensagens.setVisible(true);
+		mensagens.doOverlapped();
+		return mensagens;
+	}
+	
+	/**
+	 * Método que aplica Timer para fechar a janela em 4,5 segundos.
+	 * 
+	 * @param mensagens
+	 */
+	private void aplicarTimerFechamento(Window mensagens) {
+		Timer t = new Timer();
+		t.setDelay(4500);
+		t.setParent(mensagens);
+		t.addEventListener("onTimer",new SerializableEventListener() {
+			private static final long serialVersionUID = 7868086951980855931L;
+			public void onEvent(Event event) throws Exception {
+            	event.getTarget().getParent().setVisible(false); 
+            	event.getTarget().getParent().detach();
+            }
+		});
 	}
 
 	/**
@@ -192,6 +228,20 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 */
 	protected void setControle(E pControle) {
 		this.gControle = pControle;
+	}
+
+	/**
+	 * @return o(a) component
+	 */
+	protected Component getComponent() {
+		return component;
+	}
+
+	/**
+	 * @param component o(a) component a ser setado(a)
+	 */
+	protected void setComponent(Component component) {
+		this.component = component;
 	}
 
 }

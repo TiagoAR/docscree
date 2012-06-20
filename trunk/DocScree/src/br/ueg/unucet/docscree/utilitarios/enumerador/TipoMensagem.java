@@ -71,24 +71,10 @@ public enum TipoMensagem {
 	}
 
 	/**
-	 * @param id o id a ser setado
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	/**
 	 * @return a descricao
 	 */
 	public String getDescricao() {
 		return descricao;
-	}
-
-	/**
-	 * @param descricao a descricao a ser setada
-	 */
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
 	}
 
 }
