@@ -18,26 +18,11 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
  * Controlador específico de Usuários
  * 
  * @author Diego
- *
+ * 
  */
-@SuppressWarnings("rawtypes")
 public class UsuarioControle extends GenericoControle<Usuario> {
-	
-	private Usuario usuarioLogado = null;
 
-	@Override
-	public void setarEntidadeVisao(SuperCompositor pVisao) {
-		UsuarioCompositor visao = (UsuarioCompositor) pVisao;
-		Usuario usuarioSelecionado = (Usuario) visao.getEntidade();
-		visao.setCodigo(usuarioSelecionado.getCodigo());
-		visao.setFldSenha(usuarioSelecionado.getSenha());
-		visao.setFldNome(usuarioSelecionado.getNome());
-		boolean ativo = usuarioSelecionado.getStatus().equals(StatusEnum.ATIVO);
-		visao.setFldStatus(ativo);
-		visao.setFldConfirmarSenha(usuarioSelecionado.getSenha());
-		visao.setFldEmail(usuarioSelecionado.getEmail());
-		visao.setFldPerfilAcesso(usuarioSelecionado.getPerfilAcesso().toString());
-	}
+	private Usuario usuarioLogado = null;
 
 	/**
 	 * Método sobrescrito para validar os dados a serem preenchidos do usuário
@@ -48,7 +33,8 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 	@Override
 	protected boolean preAcao(String action) {
 		boolean retorno = true;
-		if (action.equalsIgnoreCase("salvar")) {
+		if (action.equalsIgnoreCase("salvar")
+				|| action.equalsIgnoreCase("excluir")) {
 			try {
 				getEntidade().setPerfilAcesso(
 						Conversor.castParaEnum(
@@ -91,63 +77,141 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 	 * 
 	 * @return boolean se ação foi executada
 	 */
+	@Override
 	public boolean acaoSalvar() {
-		Retorno<String, Collection<String>> retorno;
-		if (super.getEntidade().getCodigo() == null) {
-		retorno = super.getFramework()
-				.inserirUsuario(super.getEntidade());
+		if (!super.isUsuarioComum() || ((Usuario) super.getMapaAtributos().get("usuarioLogado")).getCodigo().equals(super.getEntidade().getCodigo())) {
+			Retorno<String, Collection<String>> retorno;
+			if (super.getEntidade().getCodigo() == null) {
+				retorno = super.getFramework().inserirUsuario(super.getEntidade());
+			} else {
+				retorno = super.getFramework().alterarUsuario(super.getEntidade());
+			}
+			if (retorno.isSucesso()) {
+				return true;
+			} else {
+				montarMensagemErro(retorno);
+				return false;
+			}
 		} else {
-			retorno = super.getFramework()
-					.alterarUsuario(super.getEntidade());
+			montarMensagemErroPermissao("Usuário");
+			return false;
 		}
-		if (retorno.isSucesso()) {
-			return true;
+	}
+
+	@Override
+	public boolean acaoListar() {
+		if (!isUsuarioComum()) {
+			Retorno<String, Collection<Usuario>> retorno = super.getFramework()
+					.pesquisarUsuario(new Usuario());
+			if (retorno.isSucesso()) {
+				Collection<Usuario> listaUsuario = retorno.getParametros().get(
+						Retorno.PARAMERTO_LISTA);
+				super.setLista(new ArrayList<Usuario>(listaUsuario));
+				return true;
+			} else {
+				super.mensagens.getListaMensagens().add(retorno.getMensagem());
+				return false;
+			}
 		} else {
-			String mensagemErro;
-			Throwable erro = retorno.getErro();
-			mensagemErro = erro.getMessage();
-			if (erro instanceof UsuarioExcessao) {
-				if (((UsuarioExcessao) erro).getAtributosNaoInformados() != null) {
-					Iterator<String> iterador = ((UsuarioExcessao) erro)
-							.getAtributosNaoInformados().iterator();
-					if (iterador.hasNext()) {
-						mensagemErro += ": " + iterador.next();
-					}
-					while (iterador.hasNext()) {
-						String campoNaoInformado = (String) iterador.next();
-						mensagemErro += ", " + campoNaoInformado;
-					}
+			montarMensagemErroPermissao("Usuário");
+			return false;
+		}
+	}
+
+	@Override
+	public boolean acaoExcluir() {
+		if (!isUsuarioComum()) {
+			Retorno<String, Collection<String>> retorno;
+			Usuario usuarioInativar = super.getEntidade();
+			usuarioInativar.setStatus(StatusEnum.INATIVO);
+			retorno = super.getFramework().alterarUsuario(usuarioInativar);
+			if (retorno.isSucesso()) {
+				return true;
+			} else {
+				montarMensagemErro(retorno);
+				return false;
+			}
+		} else {
+			montarMensagemErroPermissao("Usuário");
+			return false;
+		}
+	}
+
+	@Override
+	public void setarEntidadeVisao(SuperCompositor<?> pVisao) {
+		UsuarioCompositor visao = (UsuarioCompositor) pVisao;
+		Usuario usuarioSelecionado = (Usuario) visao.getEntidade();
+		visao.setCodigo(usuarioSelecionado.getCodigo());
+		visao.setFldSenha(usuarioSelecionado.getSenha());
+		visao.setFldNome(usuarioSelecionado.getNome());
+		boolean ativo = usuarioSelecionado.getStatus().equals(StatusEnum.ATIVO);
+		visao.setFldStatus(ativo);
+		visao.setFldConfirmarSenha(usuarioSelecionado.getSenha());
+		visao.setFldEmail(usuarioSelecionado.getEmail());
+		visao.setFldPerfilAcesso(usuarioSelecionado.getPerfilAcesso()
+				.toString());
+	}
+
+	@Override
+	protected void montarMensagemErro(
+			Retorno<String, Collection<String>> retorno) {
+		String mensagemErro;
+		Throwable erro = retorno.getErro();
+		mensagemErro = erro.getMessage();
+		if (erro instanceof UsuarioExcessao) {
+			if (((UsuarioExcessao) erro).getAtributosNaoInformados() != null) {
+				Iterator<String> iterador = ((UsuarioExcessao) erro)
+						.getAtributosNaoInformados().iterator();
+				if (iterador.hasNext()) {
+					mensagemErro += ": " + iterador.next();
+				}
+				while (iterador.hasNext()) {
+					String campoNaoInformado = (String) iterador.next();
+					mensagemErro += ", " + campoNaoInformado;
 				}
 			}
-			super.mensagens.getListaMensagens().add(mensagemErro);
-			return false;
 		}
+		super.mensagens.getListaMensagens().add(mensagemErro);
+
 	}
 	
-	public boolean acaoListar() {
-		Retorno<String, Collection<Usuario>> retorno = super.getFramework().pesquisarUsuario(new Usuario());
-		if (retorno.isSucesso()) {
-			Collection<Usuario> listaUsuario = retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
-			super.setLista(new ArrayList<Usuario>(listaUsuario));
-			return true;
-		} else {
-			super.mensagens.getListaMensagens().add(retorno.getMensagem());
-			return false;
-		}
+	protected void montarMensagemErroPermissao(String tipoUsuario) {
+		super.mensagens.getListaMensagens().add("O tipo de usuário "+tipoUsuario+" não tem permissão para executar a ação!");
+
 	}
-	
+
+	/**
+	 * Método que executa a ação de Logar, verifica se e-mail e senha existem no
+	 * banco de dados
+	 * 
+	 * @return boolean resultado se ação foi executada.
+	 */
 	public boolean acaoLogar() {
 		boolean resultado = false;
-		Retorno<String, Collection<Usuario>> retorno = super.getFramework().pesquisarUsuario(super.getEntidade());
+		Usuario usuario = super.getEntidade();
+		if (usuario.getEmail() == null) {
+			usuario.setEmail("");
+		}
+		if (usuario.getSenha() == null) {
+			usuario.setSenha("");
+		}
+		Retorno<String, Collection<Usuario>> retorno = super.getFramework()
+				.pesquisarUsuario(super.getEntidade());
 		if (retorno.isSucesso()) {
-			Collection<Usuario> listaUsuario = retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
-			if (!listaUsuario.isEmpty()) {
+			Collection<Usuario> listaUsuario = retorno.getParametros().get(
+					Retorno.PARAMERTO_LISTA);
+			Usuario usuarioComparar = listaUsuario.iterator().next();
+			if (!listaUsuario.isEmpty()
+					&& usuarioComparar.getEmail().equals(usuario.getEmail())
+					&& usuarioComparar.getSenha().equals(usuario.getSenha())) {
 				try {
 					resultado = true;
 					setUsuarioLogado(listaUsuario.iterator().next());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			} else {
+				super.mensagens.getListaMensagens().add("É necessário especificar um e-mail e senha cadastrados para logar!");
 			}
 		} else {
 			super.mensagens.getListaMensagens().add(retorno.getMensagem());
@@ -163,7 +227,8 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 	}
 
 	/**
-	 * @param usuarioLogado o(a) usuarioLogado a ser setado(a)
+	 * @param usuarioLogado
+	 *            o(a) usuarioLogado a ser setado(a)
 	 */
 	public void setUsuarioLogado(Usuario usuarioLogado) {
 		this.usuarioLogado = usuarioLogado;

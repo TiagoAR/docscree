@@ -1,4 +1,4 @@
-package br.ueg.unucet.docscree.visao;
+package br.ueg.unucet.docscree.interfaces;
 
 import br.ueg.unucet.quid.dominios.Usuario;
 

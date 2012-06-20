@@ -1,8 +1,12 @@
 package br.ueg.unucet.docscree.controladores;
 
+import java.util.Collection;
 import java.util.List;
 
-import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
+import br.ueg.unucet.docscree.interfaces.ICRUDControle;
+import br.ueg.unucet.quid.dominios.Retorno;
+import br.ueg.unucet.quid.dominios.Usuario;
+import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
 import br.ueg.unucet.quid.extensao.dominios.Persistivel;
 
 /**
@@ -12,10 +16,8 @@ import br.ueg.unucet.quid.extensao.dominios.Persistivel;
  *
  * @param <E>
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
-public abstract class GenericoControle<E extends Persistivel> extends SuperControle {
-
-
+@SuppressWarnings({"unchecked"})
+public abstract class GenericoControle<E extends Persistivel> extends SuperControle implements ICRUDControle {
 	
 	/**
 	 * Contém a lista de entidade, setado quando chamado a ação listar.
@@ -32,6 +34,13 @@ public abstract class GenericoControle<E extends Persistivel> extends SuperContr
 	}
 
 	/**
+	 * Método que adiciona as mensagens de erro através do retorno da ação
+	 * 
+	 * @param retorno Retorno da ação
+	 */
+	protected abstract void montarMensagemErro(Retorno<String, Collection<String>> retorno);
+
+	/**
 	 * @return o(a) lista
 	 */
 	public List<?> getLista() {
@@ -44,11 +53,25 @@ public abstract class GenericoControle<E extends Persistivel> extends SuperContr
 	public void setLista(List<?> lista) {
 		this.lista = lista;
 	}
-
-	/**
-	 * Método que mapeia a entidade selecionada aos campos da visão.
-	 * 
-	 * @param pVisao
-	 */
-	public abstract void setarEntidadeVisao(SuperCompositor pVisao);
+	
+	protected boolean isUsuarioAdmin() {
+		if (((Usuario) super.getMapaAtributos().get("usuarioLogado")).getPerfilAcesso().equals(PerfilAcessoEnum.ADMINISTRADOR)) {
+			return true;
+		}
+		return false;
+	}
+	
+	protected boolean isUsuarioGerente() {
+		if (((Usuario) super.getMapaAtributos().get("usuarioLogado")).getPerfilAcesso().equals(PerfilAcessoEnum.GERENTE)) {
+			return true;
+		}
+		return false;
+	}
+	
+	protected boolean isUsuarioComum() {
+		if (((Usuario) super.getMapaAtributos().get("usuarioLogado")).getPerfilAcesso().equals(PerfilAcessoEnum.USUARIO)) {
+			return true;
+		}
+		return false;
+	}
 }
