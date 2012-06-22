@@ -9,14 +9,15 @@
 		<div id="top" sclass="top">
 			<image src="/imagens/topo.png" />
 		</div>
-		<div id="topRight" sclass="topRight">
-	
+		<div id="topRight" sclass="topRight" apply="${usuarioCompositor}">
+			<label value="Olá"/>
+			<a onClick="gerenciador.acaoEditarProprioUsuario()" label="@{gerenciador.nomeUsuarioLogado}" />
+			<a onClick="gerenciador.acaoDeslogar()" label="Logout" style="padding-left: 3px;"/>
 		</div>
 		<div id="menu" sclass="menu">
 	
 		</div>
 		<div id="content" self="@{insert(content)}" sclass="content" align="center">
-		<window id="teste" style="float: right;" apply="${mensagemCompositor}" visible="false"/>
 		</div>
 		<separator height="4px"></separator>
 		<div id="footer" sclass="footer">

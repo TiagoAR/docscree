@@ -218,6 +218,23 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 		}
 		return resultado;
 	}
+	
+	public boolean acaoAtualizarUsuarioLogado() {
+		boolean resultado = false;
+		Usuario usuario = new Usuario();
+		usuario.setCodigo(((Usuario) super.getMapaAtributos().get("usuarioLogado")).getCodigo());
+		Retorno<String, Collection<Usuario>> retorno = super.getFramework()
+				.pesquisarUsuario(usuario);
+		if (retorno.isSucesso()) {
+			Collection<Usuario> listaUsuario = retorno.getParametros().get(
+					Retorno.PARAMERTO_LISTA);
+			setUsuarioLogado(listaUsuario.iterator().next());
+		} else {
+			super.mensagens.getListaMensagens().add("Problema em atualizar o nome de usuário, tente novamente!");
+		}
+		return resultado;
+		
+	}
 
 	/**
 	 * @return o(a) usuarioLogado

@@ -110,12 +110,16 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 		try {
 			limparFiltros();
 			boolean resultado = super.getControle().fazerAcao("listar", (SuperCompositor) this);
-			this.setListaEntidade(super.getControle().getLista());
-			Component componente = super.getComponent().getFellow("windowLista");
-			componente.setVisible(true);
-			setListaEntidadeModelo(new BindingListModelListModel(new SimpleListModel(super.getControle().getLista())));
-			super.binder.loadAll();
-			acaoFiltrar();
+			if (resultado) {
+				this.setListaEntidade(super.getControle().getLista());
+				Component componente = super.getComponent().getFellow("windowLista");
+				componente.setVisible(true);
+				setListaEntidadeModelo(new BindingListModelListModel(new SimpleListModel(super.getControle().getLista())));
+				super.binder.loadAll();
+				acaoFiltrar();
+			} else {
+				setListaEntidadeModelo(null);
+			}
 			super.mostrarMensagem(resultado);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -142,7 +146,6 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 			super.binder.saveAll();
 			super.getControle().setarEntidadeVisao(this);
 			int index = this.getListaEntidade().indexOf(this.getEntidade());
-			//setFldStatus(Boolean.FALSE);
 			boolean retorno = super.getControle().fazerAcao("excluir", (SuperCompositor) this);
 			if (retorno) {
 				atualizarEntidadeExcluida(index);

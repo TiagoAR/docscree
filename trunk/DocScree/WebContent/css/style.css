@@ -148,6 +148,35 @@ input,textarea {
 	background-position: -70px 0;
 }
 
+.z-window-popup {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	zoom: 1;
+	display: block;
+	z-index: 1800;
+}
+
+.z-window-overlapped-cnt-noborder {
+	overflow: hidden;
+	zoom: 1;
+	border-radius: 5px;
+	background: rgba(165, 160, 160, 0.5);
+	width: 250px;
+}
+
+.z-loading {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	filter: alpha(opacity = 60);
+	opacity: .6;
+	zoom: 1;
+	background: #E0E1E3;
+}
+
 /* -- 4. Novos CSS -- */
 input
 	[type="button"],input[type="submit"],input[type="reset"],button {
@@ -193,7 +222,7 @@ div.top {
 }
 
 div.topRight {
-	
+	float: right;
 }
 
 div.menu {
@@ -202,7 +231,6 @@ div.menu {
 
 div.content {
 	margin-left: 5px;
-	
 }
 
 div.footer {
