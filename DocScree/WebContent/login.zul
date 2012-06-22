@@ -13,17 +13,17 @@
 				<rows>
 					<row>
 						<label value="E-mail:" />
-						<textbox value="@{controller.fldEmail}" />
+						<textbox value="@{gerenciador.fldEmail}" />
 					</row>
 					<row>
 						<label value="Senha:" />
-						<textbox value="@{controller.fldSenha }"
+						<textbox value="@{gerenciador.fldSenha }"
 							type="password" />
 					</row>
 				</rows>
 			</grid>
 			<separator />
-			<button label="Entrar" onClick="controller.acaoLogar()" />
+			<button label="Entrar" onClick="gerenciador.acaoLogar()" />
 		</window>
 	</div>
 </zk>

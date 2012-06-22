@@ -5,7 +5,7 @@
 <zk>
 	<groupbox self="@{define(content)}" id="gpBoxUser" width="482px"
 		closable="false" apply="${usuarioCompositor}">
-		<caption label="Usuário" />
+		<caption label="Usuário" style="align: left;"/>
 		<grid sizedByContent="true" style="border: none;">
 			<columns>
 				<column width="170px" />
@@ -14,57 +14,58 @@
 			<rows>
 				<row>
 					<label value="Nome:" />
-					<textbox value="@{controller.fldNome}" />
+					<textbox value="@{gerenciador.fldNome}" />
 				</row>
 				<row>
 					<label value="E-mail:" />
-					<textbox value="@{controller.fldEmail}" />
+					<textbox value="@{gerenciador.fldEmail}" />
 				</row>
 				<row>
 					<label value="Senha:" />
-					<textbox value="@{controller.fldSenha }"
+					<textbox value="@{gerenciador.fldSenha }"
 						type="password" />
 				</row>
 				<row>
 					<label value="Confirmar Senha:" />
-					<textbox value="@{controller.fldConfirmarSenha }"
+					<textbox value="@{gerenciador.fldConfirmarSenha }"
 						type="password" />
 				</row>
 				<row>
 					<label value="Perfil de Usuário:" />
 					<combobox
-						selectedItem="@{controller.fldPerfilAcesso }"
-						model="@{ controller.listaPerfil}">
+						selectedItem="@{gerenciador.fldPerfilAcesso }"
+						model="@{ gerenciador.listaPerfil}">
 
 					</combobox>
 				</row>
 				<row>
 					<label value="Ativo:" />
-					<checkbox checked="@{controller.fldStatus}" />
+					<checkbox checked="@{gerenciador.fldStatus}" />
 				</row>
 			</rows>
 		</grid>
 		<separator />
-		<button label="Salvar" onClick="controller.acaoSalvar()" />
-		<button label="Listar" onClick="controller.acaoListar()" />
+		<button label="Salvar" onClick="gerenciador.acaoSalvar()" />
+		<button label="Listar" onClick="gerenciador.acaoListar()" />
 		<button label="Cancelar" />
 
 		<window title="Lista de Usuários" border="normal" closable="false"
-			mode="modal" width="750px" visible="false" id="windowMensagens">
+			mode="modal" width="750px" visible="false" id="windowLista">
 			<listbox pagingPosition="bottom" mold="paging" pageSize="5"
-				model="@{controller.listaEntidade }" selectedItem="@{controller.entidade }">
+				model="@{gerenciador.listaEntidadeModelo }" selectedItem="@{gerenciador.entidade }"
+				id="listboxLista">
 				<auxhead>
 					<auxheader>
-						<textbox value="@{controller.filtroCodigo }" onChange="controller.acaoFiltrar()" instant="true"/>
+						<textbox value="@{gerenciador.filtroCodigo }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
 					</auxheader>
 					<auxheader>
-						<textbox value="@{controller.filtroNome }" onChange="controller.acaoFiltrar()" instant="true"/>
+						<textbox value="@{gerenciador.filtroNome }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
 					</auxheader>
 					<auxheader>
-						<textbox value="@{controller.filtroEmail }" onChange="controller.acaoFiltrar()" instant="true"/>
+						<textbox value="@{gerenciador.filtroEmail }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
 					</auxheader>
 					<auxheader>
-						<textbox value="@{controller.filtroPerfil }" onChange="controller.acaoFiltrar()" instant="true"/>
+						<textbox value="@{gerenciador.filtroPerfil }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
 					</auxheader>
 					<auxheader colspan="3"></auxheader>
 				</auxhead>
@@ -87,7 +88,7 @@
 						<button label="Editar" > 
 							<attribute name="onClick">
 								self.getParent().getParent().setSelected(true);
-								controller.acaoEditar();
+								gerenciador.acaoEditar();
 							</attribute>
 						</button>
 					</listcell>
@@ -95,15 +96,16 @@
 						<button label="Desativar" >
 							<attribute name="onClick">
 								self.getParent().getParent().setSelected(true);
-								controller.acaoDesativar();
+								gerenciador.acaoExcluir();
 							</attribute>
 						</button>
 					</listcell>
 				</listitem>
 			</listbox>
-			<checkbox label="Exibir usuários inativos"  checked="@{controler.exibirInativos }" onClick="controller.verificarExibicaoInativos()" />
+			<checkbox label="Exibir usuários inativos" checked="@{gerenciador.exibirInativos}" 
+				onClick="gerenciador.acaoFiltrar()" />
 
-			<button label="X" onClick="controller.fecharModalLista()" />
+			<button label="X" onClick="gerenciador.fecharModalLista()" />
 		</window>
 	</groupbox>
 

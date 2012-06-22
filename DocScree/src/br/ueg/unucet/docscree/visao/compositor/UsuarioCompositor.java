@@ -14,6 +14,7 @@ import br.ueg.unucet.docscree.controladores.UsuarioControle;
 import br.ueg.unucet.docscree.interfaces.ILogar;
 import br.ueg.unucet.quid.dominios.Usuario;
 import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
+import br.ueg.unucet.quid.extensao.dominios.Persistivel;
 import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 
 /**
@@ -127,6 +128,17 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 		super.binder.loadAll();
 	}
 
+	/* (non-Javadoc)
+	 * @see br.ueg.unucet.docscree.visao.compositor.GenericoCompositor#acaoSalvar()
+	 */
+	@Override
+	public void acaoSalvar() {
+		super.acaoSalvar();
+		super.getControle().acaoAtualizarUsuarioLogado();
+		this.salvarSessaoUsuario(super.getControle().getUsuarioLogado());
+		super.binder.loadAll();
+	}
+
 	/**
 	 * @see br.ueg.unucet.docscree.visao.compositor.GenericoCompositor#acaoFiltrar()
 	 */
@@ -172,6 +184,7 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 				setFldEmail(null);
 				setFldSenha(null);
 				this.salvarSessaoUsuario(super.getControle().getUsuarioLogado());
+				this.redirecionar();
 			} else {
 				super.mostrarMensagem(resultado);
 			}
@@ -179,6 +192,18 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void acaoDeslogar() {
+		Executions.getCurrent().getSession().invalidate();
+		Executions.sendRedirect("/login.zul");
+	}
+	
+	public void acaoEditarProprioUsuario() {
+		super.setEntidade((Persistivel) super.getUsuarioSessao());
+		super.getControle().setarEntidadeVisao(this);
+		super.binder.loadAll();
 	}
 
 	/**
@@ -188,6 +213,9 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	@Override
 	public void salvarSessaoUsuario(Usuario usuario) {
 		Executions.getCurrent().getSession().setAttribute("usuario", usuario);
+	}
+	
+	public void redirecionar() {
 		Executions.sendRedirect("pages/usuario.zul");
 	}
 
@@ -202,6 +230,14 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 			listaPerfil.add(perfil.toString());
 		}
 		return listaPerfil;
+	}
+	
+	public String getNomeUsuarioLogado() {
+		try {
+			return ((Usuario) Executions.getCurrent().getSession().getAttribute("usuario")).getNome();
+		} catch (Exception e) {
+			return "Visitante";
+		}
 	}
 
 	/* GETTERS AND SETTERS */

@@ -1,47 +1,10 @@
 <?page title="" contentType="text/html;charset=UTF-8"?>
 <zk>
-<window title="" border="normal" zindex="99" closable="true" style="float: right; text-align: right;" sizable="false"
+<div >
+<image src="imagens/topo.png"/>
+<window title="" border="normal" zindex="99" closable="true" style="position: absolute; text-align: right;" sizable="false"
 	width="300px" >
 	<label value="Sucesso!"/>
 </window>
-
-<window title="Teste" border="normal" closable="true" apply="${usuarioCompositor}" mode="modal" width="750px">
-	<div>
-		<listbox pagingPosition="bottom" model="@{controller.listaEntidade }">
-			<auxhead>
-				<auxheader>
-					<textbox />
-				</auxheader>
-				<auxheader>
-					<textbox />
-				</auxheader>
-				<auxheader>
-					<textbox />
-				</auxheader>
-				<auxheader>
-					<textbox />
-				</auxheader>
-				<auxheader colspan="3">
-				</auxheader>
-			</auxhead>
-			<listhead>
-				<listheader label="Código"/>
-				<listheader label="Nome" />
-				<listheader label="E-mail" />
-				<listheader label="Perfil de Acesso" />
-				<listheader label="Status" />
-				<listheader />
-				<listheader />
-			</listhead>
-			<listitem  self="@{each=item }" value="@{item}" >
-				<listcell label="@{item.codigo }" />
-				<listcell label="@{item.nome }" />
-				<listcell label="@{item.email }" />
-				<listcell label="@{item.perfilAcesso }" />
-				<listcell label="@{item.status }" />
-			</listitem>
-		</listbox>
-		<checkbox label="Exibir usuários ativos"/>
-	</div>
-</window>
+</div>
 </zk>
