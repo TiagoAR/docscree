@@ -1,12 +1,12 @@
 package br.ueg.unucet.quid.dominios;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import br.ueg.unucet.quid.enums.PapelUsuario;
@@ -18,20 +18,22 @@ import br.ueg.unucet.quid.extensao.dominios.Persistivel;
  * @author Diego
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "equipe_usuario")
-@SuppressWarnings("serial")
 public class EquipeUsuario extends Persistivel {
 	
 	/**
 	 * A equipe que é relacionada
 	 */
-	@OneToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)  
+	@JoinColumn(name = "equipe_codigo", nullable = false)
 	private Equipe equipe;
 	/**
 	 * O usuário que é relacionado
 	 */
-	@OneToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)  
+	@JoinColumn(name = "usuario_codigo", nullable = false)
 	private Usuario usuario;
 	/**
 	 * Papel que o usuário desempenha na equipe

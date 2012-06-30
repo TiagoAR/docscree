@@ -8,7 +8,7 @@
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
             <property name="hibernate.connection.password" value="postgres" />
             <property name="hibernate.connection.username" value="postgres" />
-            <property name="hibernate.hbm2ddl.auto" value="create" />
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
         </properties>
 </persistence-unit>
 </persistence>
