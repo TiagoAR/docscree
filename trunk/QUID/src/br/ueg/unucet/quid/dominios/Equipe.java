@@ -1,50 +1,71 @@
 package br.ueg.unucet.quid.dominios;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import br.ueg.unucet.quid.extensao.dominios.Persistivel;
+import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 
 /**
  * Entidade que representa uma equipe dentro do framework.
+ * 
  * @author QUID
- *
+ * 
  */
 @Entity
-@Table(name="equipe")
-public class Equipe extends Persistivel{
-	
+@Table(name = "equipe")
+public class Equipe extends Persistivel {
+
 	/**
 	 * Nome da equipe.
 	 */
 	private String nome;
 	/**
-	 * Lista de usuarios que pertence a equipe.
+	 * Status da equipe no sistema (ativo, inativo)
 	 */
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "equipe_usuario", joinColumns = @JoinColumn(name = "equipe_codigo"), inverseJoinColumns = @JoinColumn(name = "usuario_codigo"))
-	private Collection<Usuario> usuarios;
-	
-	//GETTERS AND SETTERS
+	@Enumerated(EnumType.STRING)
+	private StatusEnum status;
+	/**
+	 * Lista de equipe usuarios que pertence a equipe.
+	 */
+	@OneToMany(fetch = FetchType.EAGER, mappedBy="equipe")
+	private Set<EquipeUsuario> equipeUsuarios = new HashSet<EquipeUsuario>(0);
+
+	// GETTERS AND SETTERS
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public Collection<Usuario> getUsuarios() {
-		return usuarios;
+
+	public StatusEnum getStatus() {
+		return status;
 	}
-	public void setUsuarios(Collection<Usuario> usuarios) {
-		this.usuarios = usuarios;
+
+	public void setStatus(StatusEnum status) {
+		this.status = status;
 	}
-	
-	
-	
+
+	/**
+	 * @return the equipeUsuarios
+	 */
+	public Set<EquipeUsuario> getEquipeUsuarios() {
+		return equipeUsuarios;
+	}
+
+	/**
+	 * @param equipeUsuarios the equipeUsuarios to set
+	 */
+	public void setEquipeUsuarios(Set<EquipeUsuario> equipeUsuarios) {
+		this.equipeUsuarios = equipeUsuarios;
+	}
 }
