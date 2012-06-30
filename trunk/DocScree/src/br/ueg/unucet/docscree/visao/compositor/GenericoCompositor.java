@@ -29,7 +29,7 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	/**
 	 * Primary key da entidade
 	 */
-	@AtributoVisao(isCampoEntidade = true, nome= "codigo", nomeCampoBundle="codigo")
+	@AtributoVisao(isCampoEntidade = true, nome= "codigo")
 	protected Long codigo = null;
 	
 	/**

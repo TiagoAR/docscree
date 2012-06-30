@@ -220,6 +220,14 @@ public abstract class SuperCompositor<E extends SuperControle> extends
             }
 		});
 	}
+	
+	/**
+	 * Método que força a atualização de algum campo/label ou componente qualquer
+	 * que não é atualizado usando o loadAll do bind
+	 */
+	protected void forcarAtualizacaoCampos() {
+		
+	}
 
 	/**
 	 * Seta o contolador

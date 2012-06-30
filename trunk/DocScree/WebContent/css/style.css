@@ -223,10 +223,11 @@ div.top {
 
 div.topRight {
 	float: right;
+	margin-right: 10px;
 }
 
 div.menu {
-	
+	width: 100%;
 }
 
 div.content {

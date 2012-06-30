@@ -30,11 +30,5 @@ public @interface AtributoVisao {
 	 * @return boolean isCampoEntidade se é campo de entidade ou não
 	 */
 	boolean isCampoEntidade() default false;
-	
-	/**
-	 * 
-	 * @return String nomeBundle representa chave do bundle.
-	 */
-	String nomeCampoBundle();
 
 }

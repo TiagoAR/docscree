@@ -3,19 +3,37 @@
 <?page title="DocScree - Documentation on Screen" contentType="text/html;charset=UTF-8"?>
 <zk xmlns:n="native">
 	<style src="/css/style.css" />
+	<style src="/css/menu.css" />
 	
 	<div style="margin-right: 10%; margin-left: 10%;">
 	
-		<div id="top" sclass="top">
+		<div id="top" sclass="top" align="center">
 			<image src="/imagens/topo.png" />
 		</div>
 		<div id="topRight" sclass="topRight" apply="${usuarioCompositor}">
 			<label value="Olá"/>
-			<a onClick="gerenciador.acaoEditarProprioUsuario()" label="@{gerenciador.nomeUsuarioLogado}" />
+			<label id="aNomeUsuario" onClick="gerenciador.acaoEditarProprioUsuario()" value="@{gerenciador.nomeUsuarioLogado}" style="cursor: pointer;" />
 			<a onClick="gerenciador.acaoDeslogar()" label="Logout" style="padding-left: 3px;"/>
 		</div>
 		<div id="menu" sclass="menu">
-	
+			<menubar >
+				<menuitem label="Usuário" href="/pages/usuario.zul" width="100px;"/>
+				<menuitem label="Equipe" href="/pages/equipe.zul" width="100px;"/>
+				<menuitem label="Modelo" href="/pages/modelo.zul" width="100px;"/>
+				<menu label="Projeto" width="100px;">
+					<menupopup>
+						<menuitem label="Abrir"/>
+						<menuitem label="Novo"/>
+					</menupopup>
+				</menu>
+				<menu label="Artefato" width="100px;">
+					<menupopup>
+						<menuitem label="Montar Novo"/>
+					</menupopup>
+				</menu>
+				<menuitem label="Mapear Componentes" width="100px;"/>
+				<menuitem label="Logs" width="100px;"/>
+			</menubar>
 		</div>
 		<div id="content" self="@{insert(content)}" sclass="content" align="center">
 		</div>
