@@ -1,7 +1,6 @@
 package br.ueg.unucet.quid.dominios;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -36,7 +35,7 @@ public class Equipe extends Persistivel {
 	 * Lista de equipe usuarios que pertence a equipe.
 	 */
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="equipe")
-	private Set<EquipeUsuario> equipeUsuarios = new HashSet<EquipeUsuario>(0);
+	private Collection<EquipeUsuario> equipeUsuarios;
 
 	// GETTERS AND SETTERS
 	public String getNome() {
@@ -58,14 +57,14 @@ public class Equipe extends Persistivel {
 	/**
 	 * @return the equipeUsuarios
 	 */
-	public Set<EquipeUsuario> getEquipeUsuarios() {
+	public Collection<EquipeUsuario> getEquipeUsuarios() {
 		return equipeUsuarios;
 	}
 
 	/**
 	 * @param equipeUsuarios the equipeUsuarios to set
 	 */
-	public void setEquipeUsuarios(Set<EquipeUsuario> equipeUsuarios) {
+	public void setEquipeUsuarios(Collection<EquipeUsuario> equipeUsuarios) {
 		this.equipeUsuarios = equipeUsuarios;
 	}
 }

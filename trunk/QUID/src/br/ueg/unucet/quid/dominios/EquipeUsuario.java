@@ -27,13 +27,11 @@ public class EquipeUsuario extends Persistivel {
 	 * A equipe que é relacionada
 	 */
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="codigo_equipe")
 	private Equipe equipe;
 	/**
 	 * O usuário que é relacionado
 	 */
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="codigo_usuario")
 	private Usuario usuario;
 	/**
 	 * Papel que o usuário desempenha na equipe
