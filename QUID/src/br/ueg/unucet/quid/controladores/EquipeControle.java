@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.ueg.unucet.quid.dominios.Equipe;
-import br.ueg.unucet.quid.dominios.Usuario;
+import br.ueg.unucet.quid.dominios.EquipeUsuario;
 import br.ueg.unucet.quid.excessoes.EquipeExcessao;
 import br.ueg.unucet.quid.excessoes.QuidExcessao;
 import br.ueg.unucet.quid.extensao.enums.StatusEnum;
@@ -88,10 +88,10 @@ public class EquipeControle extends GenericControle<Equipe, Long> implements IEq
 	 */
 	private void verificarUsuarios() throws EquipeExcessao {
 		Collection<String> usuariosInativos = new ArrayList<String>();
-		if(equipe.getUsuarios()!= null){
-			for (Usuario usuario : equipe.getUsuarios()) {
-				if(usuario.getStatus() == StatusEnum.INATIVO){
-					usuariosInativos.add(usuario.getNome());
+		if(equipe.getEquipeUsuarios()!= null){
+			for (EquipeUsuario equipeUsuario : equipe.getEquipeUsuarios()) {
+				if(equipeUsuario.getUsuario().getStatus() == StatusEnum.INATIVO){
+					usuariosInativos.add(equipeUsuario.getUsuario().getNome());
 				}
 			}
 		}
