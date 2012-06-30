@@ -13,12 +13,12 @@
 				<rows>
 					<row>
 						<label value="E-mail:" />
-						<textbox value="@{gerenciador.fldEmail}" focus="true" />
+						<textbox id="txtEmail" value="@{gerenciador.fldEmail}" focus="true" onOK="txtSenha.focus()"/>
 					</row>
 					<row>
 						<label value="Senha:" />
-						<textbox value="@{gerenciador.fldSenha }"
-							type="password" />
+						<textbox id="txtSenha" value="@{gerenciador.fldSenha }"
+							type="password" onOK="gerenciador.acaoLogar()" />
 					</row>
 				</rows>
 			</grid>

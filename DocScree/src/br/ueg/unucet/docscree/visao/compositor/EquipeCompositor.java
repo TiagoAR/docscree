@@ -73,6 +73,10 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle> {
 		}
 		return this.listaPapeis;
 	}
+	
+	public void teste() {
+		super.getControle().acaoSalvar();
+	}
 
 	/**
 	 * @return o(a) fldNome

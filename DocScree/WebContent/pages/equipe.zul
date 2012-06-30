@@ -28,7 +28,7 @@
 				</row>
 				<row>
 					<cell colspan="4" align="center"> 
-						<button label="Salvar"/>
+						<button label="Salvar" onClick="gerenciador.teste()"/>
 						<button label="Listar"/>
 						<button label="Cancelar"/>
 					</cell>
