@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zkplus.databind.BindingListModelListModel;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.SimpleListModel;
 
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
@@ -39,33 +40,33 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	/**
 	 * Campo nome
 	 */
-	@AtributoVisao(isCampoEntidade = true, nome = "nome", nomeCampoBundle = "usuario_campo_nome")
+	@AtributoVisao(isCampoEntidade = true, nome = "nome")
 	private String fldNome;
 	/**
 	 * Campo senha
 	 */
-	@AtributoVisao(isCampoEntidade = true, nome = "senha", nomeCampoBundle = "usuario_campo_senha")
+	@AtributoVisao(isCampoEntidade = true, nome = "senha")
 	private String fldSenha;
 	/**
 	 * Campo confirmar senha
 	 */
-	@AtributoVisao(isCampoEntidade = false, nome = "confirmarSenha", nomeCampoBundle = "usuario_campo_confirmar_senha")
+	@AtributoVisao(isCampoEntidade = false, nome = "confirmarSenha")
 	private String fldConfirmarSenha;
 	/**
 	 * Campo E-mail
 	 */
-	@AtributoVisao(isCampoEntidade = true, nome = "email", nomeCampoBundle = "usuario_campo_email")
+	@AtributoVisao(isCampoEntidade = true, nome = "email")
 	private String fldEmail;
 	/* Fim dos atributos da entidade */
 	/**
 	 * Campo Status
 	 */
-	@AtributoVisao(isCampoEntidade = false, nome = "status", nomeCampoBundle = "usuario_campo_status")
+	@AtributoVisao(isCampoEntidade = false, nome = "status")
 	private Boolean fldStatus = new Boolean(true);
 	/**
 	 * Campo Perfil de Acesso
 	 */
-	@AtributoVisao(isCampoEntidade = false, nome = "perfilAcesso", nomeCampoBundle = "usuario_campo_perfil_acesso")
+	@AtributoVisao(isCampoEntidade = false, nome = "perfilAcesso")
 	private String fldPerfilAcesso;
 
 	/* Fim atributos */
@@ -76,18 +77,6 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	private String filtroPerfil = "";
 
 	private Boolean exibirInativos = new Boolean(false);
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * br.ueg.unucet.docscree.visao.composer.SuperComposer#doAfterCompose(org
-	 * .zkoss.zk.ui.Component)
-	 */
-	@Override
-	public void doAfterCompose(org.zkoss.zk.ui.Component comp) throws Exception {
-		super.doAfterCompose(comp);
-	}
 
 	@Override
 	public Class getTipoEntidade() {
@@ -117,19 +106,25 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	}
 
 	/**
-	 * Atualiza lista de entidade mudando o atributo status da entidade para inativo
+	 * Atualiza lista de entidade mudando o atributo status da entidade para
+	 * inativo
 	 * 
-	 * @param index indíce da entidade
+	 * @param index
+	 *            indíce da entidade
 	 */
 	@Override
 	protected void atualizarEntidadeExcluida(int index) {
-		((Usuario)this.getListaEntidade().get(index)).setStatus(StatusEnum.INATIVO);
+		((Usuario) this.getListaEntidade().get(index))
+				.setStatus(StatusEnum.INATIVO);
 		acaoFiltrar();
 		super.binder.loadAll();
 	}
 
-	/* (non-Javadoc)
-	 * @see br.ueg.unucet.docscree.visao.compositor.GenericoCompositor#acaoSalvar()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.ueg.unucet.docscree.visao.compositor.GenericoCompositor#acaoSalvar()
 	 */
 	@Override
 	public void acaoSalvar() {
@@ -137,6 +132,19 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 		super.getControle().acaoAtualizarUsuarioLogado();
 		this.salvarSessaoUsuario(super.getControle().getUsuarioLogado());
 		super.binder.loadAll();
+		this.forcarAtualizacaoCampos();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.ueg.unucet.docscree.visao.compositor.SuperCompositor#
+	 * forcarAtualizacaoCampos()
+	 */
+	@Override
+	protected void forcarAtualizacaoCampos() {
+		((Label) super.getComponent().getFellow("aNomeUsuario"))
+				.setValue(getNomeUsuarioLogado());
 	}
 
 	/**
@@ -157,10 +165,10 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 					&& usuario.getPerfilAcesso().toString().trim()
 							.toLowerCase()
 							.contains(getFiltroPerfil().trim().toLowerCase())) {
-				if (getExibirInativos() 
-					|| usuario.getStatus().toString().toLowerCase()
-							.equals("ativo"))
-				listaUsuarios.add(usuario);
+				if (getExibirInativos()
+						|| usuario.getStatus().toString().toLowerCase()
+								.equals("ativo"))
+					listaUsuarios.add(usuario);
 			}
 		}
 		super.setListaEntidadeModelo(new BindingListModelListModel<Usuario>(
@@ -193,14 +201,19 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void acaoDeslogar() {
 		Executions.getCurrent().getSession().invalidate();
 		Executions.sendRedirect("/login.zul");
 	}
-	
+
 	public void acaoEditarProprioUsuario() {
+
+		if (!Executions.getCurrent().getDesktop().getRequestPath()
+				.contains("usuario.zul")) {
+			redirecionar();
+		}
 		super.setEntidade((Persistivel) super.getUsuarioSessao());
 		super.getControle().setarEntidadeVisao(this);
 		super.binder.loadAll();
@@ -214,9 +227,9 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	public void salvarSessaoUsuario(Usuario usuario) {
 		Executions.getCurrent().getSession().setAttribute("usuario", usuario);
 	}
-	
+
 	public void redirecionar() {
-		Executions.sendRedirect("pages/usuario.zul");
+		Executions.sendRedirect("/pages/usuario.zul");
 	}
 
 	/**
@@ -231,10 +244,11 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 		}
 		return listaPerfil;
 	}
-	
+
 	public String getNomeUsuarioLogado() {
 		try {
-			return ((Usuario) Executions.getCurrent().getSession().getAttribute("usuario")).getNome();
+			return ((Usuario) Executions.getCurrent().getSession()
+					.getAttribute("usuario")).getNome();
 		} catch (Exception e) {
 			return "Visitante";
 		}

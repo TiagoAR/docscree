@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<?page title="Manter Equipes" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+	<groupbox self="@{define(content)}" id="gpBoxEquipe" width="650px"
+		closable="false" apply="${equipeCompositor}">
+		<caption label="Equipe"/>
+		<grid sizedByContent="true" style="border: none;">
+			<columns>
+				<column width="100px" />
+				<column width="200px" />
+				<column width="200px" />
+				<column width="130px" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Nome:"/>
+					<cell colspan="3">
+					<textbox value="@{gerenciador.fldNome}" />
+					</cell>
+				</row>
+				<row>
+					<label value="Usuários:"/>
+					<combobox model="@{gerenciador.listaPapeis }" width="180px"/>
+					<combobox buttonVisible="false" width="180px"/>
+					<button label="Adicionar Usuário" />
+				</row>
+				<row>
+					<cell colspan="4" align="center"> 
+						<button label="Salvar"/>
+						<button label="Listar"/>
+						<button label="Cancelar"/>
+					</cell>
+				</row>
+			</rows>
+		</grid>
+
+		<window title="Lista de Usuários" border="normal" closable="false"
+			mode="modal" width="750px" visible="false" id="windowLista">
+			
+		</window>
+	</groupbox>
+
+</zk>

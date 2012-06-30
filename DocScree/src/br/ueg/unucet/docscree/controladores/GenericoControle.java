@@ -1,5 +1,6 @@
 package br.ueg.unucet.docscree.controladores;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -73,5 +74,34 @@ public abstract class GenericoControle<E extends Persistivel> extends SuperContr
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean acaoListar() {
+		Retorno<String, Collection<E>> retorno = executarListagem();
+		if (retorno.isSucesso()) {
+			Collection<E> listaEntidades = retorno.getParametros().get(
+					Retorno.PARAMERTO_LISTA);
+			this.setLista(new ArrayList<E>(listaEntidades));
+			return true;
+		} else {
+			super.mensagens.getListaMensagens().add(retorno.getMensagem());
+			return false;
+		}
+	}
+	
+	protected abstract Retorno<String, Collection<E>> executarListagem();
+	
+	protected void montarMensagemErroPermissao(String tipoUsuario) {
+		super.mensagens.getListaMensagens().add("O tipo de usuário "+tipoUsuario+" não tem permissão para executar a ação!");
+	}
+	
+	protected boolean montarRetorno(Retorno<String, Collection<String>> retorno) {
+		if (retorno.isSucesso()) {
+			return true;
+		} else {
+			montarMensagemErro(retorno);
+			return false;
+		}
 	}
 }

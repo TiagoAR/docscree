@@ -13,7 +13,7 @@
 				<rows>
 					<row>
 						<label value="E-mail:" />
-						<textbox value="@{gerenciador.fldEmail}" />
+						<textbox value="@{gerenciador.fldEmail}" focus="true" />
 					</row>
 					<row>
 						<label value="Senha:" />

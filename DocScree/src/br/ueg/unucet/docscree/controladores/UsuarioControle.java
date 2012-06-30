@@ -1,6 +1,5 @@
 package br.ueg.unucet.docscree.controladores;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -86,32 +85,22 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 			} else {
 				retorno = super.getFramework().alterarUsuario(super.getEntidade());
 			}
-			if (retorno.isSucesso()) {
-				return true;
-			} else {
-				montarMensagemErro(retorno);
-				return false;
-			}
+			return super.montarRetorno(retorno);
 		} else {
 			montarMensagemErroPermissao("Usuário");
 			return false;
 		}
 	}
+	
+	@Override
+	protected Retorno<String, Collection<Usuario>> executarListagem() {
+		return super.getFramework().pesquisarUsuario(new Usuario());
+	}
 
 	@Override
 	public boolean acaoListar() {
 		if (!isUsuarioComum()) {
-			Retorno<String, Collection<Usuario>> retorno = super.getFramework()
-					.pesquisarUsuario(new Usuario());
-			if (retorno.isSucesso()) {
-				Collection<Usuario> listaUsuario = retorno.getParametros().get(
-						Retorno.PARAMERTO_LISTA);
-				super.setLista(new ArrayList<Usuario>(listaUsuario));
-				return true;
-			} else {
-				super.mensagens.getListaMensagens().add(retorno.getMensagem());
-				return false;
-			}
+			return super.acaoListar();
 		} else {
 			montarMensagemErroPermissao("Usuário");
 			return false;
@@ -125,12 +114,7 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 			Usuario usuarioInativar = super.getEntidade();
 			usuarioInativar.setStatus(StatusEnum.INATIVO);
 			retorno = super.getFramework().alterarUsuario(usuarioInativar);
-			if (retorno.isSucesso()) {
-				return true;
-			} else {
-				montarMensagemErro(retorno);
-				return false;
-			}
+			return super.montarRetorno(retorno);
 		} else {
 			montarMensagemErroPermissao("Usuário");
 			return false;
@@ -172,11 +156,6 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 			}
 		}
 		super.mensagens.getListaMensagens().add(mensagemErro);
-
-	}
-	
-	protected void montarMensagemErroPermissao(String tipoUsuario) {
-		super.mensagens.getListaMensagens().add("O tipo de usuário "+tipoUsuario+" não tem permissão para executar a ação!");
 
 	}
 
