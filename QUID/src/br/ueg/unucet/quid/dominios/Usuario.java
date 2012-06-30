@@ -1,8 +1,14 @@
 package br.ueg.unucet.quid.dominios;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
@@ -14,6 +20,7 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
  * @author QUID
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "usuario")
 public class Usuario extends Persistivel {
@@ -40,6 +47,8 @@ public class Usuario extends Persistivel {
 	 */
 	@Enumerated(EnumType.STRING)
 	private PerfilAcessoEnum perfilAcesso;
+	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="usuario")
+	private Set<EquipeUsuario> equipesUsuario = new HashSet<EquipeUsuario>();
 
 	public Usuario() {
 	}
@@ -82,5 +91,19 @@ public class Usuario extends Persistivel {
 
 	public void setPerfilAcesso(PerfilAcessoEnum perfilAcesso) {
 		this.perfilAcesso = perfilAcesso;
+	}
+
+	/**
+	 * @return the equipesUsuario
+	 */
+	public Set<EquipeUsuario> getEquipesUsuario() {
+		return equipesUsuario;
+	}
+
+	/**
+	 * @param equipesUsuario the equipesUsuario to set
+	 */
+	public void setEquipesUsuario(Set<EquipeUsuario> equipesUsuario) {
+		this.equipesUsuario = equipesUsuario;
 	}
 }
