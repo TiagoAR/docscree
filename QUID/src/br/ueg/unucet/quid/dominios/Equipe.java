@@ -1,7 +1,9 @@
 package br.ueg.unucet.quid.dominios;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,6 +20,7 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
  * @author QUID
  * 
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "equipe")
 public class Equipe extends Persistivel {
@@ -34,8 +37,8 @@ public class Equipe extends Persistivel {
 	/**
 	 * Lista de equipe usuarios que pertence a equipe.
 	 */
-	@OneToMany(fetch = FetchType.EAGER, mappedBy="equipe")
-	private Collection<EquipeUsuario> equipeUsuarios;
+	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="equipe")
+	private Set<EquipeUsuario> equipeUsuarios = new HashSet<EquipeUsuario>();
 
 	// GETTERS AND SETTERS
 	public String getNome() {
@@ -57,14 +60,14 @@ public class Equipe extends Persistivel {
 	/**
 	 * @return the equipeUsuarios
 	 */
-	public Collection<EquipeUsuario> getEquipeUsuarios() {
+	public Set<EquipeUsuario> getEquipeUsuarios() {
 		return equipeUsuarios;
 	}
 
 	/**
 	 * @param equipeUsuarios the equipeUsuarios to set
 	 */
-	public void setEquipeUsuarios(Collection<EquipeUsuario> equipeUsuarios) {
+	public void setEquipeUsuarios(Set<EquipeUsuario> equipeUsuarios) {
 		this.equipeUsuarios = equipeUsuarios;
 	}
 }
