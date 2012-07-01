@@ -3,6 +3,7 @@
 	<name>QUID-EXTENSAO</name>
 	<comment></comment>
 	<projects>
+		<project>QUID</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
