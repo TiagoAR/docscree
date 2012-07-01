@@ -47,7 +47,8 @@ public class Usuario extends Persistivel {
 	 */
 	@Enumerated(EnumType.STRING)
 	private PerfilAcessoEnum perfilAcesso;
-	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="usuario")
+	
+	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="usuario")
 	private Set<EquipeUsuario> equipesUsuario = new HashSet<EquipeUsuario>();
 
 	public Usuario() {
