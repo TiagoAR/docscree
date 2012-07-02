@@ -49,7 +49,7 @@ public class Usuario extends Persistivel {
 	private PerfilAcessoEnum perfilAcesso;
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="usuario")
-	private Set<EquipeUsuario> equipesUsuario = new HashSet<EquipeUsuario>();
+	private Set<EquipeUsuario> equipesUsuario;
 
 	public Usuario() {
 	}
