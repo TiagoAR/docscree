@@ -25,7 +25,12 @@ public class EquipeControle extends GenericoControle<Equipe> {
 
 	@Override
 	public boolean acaoSalvar() {
-		Equipe equipe = new Equipe();
+		@SuppressWarnings("unused")
+		Collection<Equipe> listaUsuarios = super.getFramework()
+				.pesquisarEquipe(new Equipe()).getParametros()
+				.get(Retorno.PARAMERTO_LISTA);
+		return true;
+		/*Equipe equipe = new Equipe();
 		equipe.setNome("Teste");
 		equipe.setStatus(StatusEnum.ATIVO);
 		List<EquipeUsuario> listaEquipesUsuarios = new ArrayList<EquipeUsuario>();
@@ -35,7 +40,10 @@ public class EquipeControle extends GenericoControle<Equipe> {
 		for (Usuario usuario : listaUsuarios) {
 			if (usuario.getStatus().equals(StatusEnum.ATIVO)) {
 				EquipeUsuario equipeUsuario = new EquipeUsuario();
-				//usuario.getEquipesUsuario().add(equipeUsuario);
+				if (usuario.getEquipesUsuario() == null) {
+					usuario.setEquipesUsuario(new HashSet<EquipeUsuario>());
+				}
+				usuario.getEquipesUsuario().add(equipeUsuario);
 				equipeUsuario.setUsuario(usuario);
 				equipeUsuario.setEquipe(equipe);
 				equipeUsuario.setPapelUsuario(PapelUsuario.PREENCHEDOR);
@@ -51,7 +59,9 @@ public class EquipeControle extends GenericoControle<Equipe> {
 			return true;
 		} else {
 			return false;
-		}
+		}*/
+		
+		
 		/*
 		 * if (!super.isUsuarioComum()) { Retorno<String, Collection<String>>
 		 * retorno; if (super.getEntidade().getCodigo() == null) { retorno =
