@@ -38,7 +38,7 @@ public class Equipe extends Persistivel {
 	 * Lista de equipe usuarios que pertence a equipe.
 	 */
 	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="equipe")
-	private Set<EquipeUsuario> equipeUsuarios = new HashSet<EquipeUsuario>();
+	private Set<EquipeUsuario> equipeUsuarios;
 
 	// GETTERS AND SETTERS
 	public String getNome() {

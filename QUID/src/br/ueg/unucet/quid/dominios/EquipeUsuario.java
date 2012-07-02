@@ -26,13 +26,13 @@ public class EquipeUsuario extends Persistivel {
 	/**
 	 * A equipe que é relacionada
 	 */
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)  
+	@ManyToOne(fetch = FetchType.EAGER)  
 	@JoinColumn(name = "equipe_codigo", nullable = false)
 	private Equipe equipe;
 	/**
 	 * O usuário que é relacionado
 	 */
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)  
+	@ManyToOne(fetch = FetchType.EAGER)  
 	@JoinColumn(name = "usuario_codigo", nullable = false)
 	private Usuario usuario;
 	/**
