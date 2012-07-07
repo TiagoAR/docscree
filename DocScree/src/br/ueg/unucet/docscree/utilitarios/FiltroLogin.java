@@ -27,11 +27,12 @@ public class FiltroLogin implements Filter {
 	}
 
 	/**
-	 * Method that filter the request and if logged, continue with the request,
-	 * if not force the user to login.
+	 * Método que filtra a requisição, se estiver logado não faz nada,
+	 * caso contrário redireciona para a página de login.
 	 * 
-	 * @param ServletRequest
-	 *            , ServletResponse, FilterChain
+	 * @param resp response da visão
+	 * @param req request da visão
+	 * @param chain filterChain da visão
 	 */
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
@@ -57,10 +58,10 @@ public class FiltroLogin implements Filter {
 	}
 
 	/**
-	 * Method that verify if user is logged
+	 * Método que verifica se está logado
 	 * 
-	 * @param HttpServletRequest
-	 * @return if the user is logged or not
+	 * @param request 
+	 * @return boolean se está logado ou não
 	 */
 	private boolean isLogged(HttpServletRequest request) {
 		boolean retorno = false;

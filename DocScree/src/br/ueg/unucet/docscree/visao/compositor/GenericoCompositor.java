@@ -71,7 +71,7 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	/**
 	 * Método que filtra a lista em exibição.
 	 */
-	protected abstract void acaoFiltrar();
+	public abstract void acaoFiltrar();
 
 	/* Fim dos métodos abstratos*/
 	
