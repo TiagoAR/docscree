@@ -6,8 +6,6 @@ import java.util.List;
 
 import br.ueg.unucet.docscree.interfaces.ICRUDControle;
 import br.ueg.unucet.quid.dominios.Retorno;
-import br.ueg.unucet.quid.dominios.Usuario;
-import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
 import br.ueg.unucet.quid.extensao.dominios.Persistivel;
 
 /**
@@ -55,27 +53,9 @@ public abstract class GenericoControle<E extends Persistivel> extends SuperContr
 		this.lista = lista;
 	}
 	
-	protected boolean isUsuarioAdmin() {
-		if (((Usuario) super.getMapaAtributos().get("usuarioLogado")).getPerfilAcesso().equals(PerfilAcessoEnum.ADMINISTRADOR)) {
-			return true;
-		}
-		return false;
-	}
-	
-	protected boolean isUsuarioGerente() {
-		if (((Usuario) super.getMapaAtributos().get("usuarioLogado")).getPerfilAcesso().equals(PerfilAcessoEnum.GERENTE)) {
-			return true;
-		}
-		return false;
-	}
-	
-	protected boolean isUsuarioComum() {
-		if (((Usuario) super.getMapaAtributos().get("usuarioLogado")).getPerfilAcesso().equals(PerfilAcessoEnum.USUARIO)) {
-			return true;
-		}
-		return false;
-	}
-	
+	/**
+	 * @see ICRUDControle#acaoListar()
+	 */
 	@Override
 	public boolean acaoListar() {
 		Retorno<String, Collection<E>> retorno = executarListagem();
@@ -90,12 +70,28 @@ public abstract class GenericoControle<E extends Persistivel> extends SuperContr
 		}
 	}
 	
+	/**
+	 * Método que executa a listagem específica para cada caso de uso
+	 * 
+	 * @return Retorno<String, Collection<E>> retorno do framework
+	 */
 	protected abstract Retorno<String, Collection<E>> executarListagem();
 	
+	/**
+	 * Método que monta mensagem de erro de permissão de acesso a ação
+	 * 
+	 * @param tipoUsuario o perfil de usuário que está executando a ação
+	 */
 	protected void montarMensagemErroPermissao(String tipoUsuario) {
 		super.mensagens.getListaMensagens().add("O tipo de usuário "+tipoUsuario+" não tem permissão para executar a ação!");
 	}
 	
+	/**
+	 * Método que monta o retorno e a mensagem de erro caso ocorra um
+	 * 
+	 * @param retorno 
+	 * @return boolean se ação foi executada com sucesso
+	 */
 	protected boolean montarRetorno(Retorno<String, Collection<String>> retorno) {
 		if (retorno.isSucesso()) {
 			return true;

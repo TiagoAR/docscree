@@ -3,6 +3,7 @@ package br.ueg.unucet.docscree.controladores;
 import java.util.Collection;
 import java.util.Iterator;
 
+import br.ueg.unucet.docscree.interfaces.ICRUDControle;
 import br.ueg.unucet.docscree.utilitarios.Conversor;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
@@ -27,7 +28,7 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 	 * Método sobrescrito para validar os dados a serem preenchidos do usuário
 	 * Recebe os parâmetros da visão e os seta de forma correta na entidade.
 	 * 
-	 * @see br.ueg.unucet.docscree.controladores.SuperControle#preAcao()
+	 * @see br.ueg.unucet.docscree.controladores.SuperControle#preAcao(String)
 	 */
 	@Override
 	protected boolean preAcao(String action) {
@@ -92,11 +93,17 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 		}
 	}
 	
+	/**
+	 * @see GenericoControle#executarListagem()
+	 */
 	@Override
 	protected Retorno<String, Collection<Usuario>> executarListagem() {
 		return super.getFramework().pesquisarUsuario(new Usuario());
 	}
 
+	/**
+	 * @see GenericoControle#acaoListar()
+	 */
 	@Override
 	public boolean acaoListar() {
 		if (!isUsuarioComum()) {
@@ -107,6 +114,9 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 		}
 	}
 
+	/**
+	 * @see GenericoControle#acaoExcluir()
+	 */
 	@Override
 	public boolean acaoExcluir() {
 		if (!isUsuarioComum()) {
@@ -121,6 +131,9 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 		}
 	}
 
+	/**
+	 * @see ICRUDControle#setarEntidadeVisao(SuperCompositor)
+	 */
 	@Override
 	public void setarEntidadeVisao(SuperCompositor<?> pVisao) {
 		UsuarioCompositor visao = (UsuarioCompositor) pVisao;
@@ -136,6 +149,9 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 				.toString());
 	}
 
+	/**
+	 * @see GenericoControle#montarMensagemErro(Retorno)
+	 */
 	@Override
 	protected void montarMensagemErro(
 			Retorno<String, Collection<String>> retorno) {
@@ -198,6 +214,11 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 		return resultado;
 	}
 	
+	/**
+	 * Método que atualiza as informações do usuário logado após ser editado
+	 * 
+	 * @return boolean se ação foi executada com sucesso
+	 */
 	public boolean acaoAtualizarUsuarioLogado() {
 		boolean resultado = false;
 		Usuario usuario = new Usuario();

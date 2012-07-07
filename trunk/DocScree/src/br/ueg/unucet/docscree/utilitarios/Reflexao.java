@@ -81,6 +81,7 @@ public class Reflexao {
 				}
 			}
 		}
+		mapeador.put("visao", pVisao);
 		mapeador.put("entidade", entidade);
 		return mapeador;
 	}

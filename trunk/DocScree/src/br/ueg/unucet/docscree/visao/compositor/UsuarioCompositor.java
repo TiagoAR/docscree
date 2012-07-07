@@ -46,7 +46,7 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	 * Campo senha
 	 */
 	@AtributoVisao(isCampoEntidade = true, nome = "senha")
-	private String fldSenha;
+	private String fldSenha = "admin";
 	/**
 	 * Campo confirmar senha
 	 */
@@ -56,7 +56,7 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	 * Campo E-mail
 	 */
 	@AtributoVisao(isCampoEntidade = true, nome = "email")
-	private String fldEmail;
+	private String fldEmail = "admin";
 	/* Fim dos atributos da entidade */
 	/**
 	 * Campo Status
@@ -71,18 +71,39 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 
 	/* Fim atributos */
 
+	/**
+	 * Filtro do usuário para código
+	 */
 	private String filtroCodigo = "";
+	/**
+	 * Filtro do usuário para nome
+	 */
 	private String filtroNome = "";
+	/**
+	 * Filtro do usuário para e-mail
+	 */
 	private String filtroEmail = "";
+	/**
+	 * Filtro do usuário para perfil
+	 */
 	private String filtroPerfil = "";
 
+	/**
+	 * Representa o checkbox da visão para exibir usuários inativos ou não
+	 */
 	private Boolean exibirInativos = new Boolean(false);
 
+	/**
+	 * @see GenericoCompositor#getTipoEntidade()
+	 */
 	@Override
 	public Class getTipoEntidade() {
 		return Usuario.class;
 	}
 
+	/**
+	 * @see GenericoCompositor#limparCampos()
+	 */
 	@Override
 	protected void limparCampos() {
 		setCodigo(null);
@@ -95,6 +116,9 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 		super.binder.loadAll();
 	}
 
+	/**
+	 * @see GenericoCompositor#limparFiltros()
+	 */
 	@Override
 	protected void limparFiltros() {
 		setFiltroCodigo("");
@@ -120,9 +144,7 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 		super.binder.loadAll();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/** 
 	 * @see
 	 * br.ueg.unucet.docscree.visao.compositor.GenericoCompositor#acaoSalvar()
 	 */
@@ -135,9 +157,7 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 		this.forcarAtualizacaoCampos();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/** 
 	 * @see br.ueg.unucet.docscree.visao.compositor.SuperCompositor#
 	 * forcarAtualizacaoCampos()
 	 */
@@ -202,12 +222,18 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 		}
 	}
 
+	/**
+	 * @see ILogar#acaoDeslogar()
+	 */
 	@Override
 	public void acaoDeslogar() {
 		Executions.getCurrent().getSession().invalidate();
 		Executions.sendRedirect("/login.zul");
 	}
 
+	/**
+	 * Método que faz a edição do próprio usuário, pega informações através da sessão
+	 */
 	public void acaoEditarProprioUsuario() {
 
 		if (!Executions.getCurrent().getDesktop().getRequestPath()
@@ -228,6 +254,9 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 		Executions.getCurrent().getSession().setAttribute("usuario", usuario);
 	}
 
+	/**
+	 * Método que redireciona para a página de login
+	 */
 	public void redirecionar() {
 		Executions.sendRedirect("/pages/usuario.zul");
 	}
@@ -245,6 +274,11 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 		return listaPerfil;
 	}
 
+	/**
+	 * Método que retorna o nome do usuário logado
+	 * 
+	 * @return String nome usuário logado
+	 */
 	public String getNomeUsuarioLogado() {
 		try {
 			return ((Usuario) Executions.getCurrent().getSession()

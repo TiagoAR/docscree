@@ -7,6 +7,7 @@ import br.ueg.unucet.docscree.utilitarios.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Usuario;
+import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
 import br.ueg.unucet.quid.interfaces.IQUID;
 import br.ueg.unucet.quid.servicos.QuidService;
 
@@ -39,6 +40,39 @@ public abstract class SuperControle {
 	public IQUID getFramework() {
 		return (IQUID) QuidService.obterInstancia();
 	}
+	
+	/**
+	 * Método que verifica se o usuário é do tipo Administrador
+	 * @return boolean se o usário é Administrador ou não
+	 */
+	protected boolean isUsuarioAdmin() {
+		if (((Usuario) this.getMapaAtributos().get("usuarioLogado")).getPerfilAcesso().equals(PerfilAcessoEnum.ADMINISTRADOR)) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Método que verifica se o usuário é do tipo Gerente
+	 * @return boolean se o usário é Gerente ou não
+	 */	
+	protected boolean isUsuarioGerente() {
+		if (((Usuario) this.getMapaAtributos().get("usuarioLogado")).getPerfilAcesso().equals(PerfilAcessoEnum.GERENTE)) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Método que verifica se o usuário é do tipo Usuário
+	 * @return boolean se o usário é Usuário ou não
+	 */
+	protected boolean isUsuarioComum() {
+		if (((Usuario) this.getMapaAtributos().get("usuarioLogado")).getPerfilAcesso().equals(PerfilAcessoEnum.USUARIO)) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Método responsável por executar qualquer ação, a partir dele que chama o
@@ -62,7 +96,7 @@ public abstract class SuperControle {
 				return false;
 			}
 			String nomeAcao = "acao" + pAcao.substring(0, 1).toUpperCase()
-					+ pAcao.substring(1).toLowerCase();
+					+ pAcao.substring(1);
 			Method metodo = classeRef.getMethod(nomeAcao);
 			resultado = (Boolean) metodo.invoke(this);
 			if (!posAcao(pAcao)) {

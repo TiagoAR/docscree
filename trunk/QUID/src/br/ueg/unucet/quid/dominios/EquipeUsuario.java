@@ -1,6 +1,5 @@
 package br.ueg.unucet.quid.dominios;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -40,6 +39,11 @@ public class EquipeUsuario extends Persistivel {
 	 */
 	@Enumerated(EnumType.STRING)
 	private PapelUsuario papelUsuario;
+	
+	public EquipeUsuario() {
+		this.equipe = new Equipe();
+		this.usuario = new Usuario();
+	}
 
 	/**
 	 * @return the equipe
@@ -84,6 +88,37 @@ public class EquipeUsuario extends Persistivel {
 	 */
 	public void setPapelUsuario(PapelUsuario papelUsuario) {
 		this.papelUsuario = papelUsuario;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EquipeUsuario other = (EquipeUsuario) obj;
+		if (usuario == null) {
+			if (other.usuario != null)
+				return false;
+		} else if (!usuario.equals(other.usuario))
+			return false;
+		return true;
 	}
 
 }

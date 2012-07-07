@@ -2,15 +2,18 @@ package br.ueg.unucet.docscree.controladores;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
+import br.ueg.unucet.docscree.interfaces.ICRUDControle;
+import br.ueg.unucet.docscree.interfaces.IEquipeVisao;
+import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
+import br.ueg.unucet.docscree.visao.compositor.EquipeCompositor;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.EquipeUsuario;
 import br.ueg.unucet.quid.dominios.Retorno;
 import br.ueg.unucet.quid.dominios.Usuario;
-import br.ueg.unucet.quid.enums.PapelUsuario;
 import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 
 /**
@@ -21,57 +24,55 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
  */
 public class EquipeControle extends GenericoControle<Equipe> {
 
-	private UsuarioControle usuarioControle = new UsuarioControle();
-
+	/** 
+	 * @see
+	 * br.ueg.unucet.docscree.controladores.SuperControle#preAcao(java.lang.
+	 * String)
+	 */
 	@Override
-	public boolean acaoSalvar() {
-		@SuppressWarnings("unused")
-		Collection<Equipe> listaUsuarios = super.getFramework()
-				.pesquisarEquipe(new Equipe()).getParametros()
-				.get(Retorno.PARAMERTO_LISTA);
-		return true;
-		/*Equipe equipe = new Equipe();
-		equipe.setNome("Teste");
-		equipe.setStatus(StatusEnum.ATIVO);
-		List<EquipeUsuario> listaEquipesUsuarios = new ArrayList<EquipeUsuario>();
-		Collection<Usuario> listaUsuarios = super.getFramework()
-				.pesquisarUsuario(new Usuario()).getParametros()
-				.get(Retorno.PARAMERTO_LISTA);
-		for (Usuario usuario : listaUsuarios) {
-			if (usuario.getStatus().equals(StatusEnum.ATIVO)) {
-				EquipeUsuario equipeUsuario = new EquipeUsuario();
-				if (usuario.getEquipesUsuario() == null) {
-					usuario.setEquipesUsuario(new HashSet<EquipeUsuario>());
-				}
-				usuario.getEquipesUsuario().add(equipeUsuario);
-				equipeUsuario.setUsuario(usuario);
-				equipeUsuario.setEquipe(equipe);
-				equipeUsuario.setPapelUsuario(PapelUsuario.PREENCHEDOR);
-				listaEquipesUsuarios.add(equipeUsuario);
+	protected boolean preAcao(String action) {
+		if (action.equalsIgnoreCase("salvar")) {
+			StatusEnum status = StatusEnum.ATIVO;
+			if (((Boolean) super.getMapaAtributos().get("status"))
+					.equals(Boolean.FALSE)) {
+				status = StatusEnum.INATIVO;
+			}
+			super.getEntidade().setStatus(status);
+			if (super.getEntidade().getEquipeUsuarios().isEmpty()) {
+				super.getMensagens().getListaMensagens()
+						.add("É necessário associar usuários a equipe");
+				super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+				return false;
+			}
+			for (EquipeUsuario equipeUsuario : super.getEntidade()
+					.getEquipeUsuarios()) {
+				equipeUsuario.setEquipe(super.getEntidade());
 			}
 		}
-		HashSet<EquipeUsuario> hashSet = new HashSet<EquipeUsuario>();
-		hashSet.addAll(listaEquipesUsuarios);
-		equipe.setEquipeUsuarios(hashSet);
-		Retorno<String, Collection<String>> retorno;
-		retorno = super.getFramework().inserirEquipe(equipe);
-		if (retorno.isSucesso()) {
-			return true;
-		} else {
-			return false;
-		}*/
-		
-		
-		/*
-		 * if (!super.isUsuarioComum()) { Retorno<String, Collection<String>>
-		 * retorno; if (super.getEntidade().getCodigo() == null) { retorno =
-		 * super.getFramework().inserirEquipe(super.getEntidade()); } else {
-		 * retorno = super.getFramework().alterarEquipe(super.getEntidade()); }
-		 * return super.montarRetorno(retorno); } else {
-		 * montarMensagemErroPermissao("Usuário"); return false; }
-		 */
+		return true;
 	}
 
+	/**
+	 * Método que salva uma equipe (edição ou inserção)
+	 * 
+	 * @return boolean retorno da ação com sucesso
+	 */
+	@Override
+	public boolean acaoSalvar() {
+		Retorno<String, Collection<String>> retorno;
+		if (super.getEntidade().getCodigo() == null) {
+			retorno = super.getFramework().inserirEquipe(super.getEntidade());
+		} else {
+			retorno = super.getFramework().alterarEquipe(super.getEntidade());
+		}
+			return super.montarRetorno(retorno);
+	}
+
+	/**
+	 * Método que efetua a ação de listagem de equipe
+	 * 
+	 * @return boolean se ação foi executada com sucesso
+	 */
 	@Override
 	public boolean acaoListar() {
 		if (!super.isUsuarioComum()) {
@@ -82,34 +83,118 @@ public class EquipeControle extends GenericoControle<Equipe> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * Método que lista os usuários cadastrados e estão ativos.
+	 * 
+	 * @return List<Usuario> usuários ativos no sistema
+	 */
 	public List<Usuario> listarUsuarios() {
-		if (this.usuarioControle.acaoListar()) {
-			return (List<Usuario>) this.usuarioControle.getLista();
+		Usuario usuario = new Usuario();
+		usuario.setStatus(StatusEnum.ATIVO);
+		Retorno<String, Collection<Usuario>> retorno = super.getFramework()
+				.pesquisarUsuario(usuario);
+		if (retorno.isSucesso()) {
+			Collection<Usuario> listaEntidades = retorno.getParametros().get(
+					Retorno.PARAMERTO_LISTA);
+			return new ArrayList<Usuario>(listaEntidades);
 		} else {
 			return new ArrayList<Usuario>();
 		}
 	}
 
+	/**
+	 * Método que adiciona um usuário válido com seu papel já associado a equipe que será salva
+	 * 
+	 * @return boolean retorno se ação foi executada com sucesso
+	 */
+	public boolean acaoAdicionarEquipeUsuario() {
+		boolean retorno = true;
+		EquipeUsuario equipeUsuario = (EquipeUsuario) super.getMapaAtributos()
+				.get("equipeUsuario");
+		if (equipeUsuario.getPapelUsuario() == null
+				|| equipeUsuario.getPapelUsuario().toString().isEmpty()) {
+			super.getMensagens().getListaMensagens()
+					.add("É necessário definir o papel do usuário!");
+			super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+			retorno = false;
+		}
+		if (equipeUsuario.getUsuario() == null
+				|| equipeUsuario.getUsuario().getCodigo() == null
+				|| equipeUsuario.getUsuario().getCodigo()
+						.equals(Long.valueOf(0))) {
+			super.getMensagens().getListaMensagens()
+					.add("É necessário escolher um usuário válido!");
+			super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+			retorno = false;
+		}
+		if (retorno) {
+			IEquipeVisao visao = (IEquipeVisao) super.getMapaAtributos().get(
+					"visao");
+			if (!visao.getListaEquipeUsuario().contains(equipeUsuario)) {
+				visao.getListaEquipeUsuario().add(equipeUsuario);
+			} else {
+				super.getMensagens().getListaMensagens()
+						.add("Usuário já consta na lista!");
+				retorno = false;
+			}
+		}
+		return retorno;
+	}
+
+	/**
+	 * @see GenericoControle#acaoExcluir()
+	 */
 	@Override
 	public boolean acaoExcluir() {
-		// TODO Auto-generated method stub
-		return false;
+		Retorno<String, Collection<String>> retorno;
+		Equipe equipeInativar = super.getEntidade();
+		equipeInativar.setStatus(StatusEnum.INATIVO);
+		retorno = super.getFramework().alterarEquipe(equipeInativar);
+		return super.montarRetorno(retorno);
 	}
 
+	/**
+	 * @see ICRUDControle#setarEntidadeVisao(SuperCompositor)
+	 */
 	@Override
 	public void setarEntidadeVisao(SuperCompositor<?> pVisao) {
-		// TODO Auto-generated method stub
-
+		EquipeCompositor visao = (EquipeCompositor) pVisao;
+		Equipe equipeSelecionada = (Equipe) visao.getEntidade();
+		visao.setCodigo(equipeSelecionada.getCodigo());
+		visao.setFldNome(equipeSelecionada.getNome());
+		boolean ativo = equipeSelecionada.getStatus().equals(StatusEnum.ATIVO);
+		visao.setFldStatus(ativo);
+		visao.setListaEquipeUsuario(equipeSelecionada.getEquipeUsuarios());
 	}
 
+	/**
+	 * Método que monta o a lista de mensagens para serem exibidas na visão
+	 * através do retorno da ação efetuado pelo QUID
+	 */
 	@Override
 	protected void montarMensagemErro(
 			Retorno<String, Collection<String>> retorno) {
-		// TODO Auto-generated method stub
+		String mensagemErro = retorno.getMensagem();
+		Collection<String> colecao =  retorno.getParametros().get(Retorno.PARAMETRO_NAO_INFORMADO_INVALIDO); 
+		if (!colecao.isEmpty()) {
+			Iterator<String> iterador = colecao.iterator();
+			if (iterador.hasNext()) {
+				mensagemErro += ": " + iterador.next();
+			}
+			while (iterador.hasNext()) {
+				String campoNaoInformado = (String) iterador.next();
+				mensagemErro += ", " + campoNaoInformado;
+			}
+		}
+		super.mensagens.getListaMensagens().add(mensagemErro);
 
 	}
 
+	/**
+	 * Executa a listagem de equipe via framework.
+	 * 
+	 * @return Retorno<String, Collection<Equipe>> retorno do framework
+	 */
 	@Override
 	protected Retorno<String, Collection<Equipe>> executarListagem() {
 		return super.getFramework().pesquisarEquipe(new Equipe());

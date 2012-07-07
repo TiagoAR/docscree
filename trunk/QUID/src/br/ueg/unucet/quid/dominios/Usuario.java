@@ -1,6 +1,5 @@
 package br.ueg.unucet.quid.dominios;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;

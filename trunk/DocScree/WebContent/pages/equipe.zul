@@ -5,7 +5,7 @@
 <zk>
 	<groupbox self="@{define(content)}" id="gpBoxEquipe" width="650px"
 		closable="false" apply="${equipeCompositor}">
-		<caption label="Equipe"/>
+		<caption label="Equipe" />
 		<grid sizedByContent="true" style="border: none;">
 			<columns>
 				<column width="100px" />
@@ -15,30 +15,115 @@
 			</columns>
 			<rows>
 				<row>
-					<label value="Nome:"/>
+					<label value="Nome:" />
 					<cell colspan="3">
-					<textbox value="@{gerenciador.fldNome}" />
+						<textbox value="@{gerenciador.fldNome}" />
 					</cell>
 				</row>
 				<row>
-					<label value="Usuários:"/>
-					<combobox model="@{gerenciador.listaPapeis }" width="180px"/>
-					<combobox buttonVisible="false" width="180px"/>
-					<button label="Adicionar Usuário" />
+					<label value="Usuários:" />
+					<combobox model="@{gerenciador.listaPapeis }"
+						width="180px"
+						selectedItem="@{gerenciador.equipeUsuario.papelUsuario }" />
+					<combobox model="@{gerenciador.listaUsuarios }"
+						selectedItem="@{gerenciador.equipeUsuario.usuario }"
+						buttonVisible="false" autocomplete="true" width="180px">
+						<comboitem self="@{each=item }" value="@{item}"
+							label="@{item.nome }" />
+					</combobox>
+					<button label="Adicionar Usuário" onClick="gerenciador.acaoAdicionarUsuario()"/>
 				</row>
 				<row>
-					<cell colspan="4" align="center"> 
-						<button label="Salvar" onClick="gerenciador.teste()"/>
-						<button label="Listar"/>
-						<button label="Cancelar"/>
+					<label value="Ativo:" />
+					<checkbox checked="@{gerenciador.fldStatus}" />
+				</row>
+				<row>
+					<cell colspan="4">
+						<listbox pagingPosition="bottom" mold="paging" pageSize="5"
+							model="@{gerenciador.modelEquipeUsuario}" 
+							id="listboxUsuarios" selectedItem="@{gerenciador.equipeUsuarioSelecionado }">
+							<listhead>
+								<listheader label="Nome" />
+								<listheader label="Papel do usuário"/>
+								<listheader label="Remover"/>
+							</listhead>
+							<listitem self="@{each=item }" value="@{item}">
+								<listcell label="@{item.usuario.nome }" />
+								<listcell label="@{item.papelUsuario }" />
+								<listcell>
+									<button label="Remover" >
+										<attribute name="onClick">
+											self.getParent().getParent().setSelected(true);
+											gerenciador.acaoRemoverUsuario();
+										</attribute>
+									</button>
+								</listcell>
+								
+							</listitem>
+						</listbox>
 					</cell>
 				</row>
+				<row>
+					<cell colspan="4" align="center">
+						<button label="Salvar"
+							onClick="gerenciador.acaoSalvar()" />
+						<button label="Listar" onClick="gerenciador.acaoListar()" />
+						<button label="Cancelar" />
+					</cell>
+				</row>
+				
 			</rows>
 		</grid>
-
-		<window title="Lista de Usuários" border="normal" closable="false"
+		
+		
+		
+		<window title="Lista de Equipes" border="normal" closable="false"
 			mode="modal" width="750px" visible="false" id="windowLista">
-			
+			<listbox pagingPosition="bottom" mold="paging" pageSize="5"
+				model="@{gerenciador.listaEntidadeModelo }" selectedItem="@{gerenciador.entidade }"
+				id="listboxLista">
+				<auxhead>
+					<auxheader>
+						<textbox value="@{gerenciador.filtroCodigo }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+					</auxheader>
+					<auxheader>
+						<textbox value="@{gerenciador.filtroNome }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+					</auxheader>
+					<auxheader colspan="3"></auxheader>
+				</auxhead>
+				<listhead>
+					<listheader label="Código" />
+					<listheader label="Nome" />
+					<listheader label="Status" />
+					<listheader />
+					<listheader />
+				</listhead>
+				<listitem self="@{each=item }" value="@{item}">
+					<listcell label="@{item.codigo }" />
+					<listcell label="@{item.nome }" />
+					<listcell label="@{item.status }" />
+					<listcell>
+						<button label="Editar" > 
+							<attribute name="onClick">
+								self.getParent().getParent().setSelected(true);
+								gerenciador.acaoEditar();
+							</attribute>
+						</button>
+					</listcell>
+					<listcell>
+						<button label="Desativar" >
+							<attribute name="onClick">
+								self.getParent().getParent().setSelected(true);
+								gerenciador.acaoExcluir();
+							</attribute>
+						</button>
+					</listcell>
+				</listitem>
+			</listbox>
+			<checkbox label="Exibir usuários inativos" checked="@{gerenciador.exibirInativos}" 
+				onClick="gerenciador.acaoFiltrar()" />
+
+			<button label="Fechar" onClick="gerenciador.fecharModalLista()" />
 		</window>
 	</groupbox>
 
