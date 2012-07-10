@@ -17,6 +17,7 @@ import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.EquipeUsuario;
 import br.ueg.unucet.quid.dominios.Usuario;
 import br.ueg.unucet.quid.enums.PapelUsuario;
+import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 
 /**
  * Classe da visão que representa o caso de uso Manter Equipe; Composer da
@@ -157,6 +158,17 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * @see br.ueg.unucet.docscree.visao.compositor.GenericoCompositor#atualizarEntidadeExcluida(int)
+	 */
+	@Override
+	protected void atualizarEntidadeExcluida(int index) {
+		((Equipe) this.getListaEntidade().get(index))
+				.setStatus(StatusEnum.INATIVO);
+		acaoFiltrar();
+		super.binder.loadAll();
 	}
 
 	/**

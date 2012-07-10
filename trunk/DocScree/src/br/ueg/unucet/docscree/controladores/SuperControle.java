@@ -6,6 +6,8 @@ import java.util.HashMap;
 import br.ueg.unucet.docscree.utilitarios.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
+import br.ueg.unucet.quid.dominios.Equipe;
+import br.ueg.unucet.quid.dominios.EquipeUsuario;
 import br.ueg.unucet.quid.dominios.Usuario;
 import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
 import br.ueg.unucet.quid.interfaces.IQUID;
@@ -72,6 +74,29 @@ public abstract class SuperControle {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Método que verifica se o usuário logado pertence a equipe passada como parâmetro.
+	 * 
+	 * @param pEquipe equipe a ser verificada
+	 * @return boolean se o usuário logado pertence ou não a equipe
+	 */
+	protected boolean isMesmaEquipe(Equipe pEquipe) {
+		for (EquipeUsuario equipeUsuario : ((Usuario) this.getMapaAtributos().get("usuarioLogado")).getEquipeUsuarios()) {
+			if (equipeUsuario.getEquipe().equals(pEquipe)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Método que retorna o usuário logado
+	 * @return Usuario usuario logado
+	 */
+	protected Usuario getUsuarioLogado() {
+		return (Usuario) this.getMapaAtributos().get("usuarioLogado");
 	}
 
 	/**

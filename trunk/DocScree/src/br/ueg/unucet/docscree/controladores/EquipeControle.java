@@ -2,6 +2,7 @@ package br.ueg.unucet.docscree.controladores;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.EquipeUsuario;
 import br.ueg.unucet.quid.dominios.Retorno;
 import br.ueg.unucet.quid.dominios.Usuario;
+import br.ueg.unucet.quid.enums.PapelUsuario;
 import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 
 /**
@@ -24,10 +26,9 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
  */
 public class EquipeControle extends GenericoControle<Equipe> {
 
-	/** 
-	 * @see
-	 * br.ueg.unucet.docscree.controladores.SuperControle#preAcao(java.lang.
-	 * String)
+	/**
+	 * @see br.ueg.unucet.docscree.controladores.SuperControle#preAcao(java.lang.
+	 *      String)
 	 */
 	@Override
 	protected boolean preAcao(String action) {
@@ -59,13 +60,43 @@ public class EquipeControle extends GenericoControle<Equipe> {
 	 */
 	@Override
 	public boolean acaoSalvar() {
-		Retorno<String, Collection<String>> retorno;
-		if (super.getEntidade().getCodigo() == null) {
-			retorno = super.getFramework().inserirEquipe(super.getEntidade());
-		} else {
-			retorno = super.getFramework().alterarEquipe(super.getEntidade());
-		}
+		if (!super.isUsuarioComum()) {
+			Retorno<String, Collection<String>> retorno;
+			Equipe entidade = super.getEntidade();
+			if (entidade.getCodigo() == null) {
+				boolean contemUsuario = false;
+				for (EquipeUsuario iterador : entidade.getEquipeUsuarios()) {
+					if (iterador.getUsuario().equals(super.getUsuarioLogado())) {
+						contemUsuario = true;
+						break;
+					}
+				}
+				if (!contemUsuario) {
+					EquipeUsuario usuarioGerente = new EquipeUsuario();
+					usuarioGerente.setUsuario(super.getUsuarioLogado());
+					usuarioGerente.setPapelUsuario(PapelUsuario.GERENTE);
+					entidade.getEquipeUsuarios().add(usuarioGerente);
+				}
+				retorno = super.getFramework().inserirEquipe(
+						entidade);
+			} else {
+				if (super.isUsuarioGerente()
+						&& super.isMesmaEquipe(entidade)) {
+					retorno = super.getFramework().alterarEquipe(
+							entidade);
+				} else {
+					super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+					super.getMensagens()
+							.getListaMensagens()
+							.add("Gerente só pode editar equipes que faça parte");
+					return false;
+				}
+			}
 			return super.montarRetorno(retorno);
+		} else {
+			super.montarMensagemErroPermissao("Usuário");
+			return false;
+		}
 	}
 
 	/**
@@ -103,7 +134,8 @@ public class EquipeControle extends GenericoControle<Equipe> {
 	}
 
 	/**
-	 * Método que adiciona um usuário válido com seu papel já associado a equipe que será salva
+	 * Método que adiciona um usuário válido com seu papel já associado a equipe
+	 * que será salva
 	 * 
 	 * @return boolean retorno se ação foi executada com sucesso
 	 */
@@ -146,11 +178,22 @@ public class EquipeControle extends GenericoControle<Equipe> {
 	 */
 	@Override
 	public boolean acaoExcluir() {
-		Retorno<String, Collection<String>> retorno;
-		Equipe equipeInativar = super.getEntidade();
-		equipeInativar.setStatus(StatusEnum.INATIVO);
-		retorno = super.getFramework().alterarEquipe(equipeInativar);
-		return super.montarRetorno(retorno);
+		if (!super.isUsuarioComum()) {
+			if (super.isUsuarioAdmin() || super.isMesmaEquipe(super.getEntidade())) {
+				Retorno<String, Collection<String>> retorno;
+				Equipe equipeInativar = super.getEntidade();
+				equipeInativar.setStatus(StatusEnum.INATIVO);
+				retorno = super.getFramework().alterarEquipe(equipeInativar);
+				return super.montarRetorno(retorno);
+			} else {
+				super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+				super.getMensagens().getListaMensagens().add("Gerente só pode inativar equipe a que ele pertença");
+				return false;
+			}
+		} else {
+			super.montarMensagemErroPermissao("Usuário");
+			return false;
+		}
 	}
 
 	/**
@@ -175,7 +218,8 @@ public class EquipeControle extends GenericoControle<Equipe> {
 	protected void montarMensagemErro(
 			Retorno<String, Collection<String>> retorno) {
 		String mensagemErro = retorno.getMensagem();
-		Collection<String> colecao =  retorno.getParametros().get(Retorno.PARAMETRO_NAO_INFORMADO_INVALIDO); 
+		Collection<String> colecao = retorno.getParametros().get(
+				Retorno.PARAMETRO_NAO_INFORMADO_INVALIDO);
 		if (!colecao.isEmpty()) {
 			Iterator<String> iterador = colecao.iterator();
 			if (iterador.hasNext()) {
@@ -197,7 +241,26 @@ public class EquipeControle extends GenericoControle<Equipe> {
 	 */
 	@Override
 	protected Retorno<String, Collection<Equipe>> executarListagem() {
-		return super.getFramework().pesquisarEquipe(new Equipe());
+		Equipe equipe = new Equipe();
+		Collection<Equipe> colecao;
+		if (super.isUsuarioGerente()) {
+			Retorno<String, Collection<Equipe>> retorno;
+			colecao = new ArrayList<Equipe>();
+			for (EquipeUsuario equipeUsuario : super.getUsuarioLogado().getEquipeUsuarios()) {
+					Equipe equipePesquisa = new Equipe();
+					equipePesquisa.setCodigo(equipeUsuario.getEquipe().getCodigo());
+					retorno = super.getFramework().pesquisarEquipe(equipePesquisa);
+					if (retorno.isSucesso()) {
+						colecao.addAll(retorno.getParametros().get(
+								Retorno.PARAMERTO_LISTA));
+					}
+			}
+			retorno = new Retorno<String, Collection<Equipe>>();
+			retorno.setSucesso(true);
+			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA, colecao);
+			return retorno;
+		}
+		return super.getFramework().pesquisarEquipe(equipe);
 	}
 
 }
