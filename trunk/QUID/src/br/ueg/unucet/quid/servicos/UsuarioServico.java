@@ -44,7 +44,7 @@ public class UsuarioServico extends GenericoServico<Usuario> implements IUsuario
 	@Override
 	public Retorno<String, Collection<Usuario>> pesquisar(Usuario usuario) {
 		Retorno<String, Collection<Usuario>> retorno = new Retorno<String, Collection<Usuario>>();
-		Collection<Usuario> lista = this.usuarioControle.pesquisarPorRestricao(usuario, new String[]{"usuario.codigo","usuario.senha","usuario.nome", "usuario.email", "usuario.status", "usuario.perfilAcesso"});
+		Collection<Usuario> lista = this.usuarioControle.pesquisarUsuario(usuario);
 		if(lista == null || lista.isEmpty()){
 			retorno.setSucesso(false);
 			retorno.setMensagem(propertiesMensagensUtil.getValor("lista_vazia"));

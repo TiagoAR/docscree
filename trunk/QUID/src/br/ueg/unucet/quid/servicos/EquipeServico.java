@@ -65,7 +65,7 @@ public class EquipeServico extends GenericoServico<Equipe> implements IEquipeSev
 		if(equipes.isEmpty()){
 			retorno.setSucesso(false);
 			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA, equipes);
-			retorno.setMensagem("NENHUM USUARIO ENCONTRADO");
+			retorno.setMensagem("Nenhuma equipe encontrada");
 		}else{
 			retorno.setSucesso(true);
 			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA,	equipes);
