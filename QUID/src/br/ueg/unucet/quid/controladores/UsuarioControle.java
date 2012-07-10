@@ -83,6 +83,16 @@ public class UsuarioControle extends GenericControle<Usuario, Long> implements I
 		}
 		
 	}
+	
+	public Collection<Usuario> pesquisarUsuario(Usuario usuario){
+		Collection<Usuario> usuarios = pesquisarPorRestricao(usuario, new String[]{"usuario.codigo", "usuario.email"});
+		Collection<Usuario> retorno = new ArrayList<Usuario>();
+		for (Usuario usuario2 : usuarios) {
+			usuario2 = getPorId(Usuario.class, usuario2.getCodigo());
+			retorno.add(usuario2);
+		}
+		return retorno;
+	}
 
 
 	/* (non-Javadoc)

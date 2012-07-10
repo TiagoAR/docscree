@@ -48,7 +48,7 @@ public class Usuario extends Persistivel {
 	private PerfilAcessoEnum perfilAcesso;
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="usuario")
-	private Set<EquipeUsuario> equipesUsuario;
+	private Set<EquipeUsuario> equipeUsuarios;
 
 	public Usuario() {
 	}
@@ -94,16 +94,16 @@ public class Usuario extends Persistivel {
 	}
 
 	/**
-	 * @return the equipesUsuario
+	 * @return the equipeUsuarios
 	 */
-	public Set<EquipeUsuario> getEquipesUsuario() {
-		return equipesUsuario;
+	public Set<EquipeUsuario> getEquipeUsuarios() {
+		return equipeUsuarios;
 	}
 
 	/**
-	 * @param equipesUsuario the equipesUsuario to set
+	 * @param equipeUsuarios the equipeUsuarios to set
 	 */
-	public void setEquipesUsuario(Set<EquipeUsuario> equipesUsuario) {
-		this.equipesUsuario = equipesUsuario;
+	public void setEquipeUsuarios(Set<EquipeUsuario> equipeUsuarios) {
+		this.equipeUsuarios = equipeUsuarios;
 	}
 }
