@@ -80,8 +80,8 @@ public class EquipeControle extends GenericoControle<Equipe> {
 				retorno = super.getFramework().inserirEquipe(
 						entidade);
 			} else {
-				if (super.isUsuarioGerente()
-						&& super.isMesmaEquipe(entidade)) {
+				if (super.isUsuarioAdmin()
+						|| super.isMesmaEquipe(entidade)) {
 					retorno = super.getFramework().alterarEquipe(
 							entidade);
 				} else {
