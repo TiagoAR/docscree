@@ -150,6 +150,8 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 			if (retorno) {
 				atualizarEntidadeExcluida(index);
 			}
+			limparCampos();
+			this.setEntidade((Persistivel) novaEntidade());
 			super.mostrarMensagem(retorno);
 		} catch (Exception e) {
 			e.printStackTrace();
