@@ -120,7 +120,7 @@
 					</listcell>
 				</listitem>
 			</listbox>
-			<checkbox label="Exibir usuários inativos" checked="@{gerenciador.exibirInativos}" 
+			<checkbox label="Exibir equipes inativas" checked="@{gerenciador.exibirInativos}" 
 				onClick="gerenciador.acaoFiltrar()" />
 
 			<button label="Fechar" onClick="gerenciador.fecharModalLista()" />

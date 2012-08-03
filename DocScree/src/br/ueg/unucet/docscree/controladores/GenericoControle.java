@@ -2,6 +2,7 @@ package br.ueg.unucet.docscree.controladores;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import br.ueg.unucet.docscree.interfaces.ICRUDControle;
@@ -37,7 +38,22 @@ public abstract class GenericoControle<E extends Persistivel> extends SuperContr
 	 * 
 	 * @param retorno Retorno da ação
 	 */
-	protected abstract void montarMensagemErro(Retorno<String, Collection<String>> retorno);
+	protected void montarMensagemErro(Retorno<String, Collection<String>> retorno) {
+		String mensagemErro = retorno.getMensagem();
+		Collection<String> colecao = retorno.getParametros().get(
+				Retorno.PARAMETRO_NAO_INFORMADO_INVALIDO);
+		if (!colecao.isEmpty()) {
+			Iterator<String> iterador = colecao.iterator();
+			if (iterador.hasNext()) {
+				mensagemErro += ": " + iterador.next();
+			}
+			while (iterador.hasNext()) {
+				String campoNaoInformado = (String) iterador.next();
+				mensagemErro += ", " + campoNaoInformado;
+			}
+		}
+		super.mensagens.getListaMensagens().add(mensagemErro);
+	}
 
 	/**
 	 * @return o(a) lista

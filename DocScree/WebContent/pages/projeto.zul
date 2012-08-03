@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<?page title="Manter Projeto" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+	<groupbox self="@{define(content)}" id="gpBoxProjeto" width="650px"
+		closable="false" apply="${projetoCompositor}">
+		<caption label="Projeto" />
+		<grid sizedByContent="true" style="border: none;">
+			<columns>
+				<column width="170px" />
+				<column width="300px" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Nome:" />
+					<textbox value="@{gerenciador.fldNome}" />
+				</row>
+				<row>
+					<label value="Equipe:" />
+					<combobox model="@{gerenciador.listaEquipes}"
+						width="180px"
+						selectedItem="@{gerenciador.fldEquipe }" >
+						<comboitem self="@{each=item }" value="@{item}"
+							label="@{item.nome }" />
+					</combobox>
+				</row>
+				<row>
+					<label value="Modelo:" />
+					<combobox model="@{gerenciador.listaModelos}"
+						width="180px"
+						selectedItem="@{gerenciador.fldModelo }" >
+						<comboitem self="@{each=item }" value="@{item}"
+							label="@{item.nome }" />
+					</combobox>
+				</row>
+				
+			</rows>
+		</grid>
+		<separator />
+		<button label="Salvar" onClick="gerenciador.acaoSalvar()" />
+		<button label="Listar" onClick="gerenciador.acaoListar()" />
+		<button label="Cancelar" />
+		
+		<window title="Lista de Projetos" border="normal" closable="false"
+		mode="modal" width="750px" visible="false" id="windowLista">
+		<listbox pagingPosition="bottom" mold="paging" pageSize="5"
+			model="@{gerenciador.listaEntidadeModelo }" selectedItem="@{gerenciador.entidade }"
+			id="listboxLista">
+			<auxhead>
+				
+			</auxhead>
+			<listhead>
+				<listheader label="Código" />
+				<listheader label="Nome" />
+				<listheader />
+				<listheader />
+			</listhead>
+			<listitem self="@{each=item }" value="@{item}">
+				<listcell label="@{item.codigo }" />
+				<listcell label="@{item.nome }" />
+				<listcell>
+					<button label="Editar" > 
+						<attribute name="onClick">
+							self.getParent().getParent().setSelected(true);
+							gerenciador.acaoEditar();
+						</attribute>
+					</button>
+				</listcell>
+				<listcell>
+					<button label="Excluir" >
+						<attribute name="onClick">
+							self.getParent().getParent().setSelected(true);
+							gerenciador.acaoExcluir();
+						</attribute>
+					</button>
+				</listcell>
+			</listitem>
+		</listbox>
+
+		<button label="Fechar" onClick="gerenciador.fecharModalLista()" />
+	</window>
+	</groupbox>
+	
+	
+	
+</zk>
