@@ -21,5 +21,5 @@ public interface IEquipeVisao {
 	 * 
 	 * @return Set<EquipeUsuario> equipesUsuario
 	 */
-	public Set<EquipeUsuario> getListaEquipeUsuario();
+	public Set<EquipeUsuario> getFldListaEquipeUsuario();
 }

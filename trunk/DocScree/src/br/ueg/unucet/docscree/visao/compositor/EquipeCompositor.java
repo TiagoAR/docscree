@@ -53,7 +53,7 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	 * lista de usuários a serem associados a equipe
 	 */
 	@AtributoVisao(isCampoEntidade = true, nome = "equipeUsuarios")
-	private Set<EquipeUsuario> listaEquipeUsuario;
+	private Set<EquipeUsuario> fldListaEquipeUsuario;
 
 	/**
 	 * Relacionamento de Equipe usuário a ser inserido na lista de usuários da
@@ -103,7 +103,7 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 		setFldNome("");
 		setCodigo(null);
 		setFldStatus(Boolean.TRUE);
-		setListaEquipeUsuario(new HashSet<EquipeUsuario>());
+		setFldListaEquipeUsuario(new HashSet<EquipeUsuario>());
 		super.binder.loadAll();
 	}
 
@@ -179,7 +179,7 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 		super.binder.saveAll();
 		if (getEquipeUsuarioSelecionado() != null
 				&& getEquipeUsuarioSelecionado().getUsuario().getCodigo() > 0) {
-			this.getListaEquipeUsuario().remove(
+			this.getFldListaEquipeUsuario().remove(
 					this.getEquipeUsuarioSelecionado());
 			super.binder.loadAll();
 		}
@@ -251,21 +251,21 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	}
 
 	/**
-	 * @return Set<EquipeUsuario> o(a) listaEquipeUsuario
+	 * @return Set<EquipeUsuario> o(a) fldListaEquipeUsuario
 	 */
-	public Set<EquipeUsuario> getListaEquipeUsuario() {
-		if (this.listaEquipeUsuario == null) {
-			this.listaEquipeUsuario = new HashSet<EquipeUsuario>();
+	public Set<EquipeUsuario> getFldListaEquipeUsuario() {
+		if (this.fldListaEquipeUsuario == null) {
+			this.fldListaEquipeUsuario = new HashSet<EquipeUsuario>();
 		}
-		return listaEquipeUsuario;
+		return fldListaEquipeUsuario;
 	}
 
 	/**
 	 * @param Set
-	 *            <EquipeUsuario> o(a) listaEquipeUsuario a ser setado(a)
+	 *            <EquipeUsuario> o(a) fldListaEquipeUsuario a ser setado(a)
 	 */
-	public void setListaEquipeUsuario(Set<EquipeUsuario> listaEquipeUsuario) {
-		this.listaEquipeUsuario = listaEquipeUsuario;
+	public void setFldListaEquipeUsuario(Set<EquipeUsuario> listaEquipeUsuario) {
+		this.fldListaEquipeUsuario = listaEquipeUsuario;
 	}
 
 	/**
@@ -288,7 +288,7 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	 */
 	public BindingListModelListModel<EquipeUsuario> getModelEquipeUsuario() {
 		this.modelEquipeUsuario = new BindingListModelListModel<EquipeUsuario>(
-				new SimpleListModel<EquipeUsuario>(getListaEquipeUsuario()
+				new SimpleListModel<EquipeUsuario>(getFldListaEquipeUsuario()
 						.toArray(new EquipeUsuario[0])));
 		return modelEquipeUsuario;
 	}

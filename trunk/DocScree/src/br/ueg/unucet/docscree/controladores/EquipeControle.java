@@ -2,8 +2,6 @@ package br.ueg.unucet.docscree.controladores;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import br.ueg.unucet.docscree.interfaces.ICRUDControle;
@@ -162,8 +160,8 @@ public class EquipeControle extends GenericoControle<Equipe> {
 		if (retorno) {
 			IEquipeVisao visao = (IEquipeVisao) super.getMapaAtributos().get(
 					"visao");
-			if (!visao.getListaEquipeUsuario().contains(equipeUsuario)) {
-				visao.getListaEquipeUsuario().add(equipeUsuario);
+			if (!visao.getFldListaEquipeUsuario().contains(equipeUsuario)) {
+				visao.getFldListaEquipeUsuario().add(equipeUsuario);
 			} else {
 				super.getMensagens().getListaMensagens()
 						.add("Usuário já consta na lista!");
@@ -207,31 +205,7 @@ public class EquipeControle extends GenericoControle<Equipe> {
 		visao.setFldNome(equipeSelecionada.getNome());
 		boolean ativo = equipeSelecionada.getStatus().equals(StatusEnum.ATIVO);
 		visao.setFldStatus(ativo);
-		visao.setListaEquipeUsuario(equipeSelecionada.getEquipeUsuarios());
-	}
-
-	/**
-	 * Método que monta o a lista de mensagens para serem exibidas na visão
-	 * através do retorno da ação efetuado pelo QUID
-	 */
-	@Override
-	protected void montarMensagemErro(
-			Retorno<String, Collection<String>> retorno) {
-		String mensagemErro = retorno.getMensagem();
-		Collection<String> colecao = retorno.getParametros().get(
-				Retorno.PARAMETRO_NAO_INFORMADO_INVALIDO);
-		if (!colecao.isEmpty()) {
-			Iterator<String> iterador = colecao.iterator();
-			if (iterador.hasNext()) {
-				mensagemErro += ": " + iterador.next();
-			}
-			while (iterador.hasNext()) {
-				String campoNaoInformado = (String) iterador.next();
-				mensagemErro += ", " + campoNaoInformado;
-			}
-		}
-		super.mensagens.getListaMensagens().add(mensagemErro);
-
+		visao.setFldListaEquipeUsuario(equipeSelecionada.getEquipeUsuarios());
 	}
 
 	/**
@@ -241,26 +215,24 @@ public class EquipeControle extends GenericoControle<Equipe> {
 	 */
 	@Override
 	protected Retorno<String, Collection<Equipe>> executarListagem() {
-		Equipe equipe = new Equipe();
-		Collection<Equipe> colecao;
 		if (super.isUsuarioGerente()) {
 			Retorno<String, Collection<Equipe>> retorno;
-			colecao = new ArrayList<Equipe>();
+			Collection<Equipe> colecao = new ArrayList<Equipe>();
 			for (EquipeUsuario equipeUsuario : super.getUsuarioLogado().getEquipeUsuarios()) {
-					Equipe equipePesquisa = new Equipe();
-					equipePesquisa.setCodigo(equipeUsuario.getEquipe().getCodigo());
-					retorno = super.getFramework().pesquisarEquipe(equipePesquisa);
-					if (retorno.isSucesso()) {
-						colecao.addAll(retorno.getParametros().get(
-								Retorno.PARAMERTO_LISTA));
-					}
+				Equipe equipePesquisa = new Equipe();
+				equipePesquisa.setCodigo(equipeUsuario.getEquipe().getCodigo());
+				retorno = super.getFramework().pesquisarEquipe(equipePesquisa);
+				if (retorno.isSucesso()) {
+					colecao.addAll(retorno.getParametros().get(
+							Retorno.PARAMERTO_LISTA));
+				}
 			}
 			retorno = new Retorno<String, Collection<Equipe>>();
 			retorno.setSucesso(true);
 			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA, colecao);
 			return retorno;
 		}
-		return super.getFramework().pesquisarEquipe(equipe);
+		return super.getFramework().pesquisarEquipe(new Equipe());
 	}
 
 }

@@ -23,7 +23,7 @@
 				<menu label="Projeto" width="100px;">
 					<menupopup>
 						<menuitem label="Abrir"/>
-						<menuitem label="Novo"/>
+						<menuitem label="Novo" href="/pages/projeto.zul"/>
 					</menupopup>
 				</menu>
 				<menu label="Artefato" width="100px;">
