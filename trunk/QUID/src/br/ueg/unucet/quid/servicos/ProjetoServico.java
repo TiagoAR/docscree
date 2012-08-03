@@ -1,5 +1,7 @@
 package br.ueg.unucet.quid.servicos;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,48 @@ public class ProjetoServico extends GenericoServico<Projeto> implements IProjeto
 			retorno.setSucesso(true);
 		} catch (QuidExcessao e) {
 			retorno = (Retorno<Object, Object>) construirRetornoErro(e, TipoErroEnum.ERRO_SIMPLES, retorno);
+		}
+		return retorno;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Retorno<Object, Object> inserir(Projeto projeto) {
+		Retorno<Object, Object> retorno = new Retorno<Object, Object>();
+		try {
+			this.projetoControle.inserir(projeto);
+			retorno.setSucesso(true);
+		} catch (QuidExcessao e) {
+			retorno = (Retorno<Object, Object>) construirRetornoErro(e, TipoErroEnum.ERRO_SIMPLES, retorno);
+		}
+		return retorno;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Retorno<Object, Object> alterar(Projeto projeto) {
+		Retorno<Object, Object> retorno = new Retorno<Object, Object>();
+		try {
+			this.projetoControle.alterar(projeto);
+			retorno.setSucesso(true);
+		} catch (QuidExcessao e) {
+			retorno = (Retorno<Object, Object>) construirRetornoErro(e, TipoErroEnum.ERRO_SIMPLES, retorno);
+		}
+		return retorno;
+	}
+	
+	@Override
+	public Retorno<String, Collection<Projeto>> pesquisar(Projeto projeto) {
+		Retorno<String, Collection<Projeto>> retorno = new Retorno<String, Collection<Projeto>>();
+		Collection<Projeto> lista = this.projetoControle.pesquisarProjeto(projeto);
+		if(lista == null || lista.isEmpty()){
+			retorno.setSucesso(false);
+			retorno.setMensagem(propertiesMensagensUtil.getValor("lista_vazia"));
+			retorno.setTipoErro(TipoErroEnum.INFORMATIVO);
+			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA, lista);
+		}else{
+			retorno.setSucesso(true);
+			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA, lista);
 		}
 		return retorno;
 	}

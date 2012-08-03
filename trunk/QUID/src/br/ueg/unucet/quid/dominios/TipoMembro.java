@@ -14,6 +14,7 @@ import br.ueg.unucet.quid.extensao.dominios.Versionavel;
  * @author QUID
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name="tipo_membro")
 public class TipoMembro extends Versionavel{

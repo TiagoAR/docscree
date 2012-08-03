@@ -1,11 +1,11 @@
 package br.ueg.unucet.quid.dominios;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Entity;
 
 import br.ueg.unucet.quid.extensao.dominios.Identificavel;
 import br.ueg.unucet.quid.extensao.enums.StatusEnum;
@@ -16,43 +16,25 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
  * @author QUID
  * 
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "projeto")
 public class Projeto extends Identificavel {
 	/**
-	 * Nome do projeto
-	 */
-	private String nome;
-	/**
 	 * Modelo base para a o preenchimento do projeto.
 	 */
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	private Modelo modelo;
 	/**
 	 * Equipe que pode realizar o preenchimento do projeto.
 	 */
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	private Equipe equipe;
 	/**
 	 * Status do projeto(ativo, inativo)
 	 */
 	@Enumerated(EnumType.STRING)
 	private StatusEnum status;
-
-	/**
-	 * @return the nome
-	 */
-	public String getNome() {
-		return nome;
-	}
-
-	/**
-	 * @param nome
-	 *            the nome to set
-	 */
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
 
 	// GETTERS AND SETTERS
 	public Modelo getModelo() {

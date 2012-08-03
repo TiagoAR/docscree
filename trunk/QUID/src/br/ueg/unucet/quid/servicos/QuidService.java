@@ -29,6 +29,7 @@ import br.ueg.unucet.quid.interfaces.IEquipeSevico;
 import br.ueg.unucet.quid.interfaces.IMembroServico;
 import br.ueg.unucet.quid.interfaces.IModelo;
 import br.ueg.unucet.quid.interfaces.IModeloServico;
+import br.ueg.unucet.quid.interfaces.IProjetoServico;
 import br.ueg.unucet.quid.interfaces.IQUID;
 import br.ueg.unucet.quid.interfaces.IServicoServico;
 import br.ueg.unucet.quid.interfaces.ITipoMembroServico;
@@ -388,6 +389,26 @@ public class QuidService implements IQUID{
 		return tipoMembroServico.getInstancia(nome, versao);
 	}
 
+	@Override
+	public Retorno<Object, Object> alterarProjeto(Projeto projeto) {
+		IProjetoServico<Projeto> projetoServico = (IProjetoServico<Projeto>) appContext.getBean("ProjetoServico");
+		return projetoServico.alterar(projeto);
+	}
+
+	@Override
+	public Retorno<String, Collection<Projeto>> pesquisarProjeto(Projeto projeto) {
+		IProjetoServico<Projeto> projetoServico = (IProjetoServico<Projeto>) appContext.getBean("ProjetoServico");
+		return projetoServico.pesquisar(projeto);
+	}
 	
+	public Retorno<Object, Object> inserirProjeto(Projeto projeto) {
+		IProjetoServico<Projeto> projetoServico = (IProjetoServico<Projeto>) appContext.getBean("ProjetoServico");
+		return projetoServico.inserir(projeto);
+	}
+	
+	public Retorno<String, Collection<Modelo>> listarModelo() {
+		IModeloServico<Modelo> modeloServico = (IModeloServico<Modelo>) appContext.getBean("ModeloServico");
+		return modeloServico.listarModelos();
+	}
 
 }

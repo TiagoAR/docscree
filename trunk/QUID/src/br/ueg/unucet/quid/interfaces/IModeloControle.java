@@ -3,6 +3,7 @@ package br.ueg.unucet.quid.interfaces;
 import java.util.Collection;
 
 import br.ueg.unucet.quid.dominios.ItemModelo;
+import br.ueg.unucet.quid.dominios.Modelo;
 
 /**
  * Interface responsavel por definir as operacoes do controlador do Modelo
@@ -25,5 +26,7 @@ public interface IModeloControle<T, oid> extends IControle<T, oid> {
 	 * @return Lista
 	 */
 	Collection<String> validarItemModelo(ItemModelo itemModelo);
+	
+	Collection<Modelo> listarModelos();
 
 }

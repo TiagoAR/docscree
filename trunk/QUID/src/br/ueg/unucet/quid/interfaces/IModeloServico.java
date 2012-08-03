@@ -54,4 +54,5 @@ public interface IModeloServico<T> extends IServico<T>{
 	 * @return Sucesso de execucao ou falha na execucao com mensagem informando o tipo da falha.
 	 */
 	Retorno<Object, Object> mapearModelo(Modelo modelo);
+	Retorno<String, Collection<Modelo>> listarModelos();
 }
