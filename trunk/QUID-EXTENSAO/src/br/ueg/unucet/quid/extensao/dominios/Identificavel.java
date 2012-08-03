@@ -9,6 +9,7 @@ import br.ueg.unucet.quid.extensao.interfaces.IIdentificavel;
  * @author QUID
  *
  */
+@SuppressWarnings("serial")
 @MappedSuperclass
 public class Identificavel extends Persistivel implements IIdentificavel{
 
