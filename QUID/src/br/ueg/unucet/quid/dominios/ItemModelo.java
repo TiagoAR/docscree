@@ -14,6 +14,7 @@ import br.ueg.unucet.quid.extensao.enums.MultiplicidadeEnum;
  * @author QUID
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name="item_modelo")
 public class ItemModelo extends Persistivel{

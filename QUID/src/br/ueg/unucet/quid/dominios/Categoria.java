@@ -10,6 +10,7 @@ import br.ueg.unucet.quid.extensao.dominios.Persistivel;
  * @author QUID
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name="categoria")
 public class Categoria extends Persistivel {

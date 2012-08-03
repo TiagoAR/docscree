@@ -10,6 +10,7 @@ import br.ueg.unucet.quid.extensao.dominios.Versionavel;
  *
  */
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name="servico")
 public class Servico extends Versionavel {

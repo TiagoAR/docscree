@@ -52,8 +52,18 @@ public class ModeloControle extends GenericControle<Modelo, Long> implements IMo
 	public boolean verificarDuplicidade(Modelo modelo) {
 		Modelo modeloBusca = new Modelo();
 		modeloBusca.setNome(modelo.getNome());
-		Collection<Modelo> lista = pesquisarPorRestricao(modeloBusca, new String[]{"nome", "codigo"});
+		Collection<Modelo> lista = pesquisarPorRestricao(modeloBusca, new String[]{"modelo.nome", "modelo.codigo"});
 		return verificarLista(modelo, lista);
+	}
+	
+	public Collection<Modelo> listarModelos() {
+		Collection<Modelo> modelos = pesquisarPorRestricao(new Modelo(), new String[]{"modelo.nome", "modelo.codigo"});
+		Collection<Modelo> retorno = new ArrayList<Modelo>();
+		for (Modelo modelo : modelos) {
+			modelo = getPorId(Modelo.class, modelo.getCodigo());
+			retorno.add(modelo);
+		}
+		return retorno;
 	}
 	
 	/**

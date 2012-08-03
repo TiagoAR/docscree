@@ -11,6 +11,7 @@ import br.ueg.unucet.quid.extensao.dominios.Persistivel;
  * @author QUID
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name="artefato_tipomembro")
 public class ArtefatoMembro extends Persistivel{

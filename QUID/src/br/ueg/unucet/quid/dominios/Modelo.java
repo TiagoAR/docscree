@@ -15,6 +15,7 @@ import br.ueg.unucet.quid.extensao.dominios.Identificavel;
  * @author QUID
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name="modelo")
 public class Modelo extends Identificavel{

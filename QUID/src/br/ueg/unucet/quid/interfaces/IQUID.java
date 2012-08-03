@@ -247,4 +247,9 @@ public interface IQUID {
 	 * @return Retorno execucao
 	 */
 	Retorno<String, Collection<IServico>> listarServicos();
+	
+	Retorno<Object, Object> inserirProjeto(Projeto projeto);
+	Retorno<Object, Object> alterarProjeto(Projeto projeto);
+	Retorno<String, Collection<Projeto>> pesquisarProjeto(Projeto projeto);
+	Retorno<String, Collection<Modelo>> listarModelo();
 }

@@ -1,5 +1,6 @@
 package br.ueg.unucet.quid.controladores;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class ProjetoControle extends GenericControle<Projeto, Long> implements I
 		this.projeto = projeto;
 		Projeto projetoBusca = new Projeto();
 		projetoBusca.setNome(projeto.getNome());
-		if(isCadastrada(projetoBusca, new String[]{"codigo", "nome"})){
+		if(isCadastrada(projetoBusca, new String[]{"projeto.codigo", "projeto.nome"})){
 			throw new ProjetoExcessao(propertiesMessagesUtil.getValor("projeto_cadastrado"));
 		}
 		return true;
@@ -71,6 +72,16 @@ public class ProjetoControle extends GenericControle<Projeto, Long> implements I
 		
 	}
 	
+	@Override
+	public Collection<Projeto> pesquisarProjeto(Projeto projeto){
+		Collection<Projeto> projetos = pesquisarPorRestricao(projeto, new String[]{"projeto.codigo"});
+		Collection<Projeto> retorno = new ArrayList<Projeto>();
+		for (Projeto projeto2 : projetos) {
+			projeto2 = getPorId(Projeto.class, projeto2.getCodigo());
+			retorno.add(projeto2);
+		}
+		return retorno;
+	}
 	
 	@Override
 	public IDAO<Projeto, Long> getDao() {

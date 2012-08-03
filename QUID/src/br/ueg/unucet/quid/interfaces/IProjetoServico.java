@@ -1,5 +1,7 @@
 package br.ueg.unucet.quid.interfaces;
 
+import java.util.Collection;
+
 import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.Modelo;
 import br.ueg.unucet.quid.dominios.Projeto;
@@ -21,6 +23,9 @@ public interface IProjetoServico<T> extends IServico<T> {
 	 * @return Retorno da execucao da operacao de insercao.
 	 */
 	Retorno<Object, Object> inserir(String nome, String descricao, Modelo modelo, Equipe equipe);
+	Retorno<Object, Object> inserir(Projeto projeto);
+	Retorno<Object, Object> alterar(Projeto projeto);
+	Retorno<String, Collection<Projeto>> pesquisar(Projeto projeto);
 	/**
 	 * Metodo responsavel por realizar o bloqueio de um projeto dentro do framework. Apos ser bloqueado o projeto nao podera ser
 	 * preenchido por nenhum usuario.

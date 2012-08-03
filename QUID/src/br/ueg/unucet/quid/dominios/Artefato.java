@@ -29,6 +29,7 @@ import br.ueg.unucet.quid.utilitarias.LeitoraPropertiesUtil;
  * @author QUID
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name="artefato")
 @Service("Artefato")

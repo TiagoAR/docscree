@@ -254,11 +254,17 @@ public class ModeloServico extends GenericoServico<Modelo> implements IModeloSer
 		return retorno;
 	}
 
-	
-
-
-	
-	
-	
-	
+	public Retorno<String, Collection<Modelo>> listarModelos(){
+		Retorno<String, Collection<Modelo>> retorno = new Retorno<String, Collection<Modelo>>();
+		Collection<Modelo> modelos = this.modeloControle.listarModelos();
+		if(modelos == null || modelos.isEmpty()){
+			retorno.setSucesso(false);
+			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA, modelos);
+			retorno.setMensagem("Nenhuma equipe encontrada");
+		}else{
+			retorno.setSucesso(true);
+			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA,	modelos);
+		}
+		return retorno;
+	}
 }
