@@ -33,6 +33,26 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 				statusEnum = StatusEnum.INATIVO;
 			}
 			super.getEntidade().setStatus(statusEnum);
+			Collection<String> camposNaoInformados = new ArrayList<String>();
+			if (super.getEntidade().getEquipe() == null 
+					|| super.getEntidade().getEquipe().getCodigo() == null 
+					|| super.getEntidade().getEquipe().getCodigo() == 0) {
+				camposNaoInformados.add("equipe");
+			}
+			if (super.getEntidade().getModelo() == null 
+					|| super.getEntidade().getModelo().getCodigo() == null 
+					|| super.getEntidade().getModelo().getCodigo() == 0) {
+				camposNaoInformados.add("modelo");
+			}
+			if (!camposNaoInformados.isEmpty()) {
+				StringBuilder str = new StringBuilder();
+				str.append("Atributos não informados:");
+				for (String string : camposNaoInformados) {
+					str.append(" "+ string);
+				}
+				super.getMensagens().getListaMensagens().add(str.toString());
+				return false;
+			}
 		}
 		return true;
 	}
@@ -56,7 +76,11 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 					return false;
 				}
 			}
-			retorno = super.getFramework().inserirProjeto(entidade);
+			if (entidade.getCodigo() == null || entidade.getCodigo() == 0) {
+				retorno = super.getFramework().inserirProjeto(entidade);
+			} else {
+				retorno = super.getFramework().alterarProjeto(entidade);
+			}
 			if (retorno.isSucesso()) {
 				return true;
 			} else {
@@ -71,8 +95,16 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 	@Override
 	public boolean acaoExcluir() {
 		if (super.isUsuarioAdmin()) {
-			//super.getFramework().
+			super.getEntidade().setStatus(StatusEnum.INATIVO);
+			Retorno<Object, Object> retorno = super.getFramework().alterarProjeto(super.getEntidade());
+			if (retorno.isSucesso()) {
+				return true;
+			} else {
+				super.getMensagens().getListaMensagens().add(retorno.getMensagem());
+				return false;
+			}
 		}
+		super.getMensagens().getListaMensagens().add("É necessário ser Administrador para executar a ação");
 		return false;
 	}
 

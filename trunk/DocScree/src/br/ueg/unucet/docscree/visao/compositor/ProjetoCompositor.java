@@ -1,9 +1,12 @@
 package br.ueg.unucet.docscree.visao.compositor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.zkoss.zkplus.databind.BindingListModelListModel;
+import org.zkoss.zul.SimpleListModel;
 
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.ProjetoControle;
@@ -12,6 +15,9 @@ import br.ueg.unucet.quid.dominios.Modelo;
 import br.ueg.unucet.quid.dominios.Projeto;
 
 /**
+ * Classe da visão que representa o caso de uso Manter projeto; Composer do
+ * Projeto no ZK
+ * 
  * @author Diego
  *
  */
@@ -20,43 +26,110 @@ import br.ueg.unucet.quid.dominios.Projeto;
 @Scope("session")
 public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	
+	//Campos da entidade
+	/**
+	 * Campo nome da entidade
+	 */
 	@AtributoVisao(isCampoEntidade= true, nome= "nome")
 	private String fldNome;
+	/**
+	 * Campo descrição da entidade
+	 */
+	@AtributoVisao(isCampoEntidade= true, nome= "descricao")
+	private String fldDescricao;
+	/**
+	 * Representa a equipe da entidade
+	 */
 	@AtributoVisao(isCampoEntidade= true, nome= "equipe")
 	private Equipe fldEquipe = new Equipe();
+	/**
+	 * Representa o modelo da entidade
+	 */
 	@AtributoVisao(isCampoEntidade= true, nome= "modelo")
 	private Modelo fldModelo = new Modelo();
+	/**
+	 * Campo status da entidade
+	 */
 	@AtributoVisao(isCampoEntidade= false, nome= "status")
 	private Boolean fldStatus = Boolean.TRUE;
+	//Fim dos campos da entidade||Inicio campos de filtro
+	/**
+	 * Campo de filtro através do código
+	 */
+	private String filtroCodigo = "";
+	/**
+	 * Campo de filtro através do nome
+	 */
+	private String filtroNome = "";
+	/**
+	 * Campo de filtro através da equipe
+	 */
+	private String filtroEquipe = "";
+	/**
+	 * Campo de filtro através do modelo
+	 */
+	private String filtroModelo = "";
 
 	/**
-	 * 
+	 * Serial ID Default
 	 */
 	private static final long serialVersionUID = -8315698304806410765L;
 
+	/**
+	 * @see GenericoCompositor#getTipoEntidade()
+	 */
 	@Override
 	public Class getTipoEntidade() {
 		return Projeto.class;
 	}
 
+	/**
+	 * @see GenericoCompositor#limparCampos()
+	 */
 	@Override
 	protected void limparCampos() {
 		setFldEquipe(new Equipe());		
 		setFldModelo(new Modelo());
 		setFldNome("");
+		setFldDescricao("");
 		setFldStatus(Boolean.TRUE);
+		super.binder.loadAll();
 	}
 
+	/**
+	 * @see GenericoCompositor#limparFiltros()
+	 */
 	@Override
 	protected void limparFiltros() {
-		// TODO Auto-generated method stub
-		
+		setFiltroCodigo("");
+		setFiltroEquipe("");
+		setFiltroModelo("");
+		setFiltroNome("");
 	}
 
+	/**
+	 * @see GenericoCompositor#acaoFiltrar()
+	 */
 	@Override
 	public void acaoFiltrar() {
-		// TODO Auto-generated method stub
-		
+		List<Projeto> listaProjeto = new ArrayList<Projeto>();
+		super.binder.saveAll();
+		for (Object objeto : super.getListaEntidade()) {
+			Projeto projeto = (Projeto) objeto;
+			if (String.valueOf(projeto.getCodigo()).trim().toLowerCase().contains(getFiltroCodigo().trim().toLowerCase())
+					&& projeto.getNome().trim().toLowerCase().contains(getFiltroNome().trim().toLowerCase())
+					&& projeto.getEquipe().getNome().toLowerCase().trim().contains(getFiltroEquipe().trim().toLowerCase())
+					&& projeto.getModelo().getNome().toLowerCase().trim().contains(getFiltroModelo().trim().toLowerCase())) {
+				if (getExibirInativos()
+						|| projeto.getStatus().toString().toLowerCase()
+						.equals("ativo")) {
+					listaProjeto.add(projeto);
+				}
+			}
+		}
+		super.setListaEntidadeModelo(new BindingListModelListModel<Projeto>(
+				new SimpleListModel<Projeto>(listaProjeto)));
+		super.binder.loadAll();
 	}
 	
 	/**
@@ -76,10 +149,20 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 		}
 	}
 	
+	/**
+	 * Método que retorna as equipes cadastradas de acordo com o nível de permissão do usuário
+	 * 
+	 * @return List<Equipe> equipes cadastradas
+	 */
 	public List<Equipe> getListaEquipes() {
 		return super.getControle().listarEquipes(super.getUsuarioSessao());
 	}
 	
+	/**
+	 * Método que retorna a lista de modelos cadastrados
+	 * 
+	 * @return List<Modelo> modelos cadastrados
+	 */
 	public List<Modelo> getListaModelos() {
 		return super.getControle().listarModelos();
 	}
@@ -96,6 +179,20 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	 */
 	public void setFldNome(String fldNome) {
 		this.fldNome = fldNome;
+	}
+
+	/**
+	 * @return String o(a) fldDescricao
+	 */
+	public String getFldDescricao() {
+		return fldDescricao;
+	}
+
+	/**
+	 * @param String o(a) fldDescricao a ser setado(a)
+	 */
+	public void setFldDescricao(String fldDescricao) {
+		this.fldDescricao = fldDescricao;
 	}
 
 	/**
@@ -138,6 +235,62 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	 */
 	public void setFldStatus(Boolean fldStatus) {
 		this.fldStatus = fldStatus;
+	}
+
+	/**
+	 * @return String o(a) filtroCodigo
+	 */
+	public String getFiltroCodigo() {
+		return filtroCodigo;
+	}
+
+	/**
+	 * @param String o(a) filtroCodigo a ser setado(a)
+	 */
+	public void setFiltroCodigo(String filtroCodigo) {
+		this.filtroCodigo = filtroCodigo;
+	}
+
+	/**
+	 * @return String o(a) filtroNome
+	 */
+	public String getFiltroNome() {
+		return filtroNome;
+	}
+
+	/**
+	 * @param String o(a) filtroNome a ser setado(a)
+	 */
+	public void setFiltroNome(String filtroNome) {
+		this.filtroNome = filtroNome;
+	}
+
+	/**
+	 * @return String o(a) filtroEquipe
+	 */
+	public String getFiltroEquipe() {
+		return filtroEquipe;
+	}
+
+	/**
+	 * @param String o(a) filtroEquipe a ser setado(a)
+	 */
+	public void setFiltroEquipe(String filtroEquipe) {
+		this.filtroEquipe = filtroEquipe;
+	}
+
+	/**
+	 * @return String o(a) filtroModelo
+	 */
+	public String getFiltroModelo() {
+		return filtroModelo;
+	}
+
+	/**
+	 * @param String o(a) filtroModelo a ser setado(a)
+	 */
+	public void setFiltroModelo(String filtroModelo) {
+		this.filtroModelo = filtroModelo;
 	}
 
 }

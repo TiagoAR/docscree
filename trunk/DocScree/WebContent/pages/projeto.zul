@@ -17,6 +17,10 @@
 					<textbox value="@{gerenciador.fldNome}" />
 				</row>
 				<row>
+					<label value="Descrição:" />
+					<textbox value="@{gerenciador.fldDescricao}" />
+				</row>
+				<row>
 					<label value="Equipe:" />
 					<combobox model="@{gerenciador.listaEquipes}"
 						width="180px"
@@ -48,17 +52,35 @@
 			model="@{gerenciador.listaEntidadeModelo }" selectedItem="@{gerenciador.entidade }"
 			id="listboxLista">
 			<auxhead>
-				
+				<auxheader>
+					<textbox value="@{gerenciador.filtroCodigo }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+				</auxheader>
+				<auxheader colspan="2">
+					<textbox value="@{gerenciador.filtroNome }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+				</auxheader>
+				<auxheader>
+					<textbox value="@{gerenciador.filtroEquipe }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+				</auxheader>
+				<auxheader>
+					<textbox value="@{gerenciador.filtroModelo }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+				</auxheader>
+				<auxheader colspan="3"></auxheader>
 			</auxhead>
 			<listhead>
 				<listheader label="Código" />
 				<listheader label="Nome" />
+				<listheader label="Descrição" />
+				<listheader label="Equipe" />
+				<listheader label="Modelo" />
 				<listheader />
 				<listheader />
 			</listhead>
 			<listitem self="@{each=item }" value="@{item}">
 				<listcell label="@{item.codigo }" />
 				<listcell label="@{item.nome }" />
+				<listcell label="@{item.descricao }" />
+				<listcell label="@{item.equipe.nome }" />
+				<listcell label="@{item.modelo.nome }" />
 				<listcell>
 					<button label="Editar" > 
 						<attribute name="onClick">
