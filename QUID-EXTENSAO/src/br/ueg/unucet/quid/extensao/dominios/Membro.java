@@ -1,6 +1,5 @@
 package br.ueg.unucet.quid.extensao.dominios;
 
-import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
@@ -10,6 +9,7 @@ import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
  * @author QUID
  *
  */
+@SuppressWarnings("serial")
 public class Membro extends Identificavel{
 	
 	/**

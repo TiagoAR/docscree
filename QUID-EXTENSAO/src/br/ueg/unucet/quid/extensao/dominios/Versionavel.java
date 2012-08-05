@@ -1,8 +1,6 @@
 package br.ueg.unucet.quid.extensao.dominios;
 
 import javax.persistence.Column;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
 import br.ueg.unucet.quid.extensao.interfaces.IVersionavel;
@@ -12,6 +10,7 @@ import br.ueg.unucet.quid.extensao.interfaces.IVersionavel;
  * @author QUID
  *
  */
+@SuppressWarnings("serial")
 @MappedSuperclass
 public class Versionavel extends Identificavel implements IVersionavel{
 	
