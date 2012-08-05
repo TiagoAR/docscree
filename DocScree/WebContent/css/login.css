@@ -19,17 +19,14 @@ body {
 	background-repeat: repeat;
 	border-top: 5px solid #5E5D5D;
 	margin: 0;
+	overflow-y: hidden;
 	padding: 10px;
 }
 
 .loginWrapper {
 	height: 350px !important;
-	left: 50%;
-	margin-left: -190px;
-	margin-top: -210px;
-	position: absolute !important;
-	top: 50% !important;
-	width: 380px;
+	width: 500px;
+	margin-top: 200px;
 }
 
 .loginWrapper .logo {
@@ -37,7 +34,7 @@ body {
 	height: auto;
 	padding-bottom: 10px;
 	text-align: center;
-	width: 100%;
+	width: 500px;
 }
 
 .border {

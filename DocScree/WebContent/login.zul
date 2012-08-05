@@ -1,35 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <?page title="DocScree - Efetuar Login" contentType="text/html;charset=UTF-8"?>
-<zk xmlns:n="native">
+<zk xmlns:n="native" >
 	<style src="/css/login.css" />
-	<div align="center" style="vertical-align: middle;"
-		sclass="loginWrapper">
-		<window apply="${usuarioCompositor}" sclass="border">
-			<grid sizedByContent="true" sclass="formWrapper">
-				<columns>
-					<column width="70px" />
-					<column width="300px" />
-				</columns>
-				<rows>
-					<row>
-						<label value="E-mail:" />
-						<textbox id="txtEmail"
-							value="@{gerenciador.fldEmail}" focus="true"
-							onOK="txtSenha.focus()" />
-					</row>
-					<row>
-						<label value="Senha:" />
-						<textbox id="txtSenha"
-							value="@{gerenciador.fldSenha }" type="password"
-							onOK="gerenciador.acaoLogar()" />
-					</row>
-					<row spans="2" align="center">
-						<button label="Entrar" sclass="button gray"
-							onClick="gerenciador.acaoLogar()" />
-					</row>
-				</rows>
-			</grid>
-		</window>
+	<div align="center">
+		<div align="center" style="vertical-align: middle;"
+			sclass="loginWrapper">
+			<div sclass="logo">
+				<image src="/imagens/login/logo.png"/>
+			</div>
+			<window apply="${usuarioCompositor}" sclass="border">
+				<grid sizedByContent="true" sclass="formWrapper">
+					<columns>
+						<column width="70px" />
+						<column width="300px" />
+					</columns>
+					<rows>
+						<row>
+							<label value="E-mail:" />
+							<textbox id="txtEmail"
+								value="@{gerenciador.fldEmail}" focus="true"
+								onOK="txtSenha.focus()" />
+						</row>
+						<row>
+							<label value="Senha:" />
+							<textbox id="txtSenha"
+								value="@{gerenciador.fldSenha }" type="password"
+								onOK="gerenciador.acaoLogar()" />
+						</row>
+						<row spans="2" align="center">
+							<button label="Entrar" sclass="button gray"
+								onClick="gerenciador.acaoLogar()" />
+						</row>
+					</rows>
+				</grid>
+			</window>
+		</div>
 	</div>
 </zk>
