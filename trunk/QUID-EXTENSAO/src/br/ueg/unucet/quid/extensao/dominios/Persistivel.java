@@ -1,11 +1,8 @@
 package br.ueg.unucet.quid.extensao.dominios;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
 import br.ueg.unucet.quid.extensao.interfaces.IPersistivel;
@@ -15,6 +12,7 @@ import br.ueg.unucet.quid.extensao.interfaces.IPersistivel;
  * @author QUID
  *
  */
+@SuppressWarnings("serial")
 @MappedSuperclass
 public class Persistivel implements IPersistivel<Long>{
 	/**
