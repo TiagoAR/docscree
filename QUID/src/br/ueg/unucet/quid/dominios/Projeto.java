@@ -1,6 +1,5 @@
 package br.ueg.unucet.quid.dominios;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -23,12 +22,12 @@ public class Projeto extends Identificavel {
 	/**
 	 * Modelo base para a o preenchimento do projeto.
 	 */
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne()
 	private Modelo modelo;
 	/**
 	 * Equipe que pode realizar o preenchimento do projeto.
 	 */
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne()
 	private Equipe equipe;
 	/**
 	 * Status do projeto(ativo, inativo)

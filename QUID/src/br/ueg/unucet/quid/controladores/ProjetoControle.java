@@ -37,12 +37,27 @@ public class ProjetoControle extends GenericControle<Projeto, Long> implements I
 	 */
 	public boolean antesInserir(Projeto projeto) throws QuidExcessao{
 		this.projeto = projeto;
+		verificarProjeto();
+		verificarEquipe();
 		Projeto projetoBusca = new Projeto();
 		projetoBusca.setNome(projeto.getNome());
 		if(isCadastrada(projetoBusca, new String[]{"projeto.codigo", "projeto.nome"})){
 			throw new ProjetoExcessao(propertiesMessagesUtil.getValor("projeto_cadastrado"));
 		}
 		return true;
+	}
+	
+	private void verificarProjeto() throws QuidExcessao {
+		if (this.projeto.getNome() == null || this.projeto.getNome().isEmpty()) {
+			ProjetoExcessao projetoExcessao = new ProjetoExcessao(propertiesMessagesUtil.getValor("erro_atributo_nao_informado") + ": nome");
+			throw projetoExcessao;
+		}
+	}
+	
+	private void verificarEquipe() throws QuidExcessao {
+		if(this.projeto.getEquipe()!= null && this.projeto.getEquipe().getStatus().equals(StatusEnum.INATIVO)){
+			throw new ProjetoExcessao("Deve-se escolher uma equipe ativa!");
+		}
 	}
 	
 	/* (non-Javadoc)
