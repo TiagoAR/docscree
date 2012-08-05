@@ -31,6 +31,11 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	 */
 	@AtributoVisao(isCampoEntidade = true, nome= "codigo")
 	protected Long codigo = null;
+
+	/**
+	 * Representa o checkbox da visão para exibir equipe inativas ou não
+	 */
+	protected Boolean exibirInativos = new Boolean(false);
 	
 	/**
 	 * listagem da entidade contendo todos os objetos
@@ -180,6 +185,21 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	
 	//Segue Getters and Setters
 
+	/**
+	 * @return Boolean o(a) exibirInativos
+	 */
+	public Boolean getExibirInativos() {
+		return this.exibirInativos;
+	}
+
+	/**
+	 * @param Boolean
+	 *            o(a) exibirInativos a ser setado(a)
+	 */
+	public void setExibirInativos(Boolean exibirInativos) {
+		this.exibirInativos = exibirInativos;
+	}
+	
 	/**
 	 * @return o(a) listaEntidade
 	 */

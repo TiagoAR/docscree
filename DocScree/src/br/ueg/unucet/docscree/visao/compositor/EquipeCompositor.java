@@ -73,11 +73,6 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	private BindingListModelListModel<EquipeUsuario> modelEquipeUsuario;
 
 	/**
-	 * Representa o checkbox da visão para exibir equipe inativas ou não
-	 */
-	private Boolean exibirInativos = new Boolean(false);
-
-	/**
 	 * Filtro da lista de equipe para código
 	 */
 	private String filtroCodigo = "";
@@ -316,21 +311,6 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	public void setEquipeUsuarioSelecionado(
 			EquipeUsuario equipeUsuarioSelecionado) {
 		this.equipeUsuarioSelecionado = equipeUsuarioSelecionado;
-	}
-
-	/**
-	 * @return Boolean o(a) exibirInativos
-	 */
-	public Boolean getExibirInativos() {
-		return exibirInativos;
-	}
-
-	/**
-	 * @param Boolean
-	 *            o(a) exibirInativos a ser setado(a)
-	 */
-	public void setExibirInativos(Boolean exibirInativos) {
-		this.exibirInativos = exibirInativos;
 	}
 
 	/**

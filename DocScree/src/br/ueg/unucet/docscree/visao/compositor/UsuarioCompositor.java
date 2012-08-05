@@ -89,11 +89,6 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	private String filtroPerfil = "";
 
 	/**
-	 * Representa o checkbox da visão para exibir usuários inativos ou não
-	 */
-	private Boolean exibirInativos = new Boolean(false);
-
-	/**
 	 * @see GenericoCompositor#getTipoEntidade()
 	 */
 	@Override
@@ -438,20 +433,5 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	 */
 	public void setFiltroPerfil(String filtroPerfil) {
 		this.filtroPerfil = filtroPerfil;
-	}
-
-	/**
-	 * @return o(a) exibirInativos
-	 */
-	public Boolean getExibirInativos() {
-		return exibirInativos;
-	}
-
-	/**
-	 * @param exibirInativos
-	 *            o(a) exibirInativos a ser setado(a)
-	 */
-	public void setExibirInativos(Boolean exibirInativos) {
-		this.exibirInativos = exibirInativos;
 	}
 }

@@ -79,7 +79,6 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		this.binder.loadAll();
 	}
 	
-	//verificar se pode tirar
 	/**
 	 * Processa recursivamente os componentes filhos disparando e asscoiando listenner
 	 * e associando os compositores dentro deles.
@@ -123,6 +122,11 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		return this.gControle;
 	}
 	
+	/**
+	 * Método que retorna o usuário salvo na sessão
+	 * 
+	 * @return Object usuário
+	 */
 	public Object getUsuarioSessao() {
 		return Executions.getCurrent().getSession().getAttribute("usuario");
 	}
@@ -143,7 +147,7 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		List<String> listaMensagens = getControle().getMensagens()
 				.getListaMensagens();
 		for (int i = 0; i < listaMensagens.size(); i++) {
-			Label label = new Label(listaMensagens.get(i));
+			Label label = new Label(listaMensagens.get(i).trim());
 			label.setStyle("display: block;");
 			label.setParent(mensagens);
 			mensagens.appendChild(label);
