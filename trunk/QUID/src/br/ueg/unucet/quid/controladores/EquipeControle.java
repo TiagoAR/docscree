@@ -108,6 +108,7 @@ public class EquipeControle extends GenericControle<Equipe, Long> implements IEq
 	private void verificarEquipe()throws EquipeExcessao {
 		Collection<String> camposobrigatorios = new ArrayList<String>();
 		if(equipe.getNome() == null || equipe.getNome().equals("")){
+			camposobrigatorios.add("nome");
 			EquipeExcessao equipeExcessao = new EquipeExcessao(propertiesMessagesUtil.getValor("erro_atributo_nao_informado"), camposobrigatorios);
 			throw equipeExcessao;
 		}

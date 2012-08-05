@@ -13,6 +13,7 @@ import java.util.Map;
  *
  * @param <T>
  */
+@SuppressWarnings("unchecked")
 public class HQL<T> {
 	/**
 	 * Classe que a ser pesquisada.
@@ -120,7 +121,6 @@ public class HQL<T> {
 	 */
 	private void reinstanciarObjetoPai() throws Exception {
 		String[] nomeTabelaPai = getNomeEAlias(this.tabelas.get(0));
-		MappingClass mapeamento = this.mapeamentoClasses.get(nomeTabelaPai[1]);
 		this.mapeamentoObjetos.remove(nomeTabelaPai[1]);
 		this.objetoPai = classProcurada.newInstance();
 		this.mapeamentoObjetos.put(nomeTabelaPai[1], this.objetoPai);
@@ -420,10 +420,19 @@ public class HQL<T> {
 	public List<T> carregar(List<Object[]> registros) throws Exception {
 		List<T> list = new ArrayList<T>();
 		if (registros != null) {
-		for (Object[] objeto : registros) {
-			reinstanciarObjeto();
-			list.add(carregarObjeto(objeto));
-		} 
+		try {
+			for (Object[] objeto : registros) {
+				reinstanciarObjeto();
+				list.add(carregarObjeto(objeto));
+			} 
+		} catch (ClassCastException e) {
+			for (Object objeto : registros) {
+				Object[] objetoVetor = new Object[1];
+				objetoVetor[0] = objeto;
+				reinstanciarObjeto();
+				list.add(carregarObjeto(objetoVetor));
+			} 
+		}
 		} 
 		return list;
 	}
