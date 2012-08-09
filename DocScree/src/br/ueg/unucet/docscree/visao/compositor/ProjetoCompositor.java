@@ -12,6 +12,7 @@ import org.zkoss.zul.Window;
 
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.ProjetoControle;
+import br.ueg.unucet.docscree.interfaces.IProjetoVisao;
 import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.Modelo;
 import br.ueg.unucet.quid.dominios.Projeto;
