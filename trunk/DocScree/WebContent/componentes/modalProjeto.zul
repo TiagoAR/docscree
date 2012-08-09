@@ -1,0 +1,28 @@
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<window id="modalAbrirProjeto" title="Selecione o projeto!"
+	border="normal" apply="${projetoCompositor }" closable="true"
+	action="show: slideDown;hide: slideUp" position="center,center"
+	width="550px">
+	<vlayout>
+		<grid>
+			<columns>
+				<column width="100px" />
+				<column width="250px" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Nome" />
+					<combobox model="@{gerenciador.listaProjetos}"
+						width="180px" selectedItem="@{gerenciador.entidade }">
+						<comboitem self="@{each=item }" value="@{item}"
+							label="@{item.nome }" />
+					</combobox>
+				</row>
+			</rows>
+		</grid>
+		<cell align="center">
+			<button label="Selecionar" onClick="gerenciador.acaoAbrirProjeto(); modalAbrirProjeto.detach()" />
+			<button label="Cancelar" onClick="modalAbrirProjeto.detach()" />
+		</cell>
+	</vlayout>
+</window>

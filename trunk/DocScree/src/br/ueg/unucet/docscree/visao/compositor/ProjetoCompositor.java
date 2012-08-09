@@ -5,54 +5,58 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zkplus.databind.BindingListModelListModel;
 import org.zkoss.zul.SimpleListModel;
+import org.zkoss.zul.Window;
 
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.ProjetoControle;
 import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.Modelo;
 import br.ueg.unucet.quid.dominios.Projeto;
+import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 
 /**
  * Classe da visão que representa o caso de uso Manter projeto; Composer do
  * Projeto no ZK
  * 
  * @author Diego
- *
+ * 
  */
-@SuppressWarnings({"rawtypes","unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Component
 @Scope("session")
-public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
-	
-	//Campos da entidade
+public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
+		implements IProjetoVisao {
+
+	// Campos da entidade
 	/**
 	 * Campo nome da entidade
 	 */
-	@AtributoVisao(isCampoEntidade= true, nome= "nome")
+	@AtributoVisao(isCampoEntidade = true, nome = "nome")
 	private String fldNome;
 	/**
 	 * Campo descrição da entidade
 	 */
-	@AtributoVisao(isCampoEntidade= true, nome= "descricao")
+	@AtributoVisao(isCampoEntidade = true, nome = "descricao")
 	private String fldDescricao;
 	/**
 	 * Representa a equipe da entidade
 	 */
-	@AtributoVisao(isCampoEntidade= true, nome= "equipe")
+	@AtributoVisao(isCampoEntidade = true, nome = "equipe")
 	private Equipe fldEquipe = new Equipe();
 	/**
 	 * Representa o modelo da entidade
 	 */
-	@AtributoVisao(isCampoEntidade= true, nome= "modelo")
+	@AtributoVisao(isCampoEntidade = true, nome = "modelo")
 	private Modelo fldModelo = new Modelo();
 	/**
 	 * Campo status da entidade
 	 */
-	@AtributoVisao(isCampoEntidade= false, nome= "status")
+	@AtributoVisao(isCampoEntidade = false, nome = "status")
 	private Boolean fldStatus = Boolean.TRUE;
-	//Fim dos campos da entidade||Inicio campos de filtro
+	// Fim dos campos da entidade||Inicio campos de filtro
 	/**
 	 * Campo de filtro através do código
 	 */
@@ -88,7 +92,7 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	 */
 	@Override
 	protected void limparCampos() {
-		setFldEquipe(new Equipe());		
+		setFldEquipe(new Equipe());
 		setFldModelo(new Modelo());
 		setFldNome("");
 		setFldDescricao("");
@@ -116,13 +120,17 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 		super.binder.saveAll();
 		for (Object objeto : super.getListaEntidade()) {
 			Projeto projeto = (Projeto) objeto;
-			if (String.valueOf(projeto.getCodigo()).trim().toLowerCase().contains(getFiltroCodigo().trim().toLowerCase())
-					&& projeto.getNome().trim().toLowerCase().contains(getFiltroNome().trim().toLowerCase())
-					&& projeto.getEquipe().getNome().toLowerCase().trim().contains(getFiltroEquipe().trim().toLowerCase())
-					&& projeto.getModelo().getNome().toLowerCase().trim().contains(getFiltroModelo().trim().toLowerCase())) {
+			if (String.valueOf(projeto.getCodigo()).trim().toLowerCase()
+					.contains(getFiltroCodigo().trim().toLowerCase())
+					&& projeto.getNome().trim().toLowerCase()
+							.contains(getFiltroNome().trim().toLowerCase())
+					&& projeto.getEquipe().getNome().toLowerCase().trim()
+							.contains(getFiltroEquipe().trim().toLowerCase())
+					&& projeto.getModelo().getNome().toLowerCase().trim()
+							.contains(getFiltroModelo().trim().toLowerCase())) {
 				if (getExibirInativos()
 						|| projeto.getStatus().toString().toLowerCase()
-						.equals("ativo")) {
+								.equals("ativo")) {
 					listaProjeto.add(projeto);
 				}
 			}
@@ -131,7 +139,7 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 				new SimpleListModel<Projeto>(listaProjeto)));
 		super.binder.loadAll();
 	}
-	
+
 	/**
 	 * @see GenericoCompositor#acaoSalvar()
 	 */
@@ -148,25 +156,88 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void acaoAbrir() {
+		org.zkoss.zk.ui.Component comp = Executions.createComponents(
+				"/componentes/modalProjeto.zul", null, null);
+
+		if (comp instanceof Window) {
+			((Window) comp).doModal();
+		}
+	}
+
+	public void acaoAbrirProjeto() {
+		super.binder.saveAll();
+		try {
+			boolean retorno = super.getControle().fazerAcao("abrirProjeto",
+					(SuperCompositor) this);
+			if (retorno) {
+				limparCampos();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public List<Projeto> getListaProjetos() {
+		try {
+			limparFiltros();
+			boolean resultado = super.getControle().fazerAcao("listar",
+					(SuperCompositor) this);
+			if (resultado) {
+				this.setListaEntidade(super.getControle().getLista());
+			}
+		} catch (Exception e) {
+		}
+		return (List<Projeto>) this.getListaEntidade();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.ueg.unucet.docscree.visao.compositor.GenericoCompositor#
+	 * atualizarEntidadeExcluida(int)
+	 */
+	@Override
+	protected void atualizarEntidadeExcluida(int index) {
+		((Projeto) this.getListaEntidade().get(index))
+				.setStatus(StatusEnum.INATIVO);
+		acaoFiltrar();
+		super.binder.loadAll();
+	}
+
+	public Window criarJanela() {
+		return null;
+	}
+
+	@Override
+	public void salvarSessaoProjeto() {
+		Executions.getCurrent().getSession()
+				.setAttribute("projeto", super.getEntidade());
+	}
+
 	/**
-	 * Método que retorna as equipes cadastradas de acordo com o nível de permissão do usuário
+	 * Método que retorna as equipes cadastradas de acordo com o nível de
+	 * permissão do usuário
 	 * 
 	 * @return List<Equipe> equipes cadastradas
 	 */
+	@Override
 	public List<Equipe> getListaEquipes() {
 		return super.getControle().listarEquipes(super.getUsuarioSessao());
 	}
-	
+
 	/**
 	 * Método que retorna a lista de modelos cadastrados
 	 * 
 	 * @return List<Modelo> modelos cadastrados
 	 */
+	@Override
 	public List<Modelo> getListaModelos() {
 		return super.getControle().listarModelos();
 	}
-	
+
 	/**
 	 * @return String o(a) fldNome
 	 */
@@ -175,7 +246,8 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	}
 
 	/**
-	 * @param String o(a) fldNome a ser setado(a)
+	 * @param String
+	 *            o(a) fldNome a ser setado(a)
 	 */
 	public void setFldNome(String fldNome) {
 		this.fldNome = fldNome;
@@ -189,7 +261,8 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	}
 
 	/**
-	 * @param String o(a) fldDescricao a ser setado(a)
+	 * @param String
+	 *            o(a) fldDescricao a ser setado(a)
 	 */
 	public void setFldDescricao(String fldDescricao) {
 		this.fldDescricao = fldDescricao;
@@ -203,7 +276,8 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	}
 
 	/**
-	 * @param Equipe o(a) fldEquipe a ser setado(a)
+	 * @param Equipe
+	 *            o(a) fldEquipe a ser setado(a)
 	 */
 	public void setFldEquipe(Equipe fldEquipe) {
 		this.fldEquipe = fldEquipe;
@@ -217,7 +291,8 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	}
 
 	/**
-	 * @param Modelo o(a) fldModelo a ser setado(a)
+	 * @param Modelo
+	 *            o(a) fldModelo a ser setado(a)
 	 */
 	public void setFldModelo(Modelo fldModelo) {
 		this.fldModelo = fldModelo;
@@ -231,7 +306,8 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	}
 
 	/**
-	 * @param Boolean o(a) fldStatus a ser setado(a)
+	 * @param Boolean
+	 *            o(a) fldStatus a ser setado(a)
 	 */
 	public void setFldStatus(Boolean fldStatus) {
 		this.fldStatus = fldStatus;
@@ -245,7 +321,8 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	}
 
 	/**
-	 * @param String o(a) filtroCodigo a ser setado(a)
+	 * @param String
+	 *            o(a) filtroCodigo a ser setado(a)
 	 */
 	public void setFiltroCodigo(String filtroCodigo) {
 		this.filtroCodigo = filtroCodigo;
@@ -259,7 +336,8 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	}
 
 	/**
-	 * @param String o(a) filtroNome a ser setado(a)
+	 * @param String
+	 *            o(a) filtroNome a ser setado(a)
 	 */
 	public void setFiltroNome(String filtroNome) {
 		this.filtroNome = filtroNome;
@@ -273,7 +351,8 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	}
 
 	/**
-	 * @param String o(a) filtroEquipe a ser setado(a)
+	 * @param String
+	 *            o(a) filtroEquipe a ser setado(a)
 	 */
 	public void setFiltroEquipe(String filtroEquipe) {
 		this.filtroEquipe = filtroEquipe;
@@ -287,7 +366,8 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle> {
 	}
 
 	/**
-	 * @param String o(a) filtroModelo a ser setado(a)
+	 * @param String
+	 *            o(a) filtroModelo a ser setado(a)
 	 */
 	public void setFiltroModelo(String filtroModelo) {
 		this.filtroModelo = filtroModelo;

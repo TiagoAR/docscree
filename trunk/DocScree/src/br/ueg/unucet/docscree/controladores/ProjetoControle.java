@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
+import br.ueg.unucet.docscree.visao.compositor.IProjetoVisao;
 import br.ueg.unucet.docscree.visao.compositor.ProjetoCompositor;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Equipe;
@@ -112,9 +113,12 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 	public void setarEntidadeVisao(SuperCompositor<?> pVisao) {
 		ProjetoCompositor visao = (ProjetoCompositor) pVisao;
 		Projeto projeto = (Projeto) visao.getEntidade();
+		visao.setCodigo(projeto.getCodigo());
 		visao.setFldEquipe(projeto.getEquipe());
 		visao.setFldModelo(projeto.getModelo());
 		visao.setFldNome(projeto.getNome());
+		boolean ativo = projeto.getStatus().equals(StatusEnum.ATIVO);
+		visao.setFldStatus(ativo);
 	}
 
 	@Override
@@ -165,6 +169,12 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 			return new ArrayList<Modelo>(retorno.getParametros().get(Retorno.PARAMERTO_LISTA));
 		}
 		return null;
+	}
+	
+	public boolean acaoAbrirProjeto() {
+		IProjetoVisao projetoVisao = (IProjetoVisao) super.getMapaAtributos().get("visao");
+		projetoVisao.salvarSessaoProjeto();
+		return true;
 	}
 
 }
