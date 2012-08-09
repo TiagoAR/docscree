@@ -8,6 +8,7 @@ import br.ueg.unucet.docscree.utilitarios.Reflexao;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.EquipeUsuario;
+import br.ueg.unucet.quid.dominios.Projeto;
 import br.ueg.unucet.quid.dominios.Usuario;
 import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
 import br.ueg.unucet.quid.interfaces.IQUID;
@@ -98,6 +99,10 @@ public abstract class SuperControle {
 	protected Usuario getUsuarioLogado() {
 		return (Usuario) this.getMapaAtributos().get("usuarioLogado");
 	}
+	
+	protected Projeto getProjeto() {
+		return (Projeto) this.getMapaAtributos().get("projetoAberto");
+	}
 
 	/**
 	 * Método responsável por executar qualquer ação, a partir dele que chama o
@@ -116,6 +121,7 @@ public abstract class SuperControle {
 		try {
 			setMapaAtributos(Reflexao.gerarMapeadorAtributos(pVisao));
 			getMapaAtributos().put("usuarioLogado", (Usuario) pVisao.getUsuarioSessao());
+			getMapaAtributos().put("projetoAberto", (Projeto) pVisao.getProjetoSessao());
 			Class classeRef = this.getClass();
 			if (!preAcao(pAcao)) {
 				return false;

@@ -38,6 +38,10 @@
 							label="@{item.nome }" />
 					</combobox>
 				</row>
+				<row>
+					<label value="Ativo:" />
+					<checkbox checked="@{gerenciador.fldStatus}" />
+				</row>
 				
 			</rows>
 		</grid>
@@ -72,6 +76,7 @@
 				<listheader label="Descrição" />
 				<listheader label="Equipe" />
 				<listheader label="Modelo" />
+				<listheader label="Status" />
 				<listheader />
 				<listheader />
 			</listhead>
@@ -81,6 +86,7 @@
 				<listcell label="@{item.descricao }" />
 				<listcell label="@{item.equipe.nome }" />
 				<listcell label="@{item.modelo.nome }" />
+				<listcell label="@{item.status }" />
 				<listcell>
 					<button label="Editar" > 
 						<attribute name="onClick">
@@ -99,7 +105,9 @@
 				</listcell>
 			</listitem>
 		</listbox>
-
+		<checkbox label="Exibir equipes inativas" checked="@{gerenciador.exibirInativos}" 
+						onClick="gerenciador.acaoFiltrar()" />
+						
 		<button label="Fechar" onClick="gerenciador.fecharModalLista()" />
 	</window>
 	</groupbox>

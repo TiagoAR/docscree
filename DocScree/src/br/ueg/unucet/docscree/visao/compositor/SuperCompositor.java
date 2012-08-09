@@ -132,6 +132,15 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	}
 	
 	/**
+	 * Método que retorna o projeto salvo na sessão
+	 * 
+	 * @return Object projeto
+	 */
+	public Object getProjetoSessao() {
+		return Executions.getCurrent().getSession().getAttribute("projeto");
+	}
+	
+	/**
 	 * Método que gera a mensagem de Erro, varre a lista de mensagens e a joga na visão.
 	 * 
 	 */

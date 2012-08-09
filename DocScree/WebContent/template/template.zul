@@ -22,7 +22,7 @@
 				<menuitem label="Modelo" href="/pages/modelo.zul" width="100px;"/>
 				<menu label="Projeto" width="100px;">
 					<menupopup>
-						<menuitem label="Abrir"/>
+						<menuitem label="Abrir" apply="${projetoCompositor}" onClick="gerenciador.acaoAbrir()"/>
 						<menuitem label="Novo" href="/pages/projeto.zul"/>
 					</menupopup>
 				</menu>
