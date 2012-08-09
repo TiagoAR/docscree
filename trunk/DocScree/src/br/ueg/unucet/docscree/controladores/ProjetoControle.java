@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import br.ueg.unucet.docscree.interfaces.IProjetoVisao;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
-import br.ueg.unucet.docscree.visao.compositor.IProjetoVisao;
 import br.ueg.unucet.docscree.visao.compositor.ProjetoCompositor;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Equipe;

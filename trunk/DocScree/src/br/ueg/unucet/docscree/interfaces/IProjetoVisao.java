@@ -1,4 +1,4 @@
-package br.ueg.unucet.docscree.visao.compositor;
+package br.ueg.unucet.docscree.interfaces;
 
 import java.util.List;
 
