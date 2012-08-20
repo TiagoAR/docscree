@@ -190,4 +190,15 @@ public abstract class SuperControle {
 		return mensagens;
 	}
 
+	/**
+	 * @param Mensagens o(a) mensagens a ser setado(a)
+	 */
+	public void setMensagens(Mensagens mensagens) {
+		this.mensagens = mensagens;
+	}
+	
+	protected SuperCompositor getVisao() {
+		return (SuperCompositor) this.getMapaAtributos().get("visao");
+	}
+
 }

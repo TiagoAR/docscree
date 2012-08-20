@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<?page title="Manter Equipes" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+
+	<groupbox self="@{define(content)}" id="gpBoxTipoMembro" width="650px"
+		closable="false" apply="${tipoMembroCompositor}">
+		
+		<caption label="Mapear TipoMembro" />
+		<grid sizedByContent="true" style="border: none;">
+			<columns>
+				<column width="200px" />
+				<column width="400px"/>
+			</columns>
+			<rows>
+				<row spans="2">
+					<button label="Selecionar..." upload="true,maxsize=1000,multiple=true,native" onUpload="gerenciador.uploadTipoMembro(event)">
+					</button>
+				</row>
+				<row spans="2">
+					<listbox model="@{gerenciador.arquivosCarregados }" id="listboxArquivos"
+						pagingPosition="bottom" mold="paging" pageSize="8" selectedItem="@{gerenciador.arquivoSelecionado }" >
+						<listhead>
+							<listheader label="Nome" />
+							<listheader label="Situação"/>
+							<listheader label="Remover"/>
+						</listhead>
+						<listitem self="@{each=item }" value="@{item}">
+							<listcell label="@{item.nomeArquivo }"/>
+							<listcell label="@{item.situacao }"/>
+							<listcell>
+								<button label="Remover" >
+									<attribute name="onClick">
+										self.getParent().getParent().setSelected(true);
+										gerenciador.removerTipoMembro();
+									</attribute>
+								</button>
+							</listcell>
+						</listitem>
+					</listbox>
+				</row>
+				<row>
+					<button label="Adicionar Componentes" onClick="gerenciador.mapearTipoMembro()"/>
+					<button label="Cancelar"/>
+				</row>
+			</rows>
+		</grid>
+	</groupbox>
+</zk>

@@ -9,6 +9,7 @@ import org.zkoss.zk.ui.event.SerializableEventListener;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zkplus.databind.AnnotateDataBinder;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
@@ -185,9 +186,14 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	protected void mostrarMensagem(boolean pResultado) {
 		Window mensagens = this.gerarWindowMensagem();
 		if (pResultado) {
+			mensagens.doOverlapped();
+			mensagens.setPosition("top, right");
 			gerarMensagemSucesso(mensagens);
 		} else {
+			mensagens.doModal();
+			mensagens.setPosition("center");
 			gerarMensagemErro(mensagens);
+			adicionarBotaoFechar(mensagens);
 		}
 	}
 	
@@ -210,10 +216,23 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		mensagens.setId("windowAvisos");		
 
 		mensagens.setParent(this.getComponent());
-		mensagens.setPosition("top, right");
 		mensagens.setVisible(true);
-		mensagens.doOverlapped();
 		return mensagens;
+	}
+	
+	private void adicionarBotaoFechar(Window mensagens) {
+		Button button = new Button();
+		button.setLabel("Ok");
+		button.setParent(mensagens);
+		button.addEventListener("onClick", new SerializableEventListener() {
+			private static final long serialVersionUID = -4218067107434932638L;
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+            	event.getTarget().getParent().setVisible(false); 
+            	event.getTarget().getParent().detach();
+			}
+		});
 	}
 	
 	/**
