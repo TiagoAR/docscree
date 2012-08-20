@@ -31,7 +31,12 @@
 						<menuitem label="Montar Novo"/>
 					</menupopup>
 				</menu>
-				<menuitem label="Mapear Componentes" width="100px;"/>
+				<menu label="Mapear Componentes" width="150px;">
+					<menupopup>
+						<menuitem label="Mapear TipoMembro" href="/pages/tipomembro.zul"/>
+						<menuitem label="Mapear Serviço"/>
+					</menupopup>
+				</menu>
 				<menuitem label="Logs" width="100px;"/>
 			</menubar>
 		</div>

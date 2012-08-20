@@ -96,7 +96,7 @@
 					</button>
 				</listcell>
 				<listcell>
-					<button label="Excluir" >
+					<button label="Desativar" >
 						<attribute name="onClick">
 							self.getParent().getParent().setSelected(true);
 							gerenciador.acaoExcluir();

@@ -21,13 +21,14 @@ public class Mensagens {
 	/**
 	 * Define qual é o tipo principal de mensagens contidas.
 	 */
-	private TipoMensagem tipoMensagem = TipoMensagem.ATENCAO;
+	private TipoMensagem tipoMensagem;
 	
 	/**
 	 * Construtor que inicializa as variáveis.
 	 */
 	public Mensagens() {
 		this.listaMensagens = new ArrayList<String>();
+		this.tipoMensagem = TipoMensagem.ATENCAO;
 	}
 
 	/**
