@@ -242,7 +242,7 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 */
 	private void aplicarTimerFechamento(Window mensagens) {
 		Timer t = new Timer();
-		t.setDelay(4500);
+		t.setDelay(10000);
 		t.setParent(mensagens);
 		t.addEventListener("onTimer",new SerializableEventListener() {
 			private static final long serialVersionUID = 7868086951980855931L;
