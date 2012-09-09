@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
-<?page title="Manter Equipes" contentType="text/html;charset=UTF-8"?>
+<?page title="Mapear TipoMembro" contentType="text/html;charset=UTF-8"?>
 
 <zk>
 
