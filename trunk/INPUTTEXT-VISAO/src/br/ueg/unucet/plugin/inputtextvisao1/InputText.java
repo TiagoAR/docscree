@@ -32,7 +32,7 @@ public class InputText extends SuperTipoMembro implements ITipoMembroVisao {
 
 	@Override
 	public String getNome() {
-		return "inputvisao";
+		return "inputtextvisao";
 	}
 
 	@Override
