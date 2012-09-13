@@ -9,16 +9,15 @@ html,body,div,span,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,code,em,i,font,img,small
 	font-style: inherit;
 	font-size: 100%;
 	font-family: inherit;
-	vertical-align: baseline
 }
 
 :focus {
-	outline: 0
+	outline: 0;
 }
 
 button::-moz-focus-inner,input[type="reset"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="file"]>input[type="button"]::-moz-focus-inner
 	{
-	border: none
+	border: none;
 }
 
 /* -- 2. TYPOGRAPHY -- */
@@ -33,17 +32,17 @@ body {
 }
 
 p,ul,ol {
-	margin-bottom: 21px
+	margin-bottom: 21px;
 }
 
 ul {
 	list-style: square;
-	margin-left: 21px
+	margin-left: 21px;
 }
 
 ol {
 	list-style: decimal;
-	margin-left: 21px
+	margin-left: 21px;
 }
 
 h1,h2,h3 {
@@ -51,44 +50,44 @@ h1,h2,h3 {
 	color: #3e4550;
 	font-weight: bold;
 	margin-bottom: 21px;
-	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5)
+	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
 }
 
 h1 {
 	font-size: 36px;
 	line-height: 42px;
 	letter-spacing: -1px;
-	margin-bottom: 0px
+	margin-bottom: 0px;
 }
 
 h2 {
 	font-size: 26px;
 	line-height: 30px;
 	letter-spacing: 0px;
-	margin-bottom: 12px
+	margin-bottom: 12px;
 }
 
 h3 {
 	font-size: 16px;
-	margin-bottom: 6px
+	margin-bottom: 6px;
 }
 
 h4 {
 	font-size: 23px;
-	margin-bottom: 6px
+	margin-bottom: 6px;
 }
 
 em,i {
-	font-style: italic
+	font-style: italic;
 }
 
 b,strong {
-	font-weight: bold
+	font-weight: bold;
 }
 
 input,textarea {
 	border: none;
-	outline: none
+	outline: none;
 }
 
 /* -- 3. CSS ZK sobrescrito -- */
@@ -119,7 +118,7 @@ input,textarea {
 }
 
 .z-textbox:focus {
-	color: #555f6e
+	color: #555f6e;
 }
 
 .z-combobox-rounded .z-combobox-rounded-btn,.z-bandbox-rounded .z-bandbox-rounded-btn,.z-datebox-rounded .z-datebox-rounded-btn,.z-timebox-rounded .z-timebox-rounded-btn,.z-spinner-rounded .z-spinner-rounded-btn,.z-doublespinner-rounded .z-doublespinner-rounded-btn,.z-combobox .z-combobox-btn,.z-bandbox .z-bandbox-btn,.z-datebox .z-datebox-btn,.z-timebox .z-timebox-btn,.z-spinner .z-spinner-btn,.z-doublespinner .z-doublespinner-btn
@@ -177,7 +176,7 @@ input,textarea {
 /* -- 4. Novos CSS -- */
 input
 	[type="button"],input[type="submit"],input[type="reset"],button {
-	width: 100px;
+	width: 115px;
 	font-family: Helvetica, sans-serif;
 	display: inline-block;
 	padding: 0px 0px;
@@ -199,7 +198,7 @@ input
 input[type="button"]:hover,input[type="submit"]:hover,input[type="reset"]:hover,button:hover
 	{
 	text-decoration: none;
-	background-position: 0px -120px
+	background-position: 0px -120px;
 }
 
 input[type="button"]:active,input[type="submit"]:active,input[type="reset"]:active,button:active

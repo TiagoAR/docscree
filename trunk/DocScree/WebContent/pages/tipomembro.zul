@@ -41,7 +41,7 @@
 					</listbox>
 				</row>
 				<row>
-					<button label="Adicionar Componentes" onClick="gerenciador.mapearTipoMembro()"/>
+					<button label="Adicionar Componentes" onClick="gerenciador.mapearTipoMembro()" width="155px"/>
 					<button label="Cancelar"/>
 				</row>
 			</rows>

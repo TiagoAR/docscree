@@ -3,13 +3,12 @@
 .z-menubar-hor,.z-menubar-ver {
 	position: static;
 	border-color: #D8D8D8 !important;
-    border-radius: 10px 10px 10px 10px !important;
-    border-style: solid !important;
-    border-width: 1px !important;
-    display: block !important;
+	border-radius: 10px 10px 10px 10px !important;
+	border-style: solid !important;
+	border-width: 1px !important;
+	display: block !important;
 	-webkit-padding-end: 8px;
-    padding: 8px 0 0px !important;
-    
+	padding: 8px 0 0px !important;
 }
 
 .z-menu-body-over .z-menu-inner-l,.z-menuitem-body-over .z-menuitem-inner-l,.z-menu-body-over .z-menu-inner-r,.z-menuitem-body-over .z-menuitem-inner-r
@@ -35,7 +34,37 @@
 	color: #00547A;
 }
 
-.z-menu-inner-m .z-menu-btn, .z-menuitem-inner-m .z-menuitem-btn {
+.z-menu-inner-m .z-menu-btn,.z-menuitem-inner-m .z-menuitem-btn {
 	padding: 0 4px !important;
 	line-height: 25px;
+	box-shadow: none !important;
+}
+
+.z-menubar-hor .z-menu,.z-menubar-hor .z-menuitem,.z-menubar-hor .z-menu-btn,.z-menubar-hor .z-menuitem-btn,.z-menubar-hor span,.z-menubar-hor a,.z-menubar-hor div,.z-menubar-ver .z-menu,.z-menubar-ver .z-menuitem,.z-menubar-ver .z-menu-btn,.z-menubar-ver .z-menuitem-btn,.z-menubar-ver span,.z-menubar-ver a,.z-menubar-ver div,.z-menu-cnt,.z-menuitem-cnt
+	{
+	padding-bottom: 3px;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+
+.z-menubar-hor .z-menu-body,.z-menubar-hor .z-menuitem-body,.z-menubar-ver .z-menu-body,.z-menubar-ver .z-menuitem-body
+	{
+	width: 150px !important;
+}
+
+.z-menu-body-over .z-menu-inner-l, .z-menuitem-body-over .z-menuitem-inner-l, .z-menu-body-over .z-menu-inner-r, .z-menuitem-body-over .z-menuitem-inner-r {
+    background-position: 2px 3px;
+}
+
+.z-menu-body-over .z-menu-inner-r, .z-menuitem-body-over .z-menuitem-inner-r {
+    background-position: 0px -37px;
+}
+
+.z-menu-body-over .z-menu-inner-m, .z-menuitem-body-over .z-menuitem-inner-m {
+    background-position: 2px -77px;
+}
+
+.z-menupopup .z-menupopup-cnt {
+	background: url("/DocScree/imagens/pattern.png") repeat scroll 0 0 transparent;
+	width: 150px;
 }
