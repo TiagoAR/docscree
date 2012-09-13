@@ -40,7 +40,6 @@ public class TipoMembroControle extends GenericoControle<TipoMembro> {
 	
 	public boolean acaoMapearTipoMembro() {
 		Map<File, String> tipoMembros = (Map<File, String>) getMapaAtributos().get("tipoMembros");
-		boolean retorno = false;
 		if (!tipoMembros.isEmpty()) {
 			File[] files = new File[tipoMembros.size()];
 			int i = 0;
@@ -49,18 +48,14 @@ public class TipoMembroControle extends GenericoControle<TipoMembro> {
 				files[i] = file;
 				i++;
 			}
-			Retorno<File, String> mapearArquivosServicos = super.getFramework().mapearArquivosTipoMembro(files);
-			((TipoMembroCompositor)super.getVisao()).setTipoMembros(mapearArquivosServicos.getParametros());
-			if(mapearArquivosServicos.isSucesso()) {
-				return true;
-			} else {
-				super.getMensagens().getListaMensagens().add(mapearArquivosServicos.getMensagem());
-			}
+			Retorno<File, String> mapearArquivosTipoMembro = super.getFramework().mapearArquivosTipoMembro(files);
+			((TipoMembroCompositor)super.getVisao()).setTipoMembros(mapearArquivosTipoMembro.getParametros());
+			return true;
 		} else {
 			super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
 			super.getMensagens().getListaMensagens().add("É necessário selecionar TipoMembros para mapeá-los");
 		}
-		return retorno;
+		return false;
 	}
 
 }

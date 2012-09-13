@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<?page title="Montar Artefato" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+	<style>
+		
+		<![CDATA[
+
+		.conteudoEsq {
+			position:absolute;
+			width:140px;
+			padding-top: 2px;
+			left:5%;
+			padding-bottom:20px;
+		}
+		.conteudoDir {
+			position:absolute;
+			width:210px;
+			padding-top: 2px;
+			right: 5%;
+			padding-bottom:20px;
+		}
+		.sepEsqcolCentral {
+			margin-left:140px;
+			padding-left:0px;
+		}
+		.colDir {
+			margin:0px;	
+		}
+		.sepcolCentralDir {
+			margin-right:213px;
+		}
+		.colCentral {    
+			padding:2px;
+			text-align:justify;
+		} ]]>
+		
+	</style>
+	<div self="@{define(content)}" id="divMntArtefato"
+		apply="${artefatoCompositor}">
+		<div sclass="conteudoEsq">
+			<window width="100%" title="Componentes" border="normal"
+				id="windowComponentes">
+			</window>
+		</div>
+		<div sclass="sepEsqcolCentral">
+			<div sclass="colDir">
+				<div sclass="conteudoDir">
+					<window width="100%" title="Paleta" border="normal"
+						id="windowPaleta"  >
+						<listbox model="@{gerenciador.listaTipoMembrosVisao }" selectedItem="@{gerenciador.tipoMembroVisaoSelecionado}">
+							<listhead>
+								<listheader label="" />
+								<listheader label="TipoMembro" />
+							</listhead>
+							<listitem self="@{each=item }" value="@{item}">
+								<listcell>
+									<image content="@{item.imagemZK }"/>
+								</listcell>
+								<listcell label="@{item.nome }" onClick="@{gerenciador.adicionarTipoMembro }" />
+							</listitem>
+						</listbox>
+					</window>
+					<separator />
+					<window width="100%" title="Serviços" border="normal"
+						id="windowServicos">
+					</window>
+				</div>
+				<div sclass="sepcolCentralDir">
+					<div sclass="colCentral">
+						<window width="100%" title="Área de Montagem: "
+							border="normal" id="windowArtefato" height="800px">
+						</window>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<button label="Salvar" />
+		</div>
+	</div>
+</zk>
