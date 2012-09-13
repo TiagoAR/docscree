@@ -6,8 +6,10 @@ public class InputTextInterface {
 	
 	private Textbox textbox;
 	
+	//pedir nova instanciar
+	
 	public InputTextInterface() {
-		this.textbox = new Textbox();
+		this.textbox = new Textbox("");
 	}
 
 	public Textbox getVisualizacao() {

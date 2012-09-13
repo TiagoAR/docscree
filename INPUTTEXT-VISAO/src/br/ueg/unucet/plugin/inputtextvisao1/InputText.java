@@ -3,13 +3,12 @@ package br.ueg.unucet.plugin.inputtextvisao1;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembro;
-import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroVisao;
+import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 
-public class InputText extends SuperTipoMembro implements ITipoMembroVisao {
+public class InputText extends SuperTipoMembroVisaoZK {
 	
 	private InputTextInterface inputInterface;
-
+//ter identificar unico na visão para chamar o que foi adicionado
 	/**
 	 * 
 	 */
@@ -27,17 +26,12 @@ public class InputText extends SuperTipoMembro implements ITipoMembroVisao {
 
 	@Override
 	public Integer getRevisao() {
-		return 1;
+		return 3;
 	}
 
 	@Override
 	public String getNome() {
 		return "inputtextvisao";
-	}
-
-	@Override
-	public String getPlataforma() {
-		return "ZK";
 	}
 
 	@Override
@@ -47,12 +41,12 @@ public class InputText extends SuperTipoMembro implements ITipoMembroVisao {
 
 	@Override
 	public Object getVisaoPreenchimento() {
-		return inputInterface;
+		return inputInterface.getVisualizacao();
 	}
 
 	@Override
 	public Object getVisaoVisualizacao() {
-		return inputInterface;
+		return inputInterface.getVisualizacao();
 	}
 
 	@Override
