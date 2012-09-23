@@ -107,6 +107,22 @@ public class TipoMembroServico extends GenericoServico<TipoMembro> implements IT
 		
 		return retorno;
 	}
+	
+	@Override
+	public Retorno<String, ITipoMembroModelo> getTipoMembroModelo(ITipoMembroVisao tipoMembroVisao) {
+		Retorno<String, ITipoMembroModelo> retorno = new Retorno<String, ITipoMembroModelo>();
+		ITipoMembroModelo tipoMembroModelo = this.controleTipoMembro.getTipoMembroModelo(tipoMembroVisao);
+		retorno.adicionarParametro(Retorno.PARAMETRO_NOVA_INSTANCIA, tipoMembroModelo);
+		if(tipoMembroModelo == null){
+			retorno.setSucesso(false);
+			//TODO Procurar mensagem de erro e fazer a versão modelo.
+			retorno.setMensagem(propertiesMensagensUtil.getValor("tipomembro_modelo_sem_representante_na_visao"));
+		}else{
+			retorno.setSucesso(true);
+		}
+		
+		return retorno;
+	}
 
 	/* (non-Javadoc)
 	 * @see br.ueg.unucet.quid.interfaces.ITipoMembroServico#getInstancia(java.lang.String, java.lang.Integer)

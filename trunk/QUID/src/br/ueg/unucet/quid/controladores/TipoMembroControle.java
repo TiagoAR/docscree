@@ -225,13 +225,22 @@ public class TipoMembroControle extends GenericControle<TipoMembro, Long> implem
 		}
 		return null;
 	}
+	
+	@Override
+	public ITipoMembroModelo getTipoMembroModelo(ITipoMembroVisao tipoMembroVisao) {
+		for (ITipoMembroModelo tipoMembroModelo : this.tiposMembroModeloMapeados.values()) {
+			if (tipoMembroVisao.getNomeTipoMembroModelo().equals(tipoMembroModelo.getNome())) {
+				return tipoMembroModelo;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Metodo responsavel por realizar a inicializacao dos: diretorio de versionamento, arquivo de configuracoes, versionador e o verificador de espelho. Ele tambem e responsavel por carregar
 	 * os tiposmembro modelo e visao cadastrados
 	 * @throws TipoMembroExcessao Excessao caso aja algum problema na inicializacao dos componentes
 	 */
-	@SuppressWarnings("unused")
 	@PostConstruct
 	private void init() throws TipoMembroExcessao {
 		this.propertiesConfiguracoesUtil = FabricaProperties.loadConfiguracoes();

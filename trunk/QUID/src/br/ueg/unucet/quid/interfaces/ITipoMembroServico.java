@@ -37,5 +37,7 @@ public interface ITipoMembroServico<T> extends IServico<T> {
 	 */
 	Retorno<String, ITipoMembroVisao> getTipoMembroVisao(ITipoMembroModelo tipoMembroModelo);
 	
+	Retorno<String, ITipoMembroModelo> getTipoMembroModelo(ITipoMembroVisao tipoMembroVisao);
+	
 	Retorno<String, ITipoMembroModelo> getInstancia(String nome, Integer versao);
 }

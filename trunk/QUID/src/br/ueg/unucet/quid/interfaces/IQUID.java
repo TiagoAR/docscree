@@ -134,6 +134,8 @@ public interface IQUID {
 	 */
 	Retorno<String, ITipoMembroVisao> getTipoMembroVisao(ITipoMembroModelo tipoMembroModelo);
 	
+	Retorno<String, ITipoMembroModelo> getTipoMembroModelo(ITipoMembroVisao tipoMembroVisao);
+	
 	/**Mapeia os jar dos arquivos dos TipoMembro para o framework
 	 * @param arquivos Arquivos jars a serem mapeados
 	 * @return Retorno execucao acao.
