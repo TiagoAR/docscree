@@ -5,9 +5,8 @@ import javax.swing.ImageIcon;
 
 import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 
-public class InputText extends SuperTipoMembroVisaoZK {
+public class InputText extends SuperTipoMembroVisaoZK<InputTextInterface> {
 	
-	private InputTextInterface inputInterface;
 //ter identificar unico na visão para chamar o que foi adicionado
 	/**
 	 * 
@@ -15,18 +14,10 @@ public class InputText extends SuperTipoMembroVisaoZK {
 	private static final long serialVersionUID = 7574516772274099933L;
 	
 	public InputText() {
-		this.inputInterface = new InputTextInterface();
+		this.componente =  new InputTextInterface();
 		setDescricao("Visão Padrão");
-	}
-
-	@Override
-	public Integer getVersao() {
-		return 1;
-	}
-
-	@Override
-	public Integer getRevisao() {
-		return 3;
+		setVersao(1);
+		setRevisao(6);
 	}
 
 	@Override
@@ -41,12 +32,12 @@ public class InputText extends SuperTipoMembroVisaoZK {
 
 	@Override
 	public Object getVisaoPreenchimento() {
-		return inputInterface.getVisualizacao();
+		return getComponente().getVisualizacao();
 	}
 
 	@Override
 	public Object getVisaoVisualizacao() {
-		return inputInterface.getVisualizacao();
+		return getComponente().getVisualizacao();
 	}
 
 	@Override
@@ -62,12 +53,6 @@ public class InputText extends SuperTipoMembroVisaoZK {
 	@Override
 	public String getNomeTipoMembroModelo() {
 		return "inputtext";
-	}
-
-	@Override
-	public void setValor(Object valor) {
-		super.setValor(valor);
-		this.inputInterface.setValor(valor.toString());
 	}
 
 }
