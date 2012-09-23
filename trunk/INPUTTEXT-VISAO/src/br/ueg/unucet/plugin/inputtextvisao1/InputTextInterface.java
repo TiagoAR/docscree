@@ -2,7 +2,9 @@ package br.ueg.unucet.plugin.inputtextvisao1;
 
 import org.zkoss.zul.Textbox;
 
-public class InputTextInterface {
+import br.ueg.unucet.quid.extensao.interfaces.IComponenteInterface;
+
+public class InputTextInterface implements IComponenteInterface {
 	
 	private Textbox textbox;
 	
@@ -16,10 +18,12 @@ public class InputTextInterface {
 		return this.textbox;
 	}
 	
-	public void setValor(String valor) {
-		this.textbox.setText(valor);
+	@Override
+	public void setValor(Object valor) {
+		this.textbox.setText(valor.toString());
 	}
 	
+	@Override
 	public void getValor() {
 		this.textbox.getText();
 	}
