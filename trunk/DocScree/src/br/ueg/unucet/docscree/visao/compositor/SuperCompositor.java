@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.SerializableEventListener;
 import org.zkoss.zk.ui.select.Selectors;
@@ -17,9 +18,10 @@ import org.zkoss.zul.Timer;
 import org.zkoss.zul.Window;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
-
 import br.ueg.unucet.docscree.controladores.SuperControle;
+import br.ueg.unucet.docscree.interfaces.IComponenteDominio;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
+import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 
 /**
  * Compositor superior, contém métodos comuns a todos os compositores
@@ -251,6 +253,13 @@ public abstract class SuperCompositor<E extends SuperControle> extends
             	event.getTarget().getParent().detach();
             }
 		});
+	}
+	
+	// TODO descer para o superArtefato
+	public HtmlBasedComponent getComponentePorDominio(IParametro<?> parametro, String width) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+		String valorDominio = parametro.getDominioEntrada().toString();
+		IComponenteDominio componente = (IComponenteDominio) Class.forName("br.ueg.unucet.docscree.componentes." + valorDominio.substring(0, 1).toUpperCase() + valorDominio.substring(1).toLowerCase() + "Componente").newInstance();
+		return componente.getComponente(parametro, width);
 	}
 	
 	/**

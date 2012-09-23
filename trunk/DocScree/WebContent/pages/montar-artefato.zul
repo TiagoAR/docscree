@@ -40,30 +40,32 @@
 	<div self="@{define(content)}" id="divMntArtefato"
 		apply="${artefatoCompositor}">
 		<div sclass="conteudoEsq">
-			<window width="100%" title="Componentes" border="normal"
-				id="windowComponentes">
+			<window width="140px" title="Componentes" border="normal"
+				id="windowComponentes" mode="overlapped" >
+				<listbox model="@{gerenciador.listaTipoMembrosVisao }" selectedItem="@{gerenciador.tipoMembroVisaoSelecionado}"
+					>
+					<listhead>
+						<listheader label="" width="25%" />
+						<listheader label="TipoMembro" />
+					</listhead>
+					<listitem self="@{each=item }" value="@{item}" tooltiptext="@{item.nome }">
+						<listcell onClick="gerenciador.gerarPaletaParametros()">
+							<image content="@{item.imagemZK }" />
+						</listcell>
+						<listcell label="@{item.nome }" onClick="gerenciador.gerarPaletaParametros()" >
+						</listcell>
+					</listitem>
+				</listbox>
 			</window>
 		</div>
 		<div sclass="sepEsqcolCentral">
 			<div sclass="colDir">
 				<div sclass="conteudoDir">
-					<window width="100%" title="Paleta" border="normal"
-						id="windowPaleta"  >
-						<listbox model="@{gerenciador.listaTipoMembrosVisao }" selectedItem="@{gerenciador.tipoMembroVisaoSelecionado}">
-							<listhead>
-								<listheader label="" />
-								<listheader label="TipoMembro" />
-							</listhead>
-							<listitem self="@{each=item }" value="@{item}">
-								<listcell>
-									<image content="@{item.imagemZK }"/>
-								</listcell>
-								<listcell label="@{item.nome }" onClick="@{gerenciador.adicionarTipoMembro }" />
-							</listitem>
-						</listbox>
+					<window width="210px" title="Propriedades" border="normal"
+						id="windowPaleta">
 					</window>
 					<separator />
-					<window width="100%" title="Serviços" border="normal"
+					<window width="210px" title="Serviços" border="normal"
 						id="windowServicos">
 					</window>
 				</div>
