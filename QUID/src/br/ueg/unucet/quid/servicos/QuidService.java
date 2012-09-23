@@ -316,6 +316,12 @@ public class QuidService implements IQUID{
 		ITipoMembroServico<TipoMembro> servicoTipoMembro = (ITipoMembroServico<TipoMembro>) appContext.getBean("TipoMembroServico");
 		return servicoTipoMembro.getTipoMembroVisao(tipoMembroModelo);
 	}
+	
+	@Override
+	public Retorno<String, ITipoMembroModelo> getTipoMembroModelo(ITipoMembroVisao tipoMembroVisao) {
+		ITipoMembroServico<TipoMembro> servicoTipoMembro = (ITipoMembroServico<TipoMembro>) appContext.getBean("TipoMembroServico");
+		return servicoTipoMembro.getTipoMembroModelo(tipoMembroVisao);
+	}
 
 	/* (non-Javadoc)
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#getInstanciaModelo(java.lang.String, java.lang.String)

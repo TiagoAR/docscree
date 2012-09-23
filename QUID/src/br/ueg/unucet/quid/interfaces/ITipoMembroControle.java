@@ -61,6 +61,8 @@ public interface ITipoMembroControle<T, oid> extends IControle<T, oid> {
 	 */
 	ITipoMembroVisao getTipoMembroVisao(ITipoMembroModelo tipoMembroModelo);
 	
+	ITipoMembroModelo getTipoMembroModelo(ITipoMembroVisao tipoMembroVisao);
+	
 	/**Metodo responsavel por retornar um tipo membro modelo a partir de seu nome e sua versao
 	 * @param nome Nome do tipoMembro modelo
 	 * @param versao Versao do tipoMembro modelo
