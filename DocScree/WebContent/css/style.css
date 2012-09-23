@@ -121,12 +121,30 @@ input,textarea {
 	color: #555f6e;
 }
 
-.z-combobox-rounded .z-combobox-rounded-btn,.z-bandbox-rounded .z-bandbox-rounded-btn,.z-datebox-rounded .z-datebox-rounded-btn,.z-timebox-rounded .z-timebox-rounded-btn,.z-spinner-rounded .z-spinner-rounded-btn,.z-doublespinner-rounded .z-doublespinner-rounded-btn,.z-combobox .z-combobox-btn,.z-bandbox .z-bandbox-btn,.z-datebox .z-datebox-btn,.z-timebox .z-timebox-btn,.z-spinner .z-spinner-btn,.z-doublespinner .z-doublespinner-btn
+.z-combobox-rounded .z-combobox-rounded-btn,.z-bandbox-rounded .z-bandbox-rounded-btn,.z-datebox-rounded .z-datebox-rounded-btn,.z-timebox-rounded .z-timebox-rounded-btn,.z-spinner-rounded .z-spinner-rounded-btn,.z-doublespinner-rounded .z-doublespinner-rounded-btn,.z-combobox .z-combobox-btn,.z-bandbox .z-bandbox-btn,.z-datebox .z-datebox-btn,.z-timebox .z-timebox-btn,.z-doublespinner .z-doublespinner-btn
 	{
 	background-image: url(/DocScree/imagens/combobtn.gif);
 	border-left: 1px solid #CCC;
 	width: 23px;
 	height: 27px;
+}
+
+.z-timebox .z-timebox-btn, .z-spinner .z-spinner-btn, .z-doublespinner .z-doublespinner-btn {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 transparent;
+    border-style: solid solid solid none;
+    border-width: 1px 1px 1px 0;
+    height: 19px;
+    overflow: visible;
+    width: 18px;
+}
+
+.z-spinner-inp {
+	margin-right: 0px;
 }
 
 .z-combobox .z-combobox-btn-over,.z-bandbox .z-bandbox-btn-over,.z-datebox .z-datebox-btn-over

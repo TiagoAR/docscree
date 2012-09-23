@@ -28,7 +28,7 @@
 				</menu>
 				<menu label="Artefato" width="100px;">
 					<menupopup>
-						<menuitem label="Montar Novo"/>
+						<menuitem label="Montar Novo" href="/pages/montar-artefato.zul" />
 					</menupopup>
 				</menu>
 				<menu label="Mapear Componentes" width="150px;">

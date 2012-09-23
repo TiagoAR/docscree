@@ -7,7 +7,9 @@ import java.util.List;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Artefato;
 import br.ueg.unucet.quid.dominios.Retorno;
+import br.ueg.unucet.quid.extensao.dominios.Membro;
 import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
+import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroVisao;
 
 public class ArtefatoControle extends GenericoControle<Artefato> {
@@ -45,11 +47,17 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 		return lista;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public List<SuperTipoMembroVisaoZK> listarTipoMembrosVisao() {
 		List<SuperTipoMembroVisaoZK> lista = new ArrayList<SuperTipoMembroVisaoZK>();
-		for (ITipoMembroVisao iTipoMembroVisao : getMapaTipoMembrosVisao()) {
-			if (iTipoMembroVisao instanceof SuperTipoMembroVisaoZK) {
-				lista.add((SuperTipoMembroVisaoZK) iTipoMembroVisao);
+		for (ITipoMembroVisao tipoMembroVisao : getMapaTipoMembrosVisao()) {
+			if (tipoMembroVisao instanceof SuperTipoMembroVisaoZK) {
+				Retorno<String, ITipoMembroModelo> retorno = getFramework().getTipoMembroModelo(tipoMembroVisao);
+				ITipoMembroModelo tipoMembroModelo = retorno.getParametros().get(Retorno.PARAMETRO_NOVA_INSTANCIA);
+				Membro membro = new Membro();
+				membro.setTipoMembroModelo(tipoMembroModelo);
+				((SuperTipoMembroVisaoZK<?> )tipoMembroVisao).setMembro(membro);
+				lista.add((SuperTipoMembroVisaoZK) tipoMembroVisao);
 			}
 		}
 		return lista;
