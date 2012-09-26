@@ -77,6 +77,45 @@ public class Membro extends Identificavel{
 	public void setAltura(Integer altura) {
 		this.altura = altura;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((altura == null) ? 0 : altura.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof Membro))
+			return false;
+		Membro other = (Membro) obj;
+		if (getNome() == null) {
+			if (other.getNome() != null)
+				return false;
+		} else if (!getNome().equals(other.getNome()))
+			return false;
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Membro: " + getNome();
+	}
 	
 	
 	
