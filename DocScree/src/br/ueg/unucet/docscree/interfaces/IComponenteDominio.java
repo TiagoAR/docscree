@@ -8,6 +8,7 @@ public interface IComponenteDominio {
 	
 	HtmlBasedComponent getComponente(IParametro<?> parametro, String width);
 	Object getValor(HtmlBasedComponent componente);
+	void setValor(HtmlBasedComponent componente, Object valor);
 	Class<?> getValorClass();
 
 }

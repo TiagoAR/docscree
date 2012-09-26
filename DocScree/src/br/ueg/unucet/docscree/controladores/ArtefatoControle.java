@@ -63,5 +63,14 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 		return lista;
 		
 	}
+	
+	public Collection<Membro> listarMembrosPorTipoMembro(ITipoMembroModelo tipoMembro) {
+		Collection<Membro> lista = new ArrayList<Membro>();
+		Retorno<String, Collection<Membro>> retorno = getFramework().getListaMembro(tipoMembro);
+		if (retorno.isSucesso()) {
+			lista = retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
+		}
+		return lista;
+	}
 
 }
