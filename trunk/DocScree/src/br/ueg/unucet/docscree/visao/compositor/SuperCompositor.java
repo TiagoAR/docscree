@@ -257,9 +257,23 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	
 	// TODO descer para o superArtefato
 	public HtmlBasedComponent getComponentePorDominio(IParametro<?> parametro, String width) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		String valorDominio = parametro.getDominioEntrada().toString();
-		IComponenteDominio componente = (IComponenteDominio) Class.forName("br.ueg.unucet.docscree.componentes." + valorDominio.substring(0, 1).toUpperCase() + valorDominio.substring(1).toLowerCase() + "Componente").newInstance();
-		return componente.getComponente(parametro, width);
+		try {
+			IComponenteDominio componente = this.getInstanciaComponente(parametro);
+			return componente.getComponente(parametro, width);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public IComponenteDominio getInstanciaComponente(IParametro<?> parametro) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		String nomeClass = "";
+		if (parametro.getDominioEntrada() == null) {
+			nomeClass = "br.ueg.unucet.docscree.componentes.ListaDominioComponente";
+		} else {
+			String valorDominio = parametro.getDominioEntrada().toString();
+			nomeClass = "br.ueg.unucet.docscree.componentes." + valorDominio.substring(0, 1).toUpperCase() + valorDominio.substring(1).toLowerCase() + "Componente";
+		}
+		return (IComponenteDominio) Class.forName(nomeClass).newInstance();
 	}
 	
 	/**

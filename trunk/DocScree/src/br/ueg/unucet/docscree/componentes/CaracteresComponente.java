@@ -25,4 +25,10 @@ public class CaracteresComponente implements IComponenteDominio {
 	public Class<?> getValorClass() {
 		return String.class;
 	}
+
+	@Override
+	public void setValor(HtmlBasedComponent componente, Object valor) {
+		if (valor != null)
+			((Textbox) componente).setValue(String.valueOf(valor));
+	}
 }

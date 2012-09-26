@@ -22,6 +22,12 @@ public class NumericoComponente implements IComponenteDominio {
 	}
 	
 	@Override
+	public void setValor(HtmlBasedComponent componente, Object valor) {
+		if (valor != null)
+			((Spinner) componente).setValue(Integer.valueOf(valor.toString()));
+	}
+	
+	@Override
 	public Class<?> getValorClass() {
 		return Integer.class;
 	}
