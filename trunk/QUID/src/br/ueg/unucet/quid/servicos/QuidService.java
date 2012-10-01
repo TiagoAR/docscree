@@ -108,9 +108,9 @@ public class QuidService implements IQUID{
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#alterarMembro(br.ueg.unucet.quid.extensao.dominios.Membro)
 	 */
 	@Override
-	public Retorno alterarMembro(Membro membro) {
-		// TODO Auto-generated method stub
-		return null;
+	public Retorno<Object, Object> alterarMembro(Membro membro) {
+		IMembroServico<MembroFramework> membroServico = (IMembroServico<MembroFramework>) appContext.getBean("MembroServico");
+		return membroServico.alterar(membro);
 	}
 
 	/* (non-Javadoc)

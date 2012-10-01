@@ -85,7 +85,7 @@ public interface IQUID {
 	 * @param membro Membro a ser alterado.
 	 * @return Retorno execucao acao.
 	 */
-	Retorno alterarMembro(Membro membro);
+	Retorno<Object, Object> alterarMembro(Membro membro);
 	
 	/**Clona um artefato do framework.
 	 * @param artefatoAClonar Artefato a ser clonado.

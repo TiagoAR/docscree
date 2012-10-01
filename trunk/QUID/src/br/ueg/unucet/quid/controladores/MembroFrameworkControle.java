@@ -19,8 +19,6 @@ import br.ueg.unucet.quid.interfaces.IDAO;
 import br.ueg.unucet.quid.interfaces.IDAOMembroFramework;
 import br.ueg.unucet.quid.interfaces.IMembroFrameworkControle;
 import br.ueg.unucet.quid.interfaces.ITipoMembroControle;
-import br.ueg.unucet.quid.utilitarias.FabricaProperties;
-import br.ueg.unucet.quid.utilitarias.LeitoraPropertiesUtil;
 import br.ueg.unucet.quid.utilitarias.SerializadorObjetoUtil;
 
 /**
@@ -69,6 +67,21 @@ public class MembroFrameworkControle extends GenericControle<MembroFramework, Lo
 		}
 		
 	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, noRollbackFor=Exception.class)
+	public void alterar(Membro membro) throws MembroExcessao{
+		validarMembroAlterar(membro);
+		MembroFramework membroFramework = transformarMembro(membro);
+		try {
+			alterar(membroFramework);
+		} catch (QuidExcessao e) {
+			throw new MembroExcessao(this.propertiesMessagesUtil.getValor("erro_insercao"));
+		}
+		
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see br.ueg.unucet.quid.interfaces.IMembroFrameworkControle#pesquisar(java.lang.String, br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo)
 	 */
@@ -189,6 +202,14 @@ public class MembroFrameworkControle extends GenericControle<MembroFramework, Lo
 	 * @throws MembroExcessao Excessao caso algum campo obrigatorio nao foi informado
 	 */
 	private void validarMembro(Membro membro) throws MembroExcessao {
+		validarMembroAlterar(membro);
+		if(membroDuplicado(membro)){
+			throw new MembroExcessao(this.propertiesMessagesUtil.getValor("erro_membro_duplicado_framework"),MembroExcessao.MEMBRO_DUPLICADO);
+		}
+		
+	}
+	
+	private void validarMembroAlterar(Membro membro) throws MembroExcessao {
 		if(membro == null){
 			throw new MembroExcessao(this.propertiesMessagesUtil.getValor("erro_inserir_membro_membro_nao_informado"), MembroExcessao.MEMBRO_AUSENTE);
 		}
@@ -204,10 +225,6 @@ public class MembroFrameworkControle extends GenericControle<MembroFramework, Lo
 		if(!membro.getTipoMembroModelo().isParametrosValidos()){
 			throw new MembroExcessao(this.propertiesMessagesUtil.getValor("erro_inserir_membro_parametros_tipomembro_incorretos"), MembroExcessao.PARAMETROS_TIPO_MEMBRO_INVALIDOS);
 		}
-		if(membroDuplicado(membro)){
-			throw new MembroExcessao(this.propertiesMessagesUtil.getValor("erro_membro_duplicado_framework"),MembroExcessao.MEMBRO_DUPLICADO);
-		}
-		
 	}
 	
 	/**
@@ -218,7 +235,7 @@ public class MembroFrameworkControle extends GenericControle<MembroFramework, Lo
 	private boolean membroDuplicado(Membro membro) {
 		MembroFramework membroFramework = new MembroFramework();
 		membroFramework.setNome(membro.getNome());
-		membroFramework.setDescricao(membro.getDescricao());
+		//membroFramework.setDescricao(membro.getDescricao());
 		boolean retorno = isCadastrada(membroFramework, new String[]{"membroframework.codigo", "membroframework.nome"});
 		return retorno;
 	}
