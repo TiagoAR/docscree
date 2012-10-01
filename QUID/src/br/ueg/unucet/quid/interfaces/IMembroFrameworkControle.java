@@ -23,6 +23,8 @@ public interface IMembroFrameworkControle<T, oid> extends IControle<T, oid> {
 	 */
 	void inserir(Membro membro) throws MembroExcessao;
 	
+	void alterar(Membro membro) throws MembroExcessao;
+	
 	/**Realiza a pesquisa dos membros cadastrados no framework
 	 * @param nome Nome do membro a ser pesquisado. (Pesquisa parcial)
 	 * @param tipoMembro TipoMembro a ser pesquisado
