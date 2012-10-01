@@ -18,7 +18,12 @@ public class NumericoComponente implements IComponenteDominio {
 
 	@Override
 	public Object getValor(HtmlBasedComponent componente) {
-		return ((Spinner) componente).getValue();
+		Object valor = 0;
+		try {
+			valor = ((Spinner) componente).getValue();
+		} catch (Exception e) {
+		}
+		return valor;
 	}
 	
 	@Override
