@@ -3,6 +3,7 @@ package br.ueg.unucet.docscree.componentes;
 import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zkplus.databind.BindingListModelListModel;
 import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelArray;
 
@@ -23,7 +24,11 @@ public class ListaDominioComponente implements IComponenteDominio {
 
 	@Override
 	public Object getValor(HtmlBasedComponent componente) {
-		return ((Combobox) componente).getSelectedItem().getValue();
+		Comboitem selectedItem = ((Combobox) componente).getSelectedItem();
+		if (selectedItem != null) {
+			return selectedItem.getValue();
+		}
+		return null;
 	}
 
 	@Override

@@ -31,7 +31,9 @@ import org.zkoss.zul.Window;
 import br.ueg.unucet.docscree.controladores.ArtefatoControle;
 import br.ueg.unucet.docscree.interfaces.IComponenteDominio;
 import br.ueg.unucet.docscree.modelo.MembroDocScree;
+import br.ueg.unucet.docscree.utilitarios.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
+import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.quid.dominios.Artefato;
 import br.ueg.unucet.quid.dominios.Retorno;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
@@ -61,7 +63,6 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	protected AnnotateDataBinder binderMembro;
 	private List<MembroDocScree> listaMembrosAdicionados = new ArrayList<MembroDocScree>();
 	private SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado;
-	private Boolean atualizarMembro = Boolean.FALSE;
 	private int contador = 0;
 
 	@Override
@@ -136,6 +137,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	}
 
 	public void gerarPaletaParametros() {
+		super.binder.saveAll();
 		if (this.getTipoMembroVisaoSelecionado() != null) {
 			Window windowPaleta = getWindowPaleta();
 			windowPaleta.getChildren().clear();
@@ -143,7 +145,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 			windowPaleta.appendChild(gerarGridOpcao());
 			windowPaleta.appendChild(gerarGridMembros());
 			windowPaleta.appendChild(gerarGridPropriedades());
-			windowPaleta.appendChild(gerarButtonPropriedades(true));
+			windowPaleta.appendChild(gerarButtonPropriedades());
 			getBinderPaleta().loadAll();
 		}
 	}
@@ -151,7 +153,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	private Grid gerarGridOpcao() {
 		Grid grid = new Grid();
 		Rows rows = new Rows();
-		Checkbox checkbox = new Checkbox("Usar Membro salvo");
+		Checkbox checkbox = new Checkbox("Reaproveitar parâmetros de um Membro");
 		checkbox.addEventListener("onCheck", new EventListener<CheckEvent>() {
 
 			/* (non-Javadoc)
@@ -160,8 +162,11 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 			@Override
 			public void onEvent(CheckEvent event) throws Exception {
 				if (event.isChecked()) {
-					System.out.println("Checkado");
+					getComponentePaletaPorId("gridListaMembros").setVisible(true);
+					getBinderPaleta().loadAll();
 				} else {
+					getComponentePaletaPorId("gridListaMembros").setVisible(false);
+					getBinderPaleta().loadAll();
 				}
 			}
 			
@@ -173,6 +178,8 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	
 	private Grid gerarGridMembros() {
 		Grid grid = new Grid();
+		grid.setVisible(false);
+		grid.setId("gridListaMembros");
 		Rows rows = new Rows();
 		grid.appendChild(rows);
 		Combobox combobox = new Combobox();
@@ -187,8 +194,6 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 			public void onEvent(SelectEvent<Combobox, Membro> event)
 					throws Exception {
 				Membro membro = event.getSelectedObjects().iterator().next();
-				setValorParametroMembroPorId(PARAMETRONOME, membro.getNome());
-				setValorParametroMembroPorId(PARAMETRODESC, membro.getDescricao());
 				Collection<IParametro<?>> listaParametros = membro.getTipoMembroModelo().getListaParametros();
 				for (IParametro<?> parametro : listaParametros) {
 					getInstanciaComponente(parametro).setValor(getComponentePaletaPorId("PARAMETRO"+parametro.getNome()), parametro.getValor());
@@ -198,33 +203,13 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 			
 		});
 		rows.appendChild(gerarRow(combobox));
-		Checkbox checkbox = new Checkbox("Alterar Membro quando inserir ao Artefato");
-		checkbox.setChecked(getAtualizarMembro());
-		checkbox.addEventListener("onCheck", new EventListener<CheckEvent>() {
-
-			/* (non-Javadoc)
-			 * @see org.zkoss.zk.ui.event.EventListener#onEvent(org.zkoss.zk.ui.event.Event)
-			 */
-			@Override
-			public void onEvent(CheckEvent event) throws Exception {
-				if (event.isChecked()) {
-					setAtualizarMembro(Boolean.TRUE);
-				} else {
-					setAtualizarMembro(Boolean.FALSE);
-				}
-			}
-			
-		});
-		rows.appendChild(gerarRow(checkbox));
 		return grid;
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Button gerarButtonPropriedades(final boolean isSalvar) {
+	private Button gerarButtonPropriedades() {
 		Button button = new Button();
-		if (isSalvar) {
-			button.setLabel("Inserir Membro");
-		}
+		button.setLabel("Inserir Membro");
 		button.addEventListener("onClick", new EventListener() {
 
 			/* (non-Javadoc)
@@ -236,7 +221,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 					
 					@Override
 					public void run() {
-						gerarMembro(isSalvar);
+						gerarMembro();
 					}
 				}.run();
 			}
@@ -245,39 +230,96 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		return button;
 	}
 	
-	public void gerarMembro(boolean isSalvar) {
-		puxarValorParametrosMembro();
-		puxarValorParametrosModelo();
-		new Runnable() {
-			
-			@Override
-			public void run() {
-				Retorno<Object, Object> retorno = getControle().getFramework().mapearMembro(getTipoMembroVisaoSelecionado().getMembro());
-				if (retorno.isSucesso()) {
-					//setTipoMembroVisaoSelecionado(null);
-				} else {
-					
-				}
+	public void gerarMembro() {
+		getControle().setMensagens(new Mensagens());
+		if (puxarValorParametrosMembro() && puxarValorParametrosModelo()) {
+			Retorno<Object, Object> retorno = null;
+			retorno = getControle().getFramework().mapearMembro(getTipoMembroVisaoSelecionado().getMembro());
+			if (retorno.isSucesso()) {
+				adicionarMembroAoArtefato(getTipoMembroVisaoSelecionado().getMembro());
+				setTipoMembroVisaoSelecionado(null);
+				getWindowPaleta().getChildren().clear();
+				getBinderPaleta().loadAll();
+				mostrarMensagem(true);
+			} else {
+				getControle().setMensagens(new Mensagens());
+				getControle().getMensagens().getListaMensagens().add(retorno.getMensagem());
+				chamarMensagemErro();
 			}
-		}.run();
-		this.adicionarMembroAoArtefato(getTipoMembroVisaoSelecionado().getMembro());
+		} else {
+			chamarMensagemErro();
+		}
 	}
 	
-	private void puxarValorParametrosMembro() {
-		getTipoMembroVisaoSelecionado().getMembro().setNome(String.valueOf(getParametroMembroPorId(PARAMETRONOME)));
-		getTipoMembroVisaoSelecionado().getMembro().setAltura(Integer.valueOf(String.valueOf(getParametroMembroPorId(PARAMETROALTURA))));
-		getTipoMembroVisaoSelecionado().getMembro().setComprimento(Integer.valueOf(String.valueOf(getParametroMembroPorId(PARAMETROCOMPRIMENTO))));
-		getTipoMembroVisaoSelecionado().getMembro().setDescricao(String.valueOf(getParametroMembroPorId(PARAMETRODESC)));
-		getTipoMembroVisaoSelecionado().getMembro().setX(Integer.valueOf(String.valueOf(getParametroMembroPorId(PARAMETROPOSX))));
-		getTipoMembroVisaoSelecionado().getMembro().setY(Integer.valueOf(String.valueOf(getParametroMembroPorId(PARAMETROPOSY))));
+	private void chamarMensagemErro() {
+		getControle().getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+		super.mostrarMensagem(false);
+		super.binder.loadAll();
 	}
 	
-	private void puxarValorParametrosModelo() {
+	private boolean puxarValorParametrosMembro() {
+		Object objeto = null;
+		//Verifica campos obrigatórios não validados pelo QUID
+		boolean camposInformados = true;
+		if ((objeto = getParametroMembroPorId(PARAMETRONOME)) != null) {
+			getTipoMembroVisaoSelecionado().getMembro().setNome(String.valueOf(objeto));
+		}
+		if ((objeto = getParametroMembroPorId(PARAMETROALTURA)) != null && !objeto.toString().isEmpty()) {
+			Integer valor = Integer.valueOf(String.valueOf(objeto));
+			if (valor > 0) {
+				getTipoMembroVisaoSelecionado().getMembro().setAltura(valor);
+			} else {
+				camposInformados = false;
+				getControle().getMensagens().getListaMensagens().add("A Altura deve ser maior que 0");
+			}
+		} else {
+			camposInformados = false;
+			getControle().getMensagens().getListaMensagens().add("É necessário informar a Altura");
+		}
+		if ((objeto = getParametroMembroPorId(PARAMETROCOMPRIMENTO)) != null && !objeto.toString().isEmpty()) {
+			Integer valor = Integer.valueOf(String.valueOf(objeto));
+			if (valor > 0) {
+				getTipoMembroVisaoSelecionado().getMembro().setComprimento(valor);
+			} else {
+				camposInformados = false;
+				getControle().getMensagens().getListaMensagens().add("O Comprimento deve ser maior que 0");
+			}
+		} else {
+			camposInformados = false;
+			getControle().getMensagens().getListaMensagens().add("É necessário informar o Comprimento");
+		}
+		if ((objeto = getParametroMembroPorId(PARAMETRODESC)) != null ) {
+			getTipoMembroVisaoSelecionado().getMembro().setDescricao(String.valueOf(objeto));
+		}
+		if ((objeto = getParametroMembroPorId(PARAMETROPOSX)) != null && !objeto.toString().isEmpty()) {
+			getTipoMembroVisaoSelecionado().getMembro().setX(Integer.valueOf(String.valueOf(objeto)));
+		} else {
+			camposInformados = false;
+			getControle().getMensagens().getListaMensagens().add("É necessário informar a Posição X");
+		}
+		if ((objeto = getParametroMembroPorId(PARAMETROPOSY)) != null && !objeto.toString().isEmpty()) {
+			getTipoMembroVisaoSelecionado().getMembro().setY(Integer.valueOf(String.valueOf(objeto)));
+		} else {
+			camposInformados = false;
+			getControle().getMensagens().getListaMensagens().add("É necessário informar a Posição Y");
+		}
+		return camposInformados;
+	}
+	
+	private boolean puxarValorParametrosModelo() {
 		@SuppressWarnings("unchecked")
 		Collection<IParametro<?>> listaParametros = this.getTipoMembroVisaoSelecionado().getListaParametros();
+		boolean parametrosObrigatoriosPreenchidos = true;
 		for (IParametro<?> parametro : listaParametros) {
-			parametro.setValor(String.valueOf(getParametroModeloPorId("PARAMETRO"+parametro.getNome(), parametro)));
+			Object objeto = getParametroModeloPorId("PARAMETRO"+parametro.getNome(), parametro);
+			if (objeto != null && !objeto.toString().isEmpty() && objeto.toString() != String.valueOf(0)) {
+				parametro.setValor(String.valueOf(objeto));
+			} else if (parametro.isObrigatorio()) {
+				parametrosObrigatoriosPreenchidos = false;
+				getControle().getMensagens().getListaMensagens().add("O parâmetro " + parametro.getRotulo()+ " é obrigatório!");
+			}
 		}
+		return parametrosObrigatoriosPreenchidos;
 	}
 	
 	private void adicionarMembroAoArtefato(Membro membro) {
@@ -287,7 +329,9 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 			this.listaMembrosAdicionados.add(new MembroDocScree(getTipoMembroVisaoSelecionado(), membro, idComponente));
 			componente.setParent(getWindowArtefato());
 			getWindowArtefato().appendChild(componente);
-			super.binder.loadAll();
+			getBinderArtefato().loadAll();
+			getWindowPaleta().getChildren().clear();
+			getBinderPaleta().loadAll();
 		}
 	}
 	
@@ -297,34 +341,12 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		try {
 			resultado = Reflexao.getValorObjeto(componente, "value");
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
 		} catch (SecurityException e) {
-			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
 		}
 		return resultado;
-	}
-	
-	private void setValorParametroMembroPorId(String id, Object valor) {
-		HtmlBasedComponent componente = getComponentePaletaPorId(id);
-		try {
-			Reflexao.setValorObjeto("value", String.class, valor, componente);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	private Object getParametroModeloPorId(String id, IParametro<?> parametro) {
@@ -446,20 +468,6 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	public void setTipoMembroVisaoSelecionado(
 			SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado) {
 		this.tipoMembroVisaoSelecionado = tipoMembroVisaoSelecionado;
-	}
-
-	/**
-	 * @return Boolean o(a) atualizarMembro
-	 */
-	public Boolean getAtualizarMembro() {
-		return atualizarMembro;
-	}
-
-	/**
-	 * @param Boolean o(a) atualizarMembro a ser setado(a)
-	 */
-	public void setAtualizarMembro(Boolean atualizarMembro) {
-		this.atualizarMembro = atualizarMembro;
 	}
 
 }
