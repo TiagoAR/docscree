@@ -28,7 +28,7 @@
 				</menu>
 				<menu label="Artefato" width="100px;">
 					<menupopup>
-						<menuitem label="Montar Novo" href="/pages/montar-artefato.zul" />
+						<menuitem label="Montar Novo" apply="${artefatoCompositor }" onClick="gerenciador.acaoAbrir()" />
 					</menupopup>
 				</menu>
 				<menu label="Mapear Componentes" width="150px;">

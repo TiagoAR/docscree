@@ -38,7 +38,7 @@
 		
 	</style>
 	<div self="@{define(content)}" id="divMntArtefato"
-		apply="${artefatoCompositor}">
+		apply="${artefatoCompositor}" onCreate="gerenciador.carregarArtefato()">
 		<div sclass="conteudoEsq">
 			<window width="140px" title="Componentes" border="normal"
 				id="windowComponentes" mode="overlapped" >
@@ -70,9 +70,9 @@
 					</window>
 				</div>
 				<div sclass="sepcolCentralDir">
-					<div sclass="colCentral">
-						<window width="100%" title="Área de Montagem: "
-							border="normal" id="windowArtefato" height="800px">
+					<div sclass="colCentral" align="center">
+						<window width="100%" border="none" id="windowArtefato" 
+								style="position: relative; background-color: white; border: 1px solid;">
 						</window>
 					</div>
 				</div>

@@ -1,7 +1,10 @@
 package br.ueg.unucet.docscree.controladores;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import br.ueg.unucet.docscree.utilitarios.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
@@ -9,7 +12,9 @@ import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.EquipeUsuario;
 import br.ueg.unucet.quid.dominios.Projeto;
+import br.ueg.unucet.quid.dominios.Retorno;
 import br.ueg.unucet.quid.dominios.Usuario;
+import br.ueg.unucet.quid.enums.PapelUsuario;
 import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
 import br.ueg.unucet.quid.interfaces.IQUID;
 import br.ueg.unucet.quid.servicos.QuidService;
@@ -34,6 +39,8 @@ public abstract class SuperControle {
 	 * Guarda mensagens de sucessos personalizadas ou de erros da execução da ação.
 	 */
 	protected Mensagens mensagens;
+
+	protected Usuario usuarioLogado = null;
 
 	/**
 	 * Método que retorna instancia do serviço do QUID framework.
@@ -92,12 +99,26 @@ public abstract class SuperControle {
 		return false;
 	}
 	
+	protected List<PapelUsuario> listarPapeisDoUsuario() {
+		List<PapelUsuario> listaPapelUsuario = new ArrayList<PapelUsuario>();
+		for (EquipeUsuario equipeUsuario : ((Usuario) this.getMapaAtributos().get("usuarioLogado")).getEquipeUsuarios()) {
+			PapelUsuario papelUsuario = equipeUsuario.getPapelUsuario();
+			if (papelUsuario != null) {
+				listaPapelUsuario.add(papelUsuario);
+			}
+		}
+		return listaPapelUsuario;
+	}
+	
 	/**
 	 * Método que retorna o usuário logado
 	 * @return Usuario usuario logado
 	 */
-	protected Usuario getUsuarioLogado() {
-		return (Usuario) this.getMapaAtributos().get("usuarioLogado");
+	public Usuario getUsuarioLogado() {
+		if (this.usuarioLogado == null) {
+			this.usuarioLogado = (Usuario) this.getMapaAtributos().get("usuarioLogado");
+		}
+		return this.usuarioLogado;
 	}
 	
 	protected Projeto getProjeto() {
@@ -144,6 +165,28 @@ public abstract class SuperControle {
 			}
 		}
 		return resultado;
+	}
+	
+	/**
+	 * Método que atualiza as informações do usuário logado após ser editado
+	 * 
+	 * @return boolean se ação foi executada com sucesso
+	 */
+	public boolean acaoAtualizarUsuarioLogado() {
+		boolean resultado = false;
+		Usuario usuario = new Usuario();
+		usuario.setCodigo(((Usuario) this.getMapaAtributos().get("usuarioLogado")).getCodigo());
+		Retorno<String, Collection<Usuario>> retorno = this.getFramework()
+				.pesquisarUsuario(usuario);
+		if (retorno.isSucesso()) {
+			Collection<Usuario> listaUsuario = retorno.getParametros().get(
+					Retorno.PARAMERTO_LISTA);
+			setUsuarioLogado(listaUsuario.iterator().next());
+		} else {
+			this.mensagens.getListaMensagens().add("Problema em atualizar o nome de usuário, tente novamente!");
+		}
+		return resultado;
+		
 	}
 
 	/**
@@ -196,9 +239,16 @@ public abstract class SuperControle {
 	public void setMensagens(Mensagens mensagens) {
 		this.mensagens = mensagens;
 	}
-	
+
 	protected SuperCompositor getVisao() {
 		return (SuperCompositor) this.getMapaAtributos().get("visao");
+	}
+
+	/**
+	 * @param Usuario o(a) usuarioLogado a ser setado(a)
+	 */
+	public void setUsuarioLogado(Usuario usuarioLogado) {
+		this.usuarioLogado = usuarioLogado;
 	}
 
 }

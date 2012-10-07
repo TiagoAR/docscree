@@ -22,8 +22,6 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
  */
 public class UsuarioControle extends GenericoControle<Usuario> {
 
-	private Usuario usuarioLogado = null;
-
 	/**
 	 * Método sobrescrito para validar os dados a serem preenchidos do usuário
 	 * Recebe os parâmetros da visão e os seta de forma correta na entidade.
@@ -79,7 +77,7 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 	 */
 	@Override
 	public boolean acaoSalvar() {
-		if (!super.isUsuarioComum() || ((Usuario) super.getMapaAtributos().get("usuarioLogado")).getCodigo().equals(super.getEntidade().getCodigo())) {
+		if (!super.isUsuarioComum() || getUsuarioLogado().getCodigo().equals(super.getEntidade().getCodigo())) {
 			Retorno<String, Collection<String>> retorno;
 			if (super.getEntidade().getCodigo() == null) {
 				retorno = super.getFramework().inserirUsuario(super.getEntidade());
@@ -212,42 +210,5 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 			super.mensagens.getListaMensagens().add(retorno.getMensagem());
 		}
 		return resultado;
-	}
-	
-	/**
-	 * Método que atualiza as informações do usuário logado após ser editado
-	 * 
-	 * @return boolean se ação foi executada com sucesso
-	 */
-	public boolean acaoAtualizarUsuarioLogado() {
-		boolean resultado = false;
-		Usuario usuario = new Usuario();
-		usuario.setCodigo(((Usuario) super.getMapaAtributos().get("usuarioLogado")).getCodigo());
-		Retorno<String, Collection<Usuario>> retorno = super.getFramework()
-				.pesquisarUsuario(usuario);
-		if (retorno.isSucesso()) {
-			Collection<Usuario> listaUsuario = retorno.getParametros().get(
-					Retorno.PARAMERTO_LISTA);
-			setUsuarioLogado(listaUsuario.iterator().next());
-		} else {
-			super.mensagens.getListaMensagens().add("Problema em atualizar o nome de usuário, tente novamente!");
-		}
-		return resultado;
-		
-	}
-
-	/**
-	 * @return o(a) usuarioLogado
-	 */
-	public Usuario getUsuarioLogado() {
-		return usuarioLogado;
-	}
-
-	/**
-	 * @param usuarioLogado
-	 *            o(a) usuarioLogado a ser setado(a)
-	 */
-	public void setUsuarioLogado(Usuario usuarioLogado) {
-		this.usuarioLogado = usuarioLogado;
 	}
 }

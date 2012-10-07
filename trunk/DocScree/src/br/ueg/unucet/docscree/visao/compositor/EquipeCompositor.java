@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zkplus.databind.BindingListModelListModel;
 import org.zkoss.zul.SimpleListModel;
 
@@ -190,11 +191,22 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 					(SuperCompositor) this);
 			if (retorno) {
 				limparCampos();
+				super.getControle().acaoAtualizarUsuarioLogado();
+				this.salvarSessaoUsuario(super.getControle().getUsuarioLogado());
 			}
 			super.mostrarMensagem(retorno);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Caso seja alterado a equipe do usuário, salva dados do mesmo atualizado na sessão.
+	 * 
+	 * @param usuario
+	 */
+	public void salvarSessaoUsuario(Usuario usuario) {
+		Executions.getCurrent().getSession().setAttribute("usuario", usuario);
 	}
 
 	/**
