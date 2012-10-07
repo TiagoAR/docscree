@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Artefato;
 import br.ueg.unucet.quid.dominios.Retorno;
+import br.ueg.unucet.quid.enums.PapelUsuario;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
 import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
@@ -36,6 +38,16 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 	protected Retorno<String, Collection<Artefato>> executarListagem() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public boolean acaoMontarArtefato() {
+		if (super.listarPapeisDoUsuario().contains(PapelUsuario.MONTADOR)) {
+			return true;
+		} else {
+			getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+			getMensagens().getListaMensagens().add("Somente usuário cadastrados como Montador na equipe podem acessar a funcionalidade!");
+			return false;
+		}
 	}
 	
 	public Collection<ITipoMembroVisao> getMapaTipoMembrosVisao() {

@@ -1,0 +1,37 @@
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<window id="modalNovoArtefato" title="Selecione o projeto!"
+	border="normal" apply="${artefatoCompositor }" closable="true"
+	action="show: slideDown;hide: slideUp" position="center,center"
+	width="550px">
+	<vlayout>
+		<label value="Defina o tamanho do Artefato:" />
+		<grid>
+			<columns>
+				<column width="100px" />
+				<column width="250px" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Nome:" />
+					<textbox width="180px" id="nomeArtefato" onOK="descricaoArtefato.focus()"/>
+				</row>
+				<row>
+					<label value="Descrição" />
+					<textbox width="180px" id="descricaoArtefato" onOK="alturaArtefato.focus()"/>
+				</row>
+				<row>
+					<label value="Altura:" />
+					<intbox width="180px" id="alturaArtefato" onOK="larguraArtefato.focus()"/>
+				</row>
+				<row>
+					<label value="Largura:" />
+					<intbox width="180px" id="larguraArtefato" onOK="gerenciador.exibirNovoArtefato();" />
+				</row>
+			</rows>
+		</grid>
+		<cell align="center">
+			<button label="Ok" onClick="gerenciador.exibirNovoArtefato();" />
+			<button label="Cancelar" onClick="modalNovoArtefato.detach()" />
+		</cell>
+	</vlayout>
+</window>

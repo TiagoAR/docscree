@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.CheckEvent;
 import org.zkoss.zk.ui.event.Event;
@@ -19,6 +20,7 @@ import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Grid;
+import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelArray;
 import org.zkoss.zul.Row;
@@ -49,6 +51,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	 * 
 	 */
 	private static final long serialVersionUID = 3331698085154478299L;
+	private static final Integer LARGURA_MAXIMA = 800;
 	private static final String WIDTH = "140px;";
 	private static final String PARAMETROALTURA = "idParametroAltura";
 	private static final String PARAMETROCOMPRIMENTO = "idParametroComprimento";
@@ -63,6 +66,9 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	protected AnnotateDataBinder binderMembro;
 	private List<MembroDocScree> listaMembrosAdicionados = new ArrayList<MembroDocScree>();
 	private SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado;
+	private String alturaArtefato;
+	private String larguraArtefato;
+	private Integer larguraTotalMembro;
 	private int contador = 0;
 
 	@Override
@@ -87,6 +93,103 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		// TODO Auto-generated method stub
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see br.ueg.unucet.docscree.visao.compositor.SuperCompositor#gerarWindowMensagem()
+	 */
+	@Override
+	protected Window gerarWindowMensagem() {
+		org.zkoss.zk.ui.Component componenteInicial = super.getComponent();
+		while (super.getComponent() != null && !(super.getComponent() instanceof Div)) {
+			super.setComponent(super.getComponent().getParent());
+		}
+		if (super.getComponent() == null) {
+			super.setComponent(componenteInicial);
+		}
+		return super.gerarWindowMensagem();
+	}
+
+	@SuppressWarnings("unchecked")
+	public void acaoAbrir() {
+		boolean retorno = false;
+		try {
+			retorno = super.getControle().fazerAcao("montarArtefato", (SuperCompositor) this);
+			if (retorno) {
+				org.zkoss.zk.ui.Component comp = Executions.createComponents(
+						"/componentes/modalNovoArtefato.zul", null, null);
+
+				if (comp instanceof Window) {
+					((Window) comp).doModal();
+				}
+			} else {
+				super.mostrarMensagem(retorno);
+			}
+		} catch (Exception e) {
+			super.getControle().getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+			super.getControle().getMensagens().getListaMensagens().add("Não foi possível executar a ação!");
+			super.mostrarMensagem(retorno);
+		}
+	}
+	
+	public void exibirNovoArtefato() {
+		super.binder.saveAll();
+		this.areaMontagemWindow = null;
+		org.zkoss.zk.ui.Component alturaArtefatoComponente = getComponent().getFellow("alturaArtefato");
+		org.zkoss.zk.ui.Component larguraArtefatoComponente = getComponent().getFellow("larguraArtefato");
+		if (alturaArtefatoComponente != null 
+				&& larguraArtefatoComponente != null 
+				&& getComponent().getFellow("nomeArtefato")!= null 
+				&& getComponent().getFellow("descricaoArtefato") != null) {
+			
+			setLarguraArtefato( ((Intbox)larguraArtefatoComponente).getText());
+			setAlturaArtefato(((Intbox)alturaArtefatoComponente).getText());
+			if (!((Textbox) getComponent().getFellow("nomeArtefato")).getText().isEmpty()
+					&& !((Textbox) getComponent().getFellow("descricaoArtefato")).getText().isEmpty()) {
+				if (Integer.valueOf(getLarguraArtefato()).compareTo(LARGURA_MAXIMA) < 1 ) {
+					Executions.sendRedirect("/pages/montar-artefato.zul");
+					getComponent().detach();
+					new Runnable() {
+						
+						@SuppressWarnings("unchecked")
+						@Override
+						public void run() {
+							Artefato artefato = new Artefato();
+							artefato.setNome(((Textbox) getComponent().getFellow("nomeArtefato")).getText());
+							artefato.setDescricao(((Textbox) getComponent().getFellow("descricaoArtefato")).getText());
+							setEntidade(artefato);
+							try {
+								boolean resultado = getControle().fazerAcao("salvar", (SuperCompositor) ArtefatoCompositor.this);
+								mostrarMensagem(resultado);
+							} catch (Exception e) {
+								e.printStackTrace();
+								exibirMensagemErro("Não foi possível executar a ação!");
+							}
+						}
+					}.run();
+				} else {
+					this.exibirMensagemErro("Largura máxima do Artefato foi ultrapassada, o valor deve ser menor ou igual a " + LARGURA_MAXIMA.toString());
+				}
+			} else {
+				this.exibirMensagemErro("É obrigatório o preenchimento do Nome e Descrição do Artefato");
+			}
+		} else {
+			this.exibirMensagemErro("É obrigatório o preenchimento da Largura e Altura do Artefato");
+		}
+	}
+	
+	private void exibirMensagemErro(String mensagem) {
+		Mensagens mensagens = new Mensagens();
+		mensagens.setTipoMensagem(TipoMensagem.ERRO);
+		mensagens.getListaMensagens().add(mensagem);
+		getControle().setMensagens(mensagens);
+		super.mostrarMensagem(false);
+	}
+	
+	public void carregarArtefato() {
+		getWindowArtefato().setWidth(getLarguraArtefato()+"px");
+		getWindowArtefato().setHeight(getAlturaArtefato()+"px");
+		super.binder.loadAll();
+	}
 
 	public List<SuperTipoMembroVisaoZK> getListaTipoMembrosVisao() {
 		return super.getControle().listarTipoMembrosVisao();
@@ -102,7 +205,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 			div = new Div();
 			div.setId(idComponente.replace("Componente", "Grid"));
 			div.setWidth(String.valueOf(membro.getComprimento())+"px");
-			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + " position: relative; display: table;");
+			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + " position: absolute; display: table;");
 			div.appendChild(novaInstancia);
 		} catch (InstantiationException e) {
 		} catch (IllegalAccessException e) {
@@ -233,18 +336,20 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	public void gerarMembro() {
 		getControle().setMensagens(new Mensagens());
 		if (puxarValorParametrosMembro() && puxarValorParametrosModelo()) {
-			Retorno<Object, Object> retorno = null;
-			retorno = getControle().getFramework().mapearMembro(getTipoMembroVisaoSelecionado().getMembro());
-			if (retorno.isSucesso()) {
-				adicionarMembroAoArtefato(getTipoMembroVisaoSelecionado().getMembro());
-				setTipoMembroVisaoSelecionado(null);
-				getWindowPaleta().getChildren().clear();
-				getBinderPaleta().loadAll();
-				mostrarMensagem(true);
+			if (this.larguraTotalMembro.compareTo(Integer.valueOf(getLarguraArtefato())) < 0) {
+				Retorno<Object, Object> retorno = null;
+				retorno = getControle().getFramework().mapearMembro(getTipoMembroVisaoSelecionado().getMembro());
+				if (retorno.isSucesso()) {
+					adicionarMembroAoArtefato(getTipoMembroVisaoSelecionado().getMembro());
+					setTipoMembroVisaoSelecionado(null);
+					getWindowPaleta().getChildren().clear();
+					getBinderPaleta().loadAll();
+					mostrarMensagem(true);
+				} else {
+					exibirMensagemErro(retorno.getMensagem());
+				}
 			} else {
-				getControle().setMensagens(new Mensagens());
-				getControle().getMensagens().getListaMensagens().add(retorno.getMensagem());
-				chamarMensagemErro();
+				exibirMensagemErro("Somatória da largura do membro ("+ this.larguraTotalMembro +") deve ser menor que: " + getLarguraArtefato());
 			}
 		} else {
 			chamarMensagemErro();
@@ -259,6 +364,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	
 	private boolean puxarValorParametrosMembro() {
 		Object objeto = null;
+		larguraTotalMembro = 0;
 		//Verifica campos obrigatórios não validados pelo QUID
 		boolean camposInformados = true;
 		if ((objeto = getParametroMembroPorId(PARAMETRONOME)) != null) {
@@ -279,6 +385,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		if ((objeto = getParametroMembroPorId(PARAMETROCOMPRIMENTO)) != null && !objeto.toString().isEmpty()) {
 			Integer valor = Integer.valueOf(String.valueOf(objeto));
 			if (valor > 0) {
+				larguraTotalMembro += valor;
 				getTipoMembroVisaoSelecionado().getMembro().setComprimento(valor);
 			} else {
 				camposInformados = false;
@@ -292,7 +399,9 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 			getTipoMembroVisaoSelecionado().getMembro().setDescricao(String.valueOf(objeto));
 		}
 		if ((objeto = getParametroMembroPorId(PARAMETROPOSX)) != null && !objeto.toString().isEmpty()) {
-			getTipoMembroVisaoSelecionado().getMembro().setX(Integer.valueOf(String.valueOf(objeto)));
+			int posXMembro = Integer.valueOf(String.valueOf(objeto));
+			larguraTotalMembro += posXMembro;
+			getTipoMembroVisaoSelecionado().getMembro().setX(posXMembro);
 		} else {
 			camposInformados = false;
 			getControle().getMensagens().getListaMensagens().add("É necessário informar a Posição X");
@@ -332,7 +441,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 			getBinderArtefato().loadAll();
 			getWindowPaleta().getChildren().clear();
 			getBinderPaleta().loadAll();
-		}
+		} 
 	}
 	
 	private Object getParametroMembroPorId(String id) {
@@ -468,6 +577,34 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	public void setTipoMembroVisaoSelecionado(
 			SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado) {
 		this.tipoMembroVisaoSelecionado = tipoMembroVisaoSelecionado;
+	}
+
+	/**
+	 * @return String o(a) alturaArtefato
+	 */
+	public String getAlturaArtefato() {
+		return alturaArtefato;
+	}
+
+	/**
+	 * @param String o(a) alturaArtefato a ser setado(a)
+	 */
+	public void setAlturaArtefato(String alturaArtefato) {
+		this.alturaArtefato = alturaArtefato;
+	}
+
+	/**
+	 * @return String o(a) larguraArtefato
+	 */
+	public String getLarguraArtefato() {
+		return larguraArtefato;
+	}
+
+	/**
+	 * @param String o(a) larguraArtefato a ser setado(a)
+	 */
+	public void setLarguraArtefato(String larguraArtefato) {
+		this.larguraArtefato = larguraArtefato;
 	}
 
 }

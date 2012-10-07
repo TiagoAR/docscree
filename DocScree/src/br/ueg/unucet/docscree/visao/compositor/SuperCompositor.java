@@ -205,9 +205,11 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 * 
 	 * @return Window de mensagens
 	 */
-	private Window gerarWindowMensagem() {
+	protected Window gerarWindowMensagem() {
 		Window mensagens;
+		Component componentePai = this.getComponent();
 		if (this.getComponent().hasFellow("windowAvisos")) {
+			componentePai.getParent();
 			mensagens = (Window) this.getComponent().getFellow("windowAvisos");
 			mensagens.detach();
 		}
@@ -217,7 +219,7 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		
 		mensagens.setId("windowAvisos");		
 
-		mensagens.setParent(this.getComponent());
+		mensagens.setParent(componentePai);
 		mensagens.setVisible(true);
 		return mensagens;
 	}
