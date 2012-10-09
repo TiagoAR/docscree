@@ -71,9 +71,25 @@
 				</div>
 				<div sclass="sepcolCentralDir">
 					<div sclass="colCentral" align="center">
-						<window width="100%" border="none" id="windowArtefato" 
-								style="position: relative; background-color: white; border: 1px solid;">
-						</window>
+						<tabbox>
+							<tabs>
+								<tab label="1" closable="false">
+								</tab>
+								<tab label="2" closable="false">
+									
+								</tab>
+							</tabs>
+							<tabpanels>
+								<tabpanel>
+									<window width="100%" border="none" id="windowArtefato" 
+											style="position: relative; background-color: white; border: 1px solid; overflow: auto;">
+									</window>
+								</tabpanel>
+								<tabpanel>
+								
+								</tabpanel>
+							</tabpanels>
+						</tabbox>
 					</div>
 				</div>
 			</div>
