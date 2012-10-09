@@ -42,7 +42,7 @@ public abstract class GenericoControle<E extends Persistivel> extends SuperContr
 		String mensagemErro = retorno.getMensagem();
 		Collection<String> colecao = retorno.getParametros().get(
 				Retorno.PARAMETRO_NAO_INFORMADO_INVALIDO);
-		if (!colecao.isEmpty()) {
+		if (colecao != null && !colecao.isEmpty()) {
 			Iterator<String> iterador = colecao.iterator();
 			if (iterador.hasNext()) {
 				mensagemErro += ": " + iterador.next();

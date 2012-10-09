@@ -91,7 +91,7 @@ input,textarea {
 }
 
 /* -- 3. CSS ZK sobrescrito -- */
-.z-textbox,.z-combobox-rounded-inp,.z-bandbox-rounded-inp,.z-datebox-rounded-inp,.z-timebox-rounded-inp,.z-spinner-rounded-inp,.z-doublespinner-rounded-inp,.z-combobox-inp,.z-bandbox-inp,.z-datebox-inp,.z-timebox-inp,.z-spinner-inp,.z-doublespinner-inp,input[type="button"],input[type="submit"],input[type="reset"],button
+.z-textbox,.z-intbox,.z-combobox-rounded-inp,.z-bandbox-rounded-inp,.z-datebox-rounded-inp,.z-timebox-rounded-inp,.z-spinner-rounded-inp,.z-doublespinner-rounded-inp,.z-combobox-inp,.z-bandbox-inp,.z-datebox-inp,.z-timebox-inp,.z-spinner-inp,.z-doublespinner-inp,input[type="button"],input[type="submit"],input[type="reset"],button
 	{
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;

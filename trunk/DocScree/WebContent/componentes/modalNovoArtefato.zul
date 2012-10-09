@@ -13,19 +13,23 @@
 			<rows>
 				<row>
 					<label value="Nome:" />
-					<textbox width="180px" id="nomeArtefato" onOK="descricaoArtefato.focus()"/>
+					<textbox width="180px" id="nomeArtefato" onOK="descricaoArtefato.focus()"
+						value="@{gerenciador.nome }" />
 				</row>
 				<row>
 					<label value="Descrição" />
-					<textbox width="180px" id="descricaoArtefato" onOK="alturaArtefato.focus()"/>
+					<textbox width="180px" id="descricaoArtefato" onOK="alturaArtefato.focus()"
+						value="@{gerenciador.descricao }"/>
 				</row>
 				<row>
 					<label value="Altura:" />
-					<intbox width="180px" id="alturaArtefato" onOK="larguraArtefato.focus()"/>
+					<intbox width="180px" id="alturaArtefato" onOK="larguraArtefato.focus()"
+						value="@{gerenciador.altura }"/>
 				</row>
 				<row>
 					<label value="Largura:" />
-					<intbox width="180px" id="larguraArtefato" onOK="gerenciador.exibirNovoArtefato();" />
+					<intbox width="180px" id="larguraArtefato" onOK="gerenciador.exibirNovoArtefato();" 
+						value="@{gerenciador.largura }"/>
 				</row>
 			</rows>
 		</grid>
