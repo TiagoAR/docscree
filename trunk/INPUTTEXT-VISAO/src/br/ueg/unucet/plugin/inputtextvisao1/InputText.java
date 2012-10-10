@@ -3,21 +3,34 @@ package br.ueg.unucet.plugin.inputtextvisao1;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import org.zkoss.zul.Label;
+
 import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 
+/**
+ * TipoMembro-Visão InputText
+ * Classe responsável por representar o TipoMembro-Visão
+ * contém implementações dos métodos do SuperTipoMembroVisaoZK
+ * 
+ * @author Diego
+ *
+ */
 public class InputText extends SuperTipoMembroVisaoZK<InputTextInterface> {
 	
-//ter identificar unico na visão para chamar o que foi adicionado
 	/**
-	 * 
+	 * Serial ID
 	 */
 	private static final long serialVersionUID = 7574516772274099933L;
 	
+	/**
+	 * Construtor DEFAULT, seta os dados que grava no banco e que são necessários
+	 * para obter o componente de visualização
+	 */
 	public InputText() {
 		this.componente =  new InputTextInterface();
 		setDescricao("Visão Padrão");
 		setVersao(1);
-		setRevisao(6);
+		setRevisao(7);
 	}
 
 	@Override
@@ -32,12 +45,19 @@ public class InputText extends SuperTipoMembroVisaoZK<InputTextInterface> {
 
 	@Override
 	public Object getVisaoPreenchimento() {
-		return getComponente().getVisualizacao();
+		return getComponente().getPreenchimento();
 	}
 
 	@Override
 	public Object getVisaoVisualizacao() {
 		return getComponente().getVisualizacao();
+	}
+	
+	@Override
+	public Object getVisualizacaoExemplo() {
+		Label visualizacao = getComponente().getVisualizacao();
+		visualizacao.setValue("Exemplo");
+		return visualizacao;
 	}
 
 	@Override
