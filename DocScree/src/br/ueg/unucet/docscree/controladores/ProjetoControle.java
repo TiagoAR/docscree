@@ -17,9 +17,15 @@ import br.ueg.unucet.quid.dominios.Usuario;
 import br.ueg.unucet.quid.enums.PerfilAcessoEnum;
 import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 
+/**
+ * Controle específico de Projeto
+ * 
+ * @author Diego
+ *
+ */
 public class ProjetoControle extends GenericoControle<Projeto> {
 
-	/* (non-Javadoc)
+	/**
 	 * @see br.ueg.unucet.docscree.controladores.SuperControle#preAcao(java.lang.String)
 	 */
 	@Override
@@ -93,6 +99,9 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 		return false;
 	}
 
+	/**
+	 * @see br.ueg.unucet.docscree.interfaces.ICRUDControle#acaoExcluir()
+	 */
 	@Override
 	public boolean acaoExcluir() {
 		if (super.isUsuarioAdmin()) {
@@ -109,6 +118,9 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 		return false;
 	}
 
+	/**
+	 * @see br.ueg.unucet.docscree.interfaces.ICRUDControle#setarEntidadeVisao(br.ueg.unucet.docscree.visao.compositor.SuperCompositor)
+	 */
 	@Override
 	public void setarEntidadeVisao(SuperCompositor<?> pVisao) {
 		ProjetoCompositor visao = (ProjetoCompositor) pVisao;
@@ -121,6 +133,9 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 		visao.setFldStatus(ativo);
 	}
 
+	/**
+	 * @see br.ueg.unucet.docscree.controladores.GenericoControle#executarListagem()
+	 */
 	@Override
 	protected Retorno<String, Collection<Projeto>> executarListagem() {
 		if (!super.isUsuarioAdmin()) {
@@ -144,6 +159,13 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 		return super.getFramework().pesquisarProjeto(new Projeto());
 	}
 	
+	/**
+	 * Método responsável por listar as Equipes para seleção de projeto,
+	 * verificando as regras de negócio para diferenciação de usuário Gerente e Administrador
+	 * 
+	 * @param objeto usuário para analisar o seu tipo de Perfil e listar as equipes de acordo com regra de negócio
+	 * @return List<Equipe> colecao
+	 */
 	public List<Equipe> listarEquipes(Object objeto) {
 		Usuario usuario = (Usuario) objeto;
 		if (usuario.getPerfilAcesso().equals(PerfilAcessoEnum.GERENTE)) {
@@ -163,6 +185,11 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 		return new ArrayList<Equipe>(retorno.getParametros().get(Retorno.PARAMERTO_LISTA));
 	}
 	
+	/**
+	 * Método que traz a lista de Modelos
+	 * 
+	 * @return List<Modelo>
+	 */
 	public List<Modelo> listarModelos() {
 		Retorno<String, Collection<Modelo>> retorno = super.getFramework().listarModelo();
 		if (retorno.isSucesso()) {
@@ -171,6 +198,11 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 		return null;
 	}
 	
+	/**
+	 * Método que "Abre" o Projeto, associando a instancia do projeto escolhido a sessão do usuário
+	 * 
+	 * @return
+	 */
 	public boolean acaoAbrirProjeto() {
 		IProjetoVisao projetoVisao = (IProjetoVisao) super.getMapaAtributos().get("visao");
 		projetoVisao.salvarSessaoProjeto();

@@ -33,7 +33,7 @@ import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.ArtefatoControle;
 import br.ueg.unucet.docscree.interfaces.IComponenteDominio;
 import br.ueg.unucet.docscree.modelo.MembroDocScree;
-import br.ueg.unucet.docscree.utilitarios.Mensagens;
+import br.ueg.unucet.docscree.modelo.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.quid.dominios.Artefato;
@@ -66,8 +66,10 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	private static final String ESTILOCOMPONENTE = " padding: 0px; margin: 0px; padding-top: 1px;";
 
 	private Window areaMontagemWindow = null;
+	private Window areaVisualizacaoWindow = null;
 	protected AnnotateDataBinder binderPaleta;
 	protected AnnotateDataBinder binderArtefato;
+	protected AnnotateDataBinder binderVisualizao;
 	protected AnnotateDataBinder binderMembro;
 	private SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado;
 	private Integer larguraTotalMembro;
@@ -157,6 +159,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	}
 	
 	private void inicializarVariaveisNovoArtefato() {
+		this.setCodigo(null);
 		this.setLargura(0);
 		this.setAltura(0);
 		this.setNome("");
@@ -165,6 +168,9 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	
 	private void inicializarVariaveisCriarArtefato() {
 		this.areaMontagemWindow = null;
+		this.areaVisualizacaoWindow = null;
+		this.binderArtefato = null;
+		this.binderVisualizao = null;
 		setListaMembrosAdicionados(new ArrayList<MembroDocScree>());
 	}
 	
@@ -222,6 +228,8 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	public void carregarArtefato() {
 		getWindowArtefato().setWidth(String.valueOf(getLargura())+"px");
 		getWindowArtefato().setHeight(String.valueOf(getAltura())+"px");
+		getWindowVisualizacaoArtefato().setWidth(String.valueOf(getLargura())+"px");
+		getWindowVisualizacaoArtefato().setHeight(String.valueOf(getAltura())+"px");
 		super.binder.loadAll();
 	}
 
@@ -231,7 +239,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 
 	// TODO rever
 	private HtmlBasedComponent gerarNovaInstancia(String idComponente, Membro membro) {
-		 Div div = null;
+		Div div = null;
 		try {
 			HtmlBasedComponent novaInstancia = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisaoPreenchimento().getClass().newInstance();
 			novaInstancia.setId(idComponente);
@@ -247,6 +255,25 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		return div;
 	}
 
+	private HtmlBasedComponent gerarNovaInstanciaVisualizacao(String idComponente, Membro membro) {
+		Div div = null;
+		try {
+			HtmlBasedComponent novaInstancia = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisaoVisualizacao().getClass().newInstance();
+			//HtmlBasedComponent instanciaAux = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisualizacaoExemplo(novaInstancia, "Exemplo");
+			novaInstancia.setId(idComponente);
+			novaInstancia.setStyle(getTipoMembroVisaoSelecionado().getCss(membro) + ESTILOCOMPONENTE);
+			div = new Div();
+			div.setId(idComponente.replace("Visualizacao", "Grid"));
+			div.setWidth(String.valueOf(membro.getComprimento())+"px");
+			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + ESTILODIV);
+			div.appendChild(novaInstancia);
+			getTipoMembroVisaoSelecionado().getVisualizacaoExemplo(novaInstancia, "Exemplo");
+		} catch (InstantiationException e) {
+		} catch (IllegalAccessException e) {
+		}
+		return div;
+	}
+
 	protected Window getWindowArtefato() {
 		if (this.areaMontagemWindow == null) {
 			this.areaMontagemWindow = (Window) getComponent().getFellow(
@@ -255,11 +282,26 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		return this.areaMontagemWindow;
 	}
 	
+	protected Window getWindowVisualizacaoArtefato() {
+		if (this.areaVisualizacaoWindow == null) {
+			this.areaVisualizacaoWindow = (Window) getComponent().getFellow(
+					"windowArtefatoVisualizacao");
+		}
+		return this.areaVisualizacaoWindow;
+	}
+	
 	protected AnnotateDataBinder getBinderArtefato() {
 		if (this.binderArtefato == null) {
 			this.binderArtefato = new AnnotateDataBinder(getWindowArtefato());
 		}
 		return this.binderArtefato;
+	}
+	
+	protected AnnotateDataBinder getBinderVisualizacaoArtefato() {
+		if (this.binderVisualizao == null) {
+			this.binderVisualizao = new AnnotateDataBinder(getWindowVisualizacaoArtefato());
+		}
+		return this.binderVisualizao;
 	}
 	
 	protected AnnotateDataBinder getBinderPaleta() {
@@ -374,7 +416,9 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 				Retorno<Object, Object> retorno = null;
 				retorno = getControle().getFramework().mapearMembro(getTipoMembroVisaoSelecionado().getMembro());
 				if (retorno.isSucesso()) {
-					adicionarMembroAoArtefato(getTipoMembroVisaoSelecionado().getMembro());
+					String idMembro = getTipoMembroVisaoSelecionado().getNome()+String.valueOf(contador++);
+					adicionarMembroAoArtefato(idMembro);
+					adicionarMembroAVisualizacao(idMembro);
 					setTipoMembroVisaoSelecionado(null);
 					getWindowPaleta().getChildren().clear();
 					getBinderPaleta().loadAll();
@@ -397,7 +441,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	}
 	
 	// TODO ver com Guiliano responsabilidade do método - muito grande
-	private Integer puxarValorInteiro(String parametroID, String nomeParametro, boolean camposInformados, boolean validarMaior0) {
+	private Integer puxarValorInteiro(String parametroID, String nomeParametro, Boolean camposInformados, boolean validarMaior0) {
 		Object objeto = getParametroMembroPorId(parametroID);
 		if (objeto != null && !objeto.toString().isEmpty()) {
 			Integer retorno = Integer.valueOf(String.valueOf(objeto));
@@ -409,7 +453,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		} else {
 			getControle().getMensagens().getListaMensagens().add("É necessário informar o campo " + nomeParametro);
 		}
-		camposInformados = false;
+		camposInformados = Boolean.FALSE;
 		return 0;
 	}
 	
@@ -418,7 +462,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		Integer valorInteiro;
 		larguraTotalMembro = 0;
 		//Verifica campos obrigatórios não validados pelo QUID (altura e comprimento)
-		boolean camposInformados = true;
+		Boolean camposInformados = Boolean.TRUE;
 		if ((objeto = getParametroMembroPorId(PARAMETRONOME)) != null) {
 			getTipoMembroVisaoSelecionado().getMembro().setNome(String.valueOf(objeto));
 		}
@@ -430,31 +474,6 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		if (valorInteiro > 0) {
 			getTipoMembroVisaoSelecionado().getMembro().setComprimento(valorInteiro);
 		} 
-		/*if ((objeto = getParametroMembroPorId(PARAMETROALTURA)) != null && !objeto.toString().isEmpty()) {
-			Integer valor = Integer.valueOf(String.valueOf(objeto));
-			if (valor > 0) {
-				getTipoMembroVisaoSelecionado().getMembro().setAltura(valor);
-			} else {
-				camposInformados = false;
-				getControle().getMensagens().getListaMensagens().add("A Altura deve ser maior que 0");
-			}
-		} else {
-			camposInformados = false;
-			getControle().getMensagens().getListaMensagens().add("É necessário informar a Altura");
-		}*/
-		/*if ((objeto = getParametroMembroPorId(PARAMETROCOMPRIMENTO)) != null && !objeto.toString().isEmpty()) {
-			Integer valor = Integer.valueOf(String.valueOf(objeto));
-			if (valor > 0) {
-				larguraTotalMembro += valor;
-				getTipoMembroVisaoSelecionado().getMembro().setComprimento(valor);
-			} else {
-				camposInformados = false;
-				getControle().getMensagens().getListaMensagens().add("O Comprimento deve ser maior que 0");
-			}
-		} else {
-			camposInformados = false;
-			getControle().getMensagens().getListaMensagens().add("É necessário informar o Comprimento");
-		}*/
 		if ((objeto = getParametroMembroPorId(PARAMETRODESC)) != null ) {
 			getTipoMembroVisaoSelecionado().getMembro().setDescricao(String.valueOf(objeto));
 		}
@@ -464,21 +483,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		
 		getTipoMembroVisaoSelecionado().getMembro().setY(puxarValorInteiro(PARAMETROPOSY, "Posição Y", camposInformados, false));
 		
-		/*if ((objeto = getParametroMembroPorId(PARAMETROPOSX)) != null && !objeto.toString().isEmpty()) {
-			int posXMembro = Integer.valueOf(String.valueOf(objeto));
-			larguraTotalMembro += posXMembro;
-			getTipoMembroVisaoSelecionado().getMembro().setX(posXMembro);
-		} else {
-			camposInformados = false;
-			getControle().getMensagens().getListaMensagens().add("É necessário informar a Posição X");
-		}
-		if ((objeto = getParametroMembroPorId(PARAMETROPOSY)) != null && !objeto.toString().isEmpty()) {
-			getTipoMembroVisaoSelecionado().getMembro().setY(Integer.valueOf(String.valueOf(objeto)));
-		} else {
-			camposInformados = false;
-			getControle().getMensagens().getListaMensagens().add("É necessário informar a Posição Y");
-		}*/
-		return camposInformados;
+		return camposInformados.booleanValue();
 	}
 	
 	private boolean puxarValorParametrosModelo() {
@@ -497,16 +502,26 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		return parametrosObrigatoriosPreenchidos;
 	}
 	
-	private void adicionarMembroAoArtefato(Membro membro) {
-		String idComponente = "Componente"+getTipoMembroVisaoSelecionado().getNome()+String.valueOf(contador++);
-		HtmlBasedComponent componente = gerarNovaInstancia(idComponente, membro);
+	private void adicionarMembroAoArtefato(String nomeParcial) {
+		String idComponente = "Componente" + nomeParcial;
+		HtmlBasedComponent componente = gerarNovaInstancia("Componente" + nomeParcial, getTipoMembroVisaoSelecionado().getMembro());
 		if (componente != null) {
-			this.getListaMembrosAdicionados().add(new MembroDocScree(getTipoMembroVisaoSelecionado(), membro, idComponente));
+			this.getListaMembrosAdicionados().add(new MembroDocScree(getTipoMembroVisaoSelecionado(), idComponente));
 			componente.setParent(getWindowArtefato());
 			getWindowArtefato().appendChild(componente);
 			getBinderArtefato().loadAll();
 			getWindowPaleta().getChildren().clear();
 			getBinderPaleta().loadAll();
+		} 
+	}
+	
+	private void adicionarMembroAVisualizacao(String nomeParcial) {
+		String idVisualizacao = "Visualizacao" + nomeParcial;
+		HtmlBasedComponent componenteVisualizacao = gerarNovaInstanciaVisualizacao(idVisualizacao, getTipoMembroVisaoSelecionado().getMembro());
+		if (componenteVisualizacao != null) {
+			componenteVisualizacao.setParent(getWindowVisualizacaoArtefato());
+			getWindowVisualizacaoArtefato().appendChild(componenteVisualizacao);
+			getBinderVisualizacaoArtefato().loadAll();
 		} 
 	}
 	

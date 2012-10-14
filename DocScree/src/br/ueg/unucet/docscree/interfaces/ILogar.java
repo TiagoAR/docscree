@@ -2,6 +2,12 @@ package br.ueg.unucet.docscree.interfaces;
 
 import br.ueg.unucet.quid.dominios.Usuario;
 
+/**
+ * Interface a ser implementada no gerenciador da visão responsável por efetuar o login
+ * 
+ * @author Diego
+ *
+ */
 public interface ILogar {
 	
 	/**

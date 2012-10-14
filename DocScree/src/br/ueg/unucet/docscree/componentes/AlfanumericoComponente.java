@@ -7,9 +7,17 @@ import org.zkoss.zul.Textbox;
 
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 
-
+/**
+ * Componente para exibição e preenchimento de parâmetros com Domínio do Tipo Alfanumérico
+ * 
+ * @author Diego
+ *
+ */
 public class AlfanumericoComponente extends CaracteresComponente {
 	
+	/**
+	 * String válidas que podem ser inseridas no componente
+	 */
 	private static final String CHARVALIDOS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.,-";
 
 	/* (non-Javadoc)

@@ -1,4 +1,4 @@
-package br.ueg.unucet.docscree.utilitarios;
+package br.ueg.unucet.docscree.modelo;
 
 import java.util.ArrayList;
 import java.util.List;

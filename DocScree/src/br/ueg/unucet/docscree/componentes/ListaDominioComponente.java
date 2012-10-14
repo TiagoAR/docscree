@@ -10,8 +10,18 @@ import org.zkoss.zul.ListModelArray;
 import br.ueg.unucet.docscree.interfaces.IComponenteDominio;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 
+/**
+ * Componente para exibição e preenchimento de parâmetros que contém uma Lista de Domínios
+ * ou seja, não tem um Domínio, mas contem uma lista para escolha do valor
+ * 
+ * @author Diego
+ *
+ */
 public class ListaDominioComponente implements IComponenteDominio {
 
+	/**
+	 * @see IComponenteDominio#getComponente(IParametro, String)
+	 */
 	@Override
 	public HtmlBasedComponent getComponente(IParametro<?> parametro,
 			String width) {
@@ -22,6 +32,9 @@ public class ListaDominioComponente implements IComponenteDominio {
 		return combobox;
 	}
 
+	/**
+	 * @see IComponenteDominio#getValor(HtmlBasedComponent)
+	 */
 	@Override
 	public Object getValor(HtmlBasedComponent componente) {
 		Comboitem selectedItem = ((Combobox) componente).getSelectedItem();
@@ -31,11 +44,17 @@ public class ListaDominioComponente implements IComponenteDominio {
 		return null;
 	}
 
+	/**
+	 * @see IComponenteDominio#getValorClass()
+	 */
 	@Override
 	public Class<?> getValorClass() {
 		return String.class;
 	}
 
+	/**
+	 * @see IComponenteDominio#setValor(HtmlBasedComponent, Object)
+	 */
 	@Override
 	public void setValor(HtmlBasedComponent componente, Object valor) {
 		if (valor != null) {

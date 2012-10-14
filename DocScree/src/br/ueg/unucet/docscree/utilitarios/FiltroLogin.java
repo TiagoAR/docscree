@@ -40,7 +40,7 @@ public class FiltroLogin implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 
-		if (!this.isLogged(request)
+		if (!this.estaLogado(request)
 				&& !request.getRequestURL().toString().contains("login.zul")) {
 			response.sendRedirect(request.getContextPath() + "/login.zul");
 		} else {
@@ -63,7 +63,7 @@ public class FiltroLogin implements Filter {
 	 * @param request 
 	 * @return boolean se está logado ou não
 	 */
-	private boolean isLogged(HttpServletRequest request) {
+	private boolean estaLogado(HttpServletRequest request) {
 		boolean retorno = false;
 		HttpSession session = request.getSession(true);
 		if (session != null) {
