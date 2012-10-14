@@ -34,7 +34,7 @@
 			</rows>
 		</grid>
 		<cell align="center">
-			<button label="Ok" onClick="gerenciador.exibirNovoArtefato();" />
+			<button label="Criar" onClick="gerenciador.exibirNovoArtefato();" />
 			<button label="Cancelar" onClick="modalNovoArtefato.detach()" />
 		</cell>
 	</vlayout>

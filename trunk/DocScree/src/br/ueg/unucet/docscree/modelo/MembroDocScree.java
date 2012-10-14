@@ -1,27 +1,40 @@
 package br.ueg.unucet.docscree.modelo;
 
-import br.ueg.unucet.quid.extensao.dominios.Membro;
 import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 
 /**
- * 
+ * POJO que representa o Membro do DocScree
+ * contendo instancia do Membro do QUID, o TipoMembro-Visão do Membro
+ * e o ID do componente que foi adicionado ao Artefato
  * 
  * @author Diego
  *
  */
 public class MembroDocScree {
 
-	//TODO Tirar membro e jogar para a visão.
+	/**
+	 * TipoMembro-Visão do Membro
+	 */
 	private SuperTipoMembroVisaoZK<?> tipoMembroVisao;
-	private Membro membroQUID;
+	/**
+	 * ID do componente adicionado no Artefato
+	 */
 	private String idComponente;
 	
+	/**
+	 * Construtor Default
+	 */
 	public MembroDocScree() {
 	}
 	
-	public MembroDocScree(SuperTipoMembroVisaoZK<?> tipoMembroVisao, Membro membro, String idComponente) {
+	/**
+	 * Construtor que seta as variáveis da classe através dos parâmetros
+	 * 
+	 * @param tipoMembroVisao
+	 * @param idComponente
+	 */
+	public MembroDocScree(SuperTipoMembroVisaoZK<?> tipoMembroVisao, String idComponente) {
 		this.tipoMembroVisao = tipoMembroVisao;
-		this.membroQUID = membro;
 		this.idComponente = idComponente;
 	}
 
@@ -38,21 +51,6 @@ public class MembroDocScree {
 	 */
 	public void setTipoMembroVisao(SuperTipoMembroVisaoZK<?> tipoMembroVisao) {
 		this.tipoMembroVisao = tipoMembroVisao;
-	}
-
-	/**
-	 * @return Membro o(a) membroQUID
-	 */
-	public Membro getMembroQUID() {
-		return membroQUID;
-	}
-
-	/**
-	 * @param Membro
-	 *            o(a) membroQUID a ser setado(a)
-	 */
-	public void setMembroQUID(Membro membroQUID) {
-		this.membroQUID = membroQUID;
 	}
 
 	/**

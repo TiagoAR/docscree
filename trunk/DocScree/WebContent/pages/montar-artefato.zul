@@ -73,11 +73,8 @@
 					<div sclass="colCentral" align="center">
 						<tabbox>
 							<tabs>
-								<tab label="1" closable="false">
-								</tab>
-								<tab label="2" closable="false">
-									
-								</tab>
+								<tab label="Visão de Preenchimento" />
+								<tab label="Visão de Visualização"  />
 							</tabs>
 							<tabpanels>
 								<tabpanel>
@@ -86,7 +83,9 @@
 									</window>
 								</tabpanel>
 								<tabpanel>
-								
+									<window width="100%" border="none" id="windowArtefatoVisualizacao" 
+											style="position: relative; background-color: white; border: 1px solid; overflow: auto;">
+									</window>
 								</tabpanel>
 							</tabpanels>
 						</tabbox>

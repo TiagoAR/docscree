@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import br.ueg.unucet.docscree.utilitarios.Mensagens;
+import br.ueg.unucet.docscree.modelo.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Equipe;
@@ -40,6 +40,9 @@ public abstract class SuperControle {
 	 */
 	protected Mensagens mensagens;
 
+	/**
+	 * Guarda instancia do usuário logado para análise de acesso do usuário
+	 */
 	protected Usuario usuarioLogado = null;
 
 	/**
@@ -99,6 +102,11 @@ public abstract class SuperControle {
 		return false;
 	}
 	
+	/**
+	 * Método que lista os papeis do usuário logado para as equipes que está associado
+	 * 
+	 * @return List<PapelUsuario> listaPapelUsuario
+	 */
 	protected List<PapelUsuario> listarPapeisDoUsuario() {
 		List<PapelUsuario> listaPapelUsuario = new ArrayList<PapelUsuario>();
 		for (EquipeUsuario equipeUsuario : ((Usuario) this.getMapaAtributos().get("usuarioLogado")).getEquipeUsuarios()) {
@@ -121,8 +129,22 @@ public abstract class SuperControle {
 		return this.usuarioLogado;
 	}
 	
+	/**
+	 * Método que retorna o projeto salvo na sessão
+	 * 
+	 * @return Projeto
+	 */
 	protected Projeto getProjeto() {
 		return (Projeto) this.getMapaAtributos().get("projetoAberto");
+	}
+
+	/**
+	 * Método que traz instancia da visão que está chamando o método fazerAcao()
+	 * 
+	 * @return SuperCompositor visão
+	 */
+	protected SuperCompositor getVisao() {
+		return (SuperCompositor) this.getMapaAtributos().get("visao");
 	}
 
 	/**
@@ -238,10 +260,6 @@ public abstract class SuperControle {
 	 */
 	public void setMensagens(Mensagens mensagens) {
 		this.mensagens = mensagens;
-	}
-
-	protected SuperCompositor getVisao() {
-		return (SuperCompositor) this.getMapaAtributos().get("visao");
 	}
 
 	/**

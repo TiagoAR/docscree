@@ -14,7 +14,7 @@ import br.ueg.unucet.quid.extensao.dominios.Persistivel;
  * 
  * @author Diego
  *
- * @param <E>
+ * @param <E> entidade persistivel
  */
 @SuppressWarnings({"unchecked"})
 public abstract class GenericoControle<E extends Persistivel> extends SuperControle implements ICRUDControle {

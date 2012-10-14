@@ -4,6 +4,12 @@ import java.util.Set;
 
 import br.ueg.unucet.quid.dominios.EquipeUsuario;
 
+/**
+ * Interface para ser implementado no gerenciador da visão do caso de uso Manter Equipe
+ * 
+ * @author Diego
+ *
+ */
 public interface IEquipeVisao {
 	
 	/**

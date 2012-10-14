@@ -164,6 +164,14 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	}
 	
 	/**
+	 * Método do botão cancelar, limpa campos para poder adicionar nova entidade
+	 */
+	public void acaoCancelar() {
+		setCodigo(null);
+		limparCampos();
+	}
+	
+	/**
 	 * Atualiza a lista de entidade excluindo a entidade selecionada,
 	 * não sendo necessário fazer nova listagem.
 	 * 

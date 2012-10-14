@@ -16,8 +16,16 @@ import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroVisao;
 
+/**
+ * 
+ * @author Diego
+ *
+ */
 public class ArtefatoControle extends GenericoControle<Artefato> {
 
+	/**
+	 * @see br.ueg.unucet.docscree.interfaces.ICRUDControle#acaoSalvar()
+	 */
 	@Override
 	public boolean acaoSalvar() {
 		if (this.isUsuarioMontador()) {
@@ -40,18 +48,27 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 		return false;
 	}
 
+	/**
+	 * @see br.ueg.unucet.docscree.interfaces.ICRUDControle#acaoExcluir()
+	 */
 	@Override
 	public boolean acaoExcluir() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/**
+	 * @see br.ueg.unucet.docscree.interfaces.ICRUDControle#setarEntidadeVisao(br.ueg.unucet.docscree.visao.compositor.SuperCompositor)
+	 */
 	@Override
 	public void setarEntidadeVisao(SuperCompositor<?> pVisao) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * @see br.ueg.unucet.docscree.controladores.GenericoControle#executarListagem()
+	 */
 	@Override
 	protected Retorno<String, Collection<Artefato>> executarListagem() {
 		// TODO Auto-generated method stub
@@ -67,7 +84,7 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 			@SuppressWarnings("unchecked")
 			List<MembroDocScree> listaMembros = (List<MembroDocScree>) getMapaAtributos().get("listaMembrosDocScree");
 			for (MembroDocScree membroDocScree : listaMembros) {
-				Retorno<String, Collection<String>> retornoAdicao = getEntidade().addMembro(membroDocScree.getMembroQUID());
+				Retorno<String, Collection<String>> retornoAdicao = getEntidade().addMembro(membroDocScree.getTipoMembroVisao().getMembro());
 				if (!retornoAdicao.isSucesso()) {
 					retorno = false;
 					getMensagens().getListaMensagens().add(2, retornoAdicao.getMensagem());
@@ -76,7 +93,7 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 			}
 			if (!retorno) {
 				for (MembroDocScree membroDocScree : listaMembros) {
-					Retorno<Object, Object> retornoRemover = getEntidade().removerMembro(membroDocScree.getMembroQUID());
+					Retorno<Object, Object> retornoRemover = getEntidade().removerMembro(membroDocScree.getTipoMembroVisao().getMembro());
 					if (!retornoRemover.isSucesso()) {
 						break;
 					}

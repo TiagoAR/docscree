@@ -2,6 +2,12 @@ package br.ueg.unucet.docscree.utilitarios;
 
 import java.io.File;
 
+/**
+ * Classe responsável por fazer o upload do arquivo para o servidor
+ * 
+ * @author Diego
+ *
+ */
 public class UploadArquivo {
 
 	/**
@@ -28,6 +34,12 @@ public class UploadArquivo {
 		return null;
 	}
 	
+	/**
+	 * Método que adiciona barra de separação de pasta no final da palavra
+	 * 
+	 * @param s string do caminho
+	 * @return String com barra adicionada ao final
+	 */
 	public static String adicionarBarraFinalString(String s){
 		if (!s.endsWith(File.separator))
 			return s+= File.separator;

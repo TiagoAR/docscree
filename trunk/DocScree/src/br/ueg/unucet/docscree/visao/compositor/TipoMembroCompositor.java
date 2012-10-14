@@ -18,8 +18,8 @@ import org.zkoss.zk.ui.event.UploadEvent;
 
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.TipoMembroControle;
-import br.ueg.unucet.docscree.utilitarios.ArquivoCarregado;
-import br.ueg.unucet.docscree.utilitarios.Mensagens;
+import br.ueg.unucet.docscree.modelo.ArquivoCarregado;
+import br.ueg.unucet.docscree.modelo.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.UploadArquivo;
 import br.ueg.unucet.quid.dominios.TipoMembro;
 
