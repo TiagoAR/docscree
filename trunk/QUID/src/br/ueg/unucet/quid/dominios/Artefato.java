@@ -24,23 +24,29 @@ import br.ueg.unucet.quid.utilitarias.FabricaProperties;
 import br.ueg.unucet.quid.utilitarias.LeitoraPropertiesUtil;
 
 /**
- * Classe que representa a entidade artefato dentro do framework. Alem de ser uma classe bean, ela e composta de alguns metodos
- * de manipulacao dos servicos e TiposMembros que sao adicionados dentro dela.
+ * Classe que representa a entidade artefato dentro do framework. Alem de ser
+ * uma classe bean, ela e composta de alguns metodos de manipulacao dos servicos
+ * e TiposMembros que sao adicionados dentro dela.
+ * 
  * @author QUID
- *
+ * 
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name="artefato")
+@Table(name = "artefato")
 @Service("Artefato")
 @Scope("prototype")
-public class Artefato extends Identificavel implements IArtefato{
-	
+public class Artefato extends Identificavel implements IArtefato {
+
+	private int altura;
+
+	private int largura;
+
 	/**
 	 * Categoria que pertence o artefato.
 	 */
 	@ManyToOne
-	@JoinColumn(name="categoria_codigo", insertable=true, updatable=true)
+	@JoinColumn(name = "categoria_codigo", insertable = true, updatable = true)
 	private Categoria categoria;
 	/**
 	 * Titulo do artefato.
@@ -64,19 +70,21 @@ public class Artefato extends Identificavel implements IArtefato{
 	@Autowired
 	private IArtefatoControle<Artefato, Long> artefatoControle;
 	/**
-	 * Atributo que realiza a leitura das propriedades do arquivo mensagens.properties.
+	 * Atributo que realiza a leitura das propriedades do arquivo
+	 * mensagens.properties.
 	 */
 	@Transient
-	private LeitoraPropertiesUtil propertiesMessagesUtil = FabricaProperties.loadMessages();
-	
+	private LeitoraPropertiesUtil propertiesMessagesUtil = FabricaProperties
+			.loadMessages();
+
 	/**
-	 * Contrutor padrao da classe que inicializa a lista de membros e servidos do artefato.
+	 * Contrutor padrao da classe que inicializa a lista de membros e servidos
+	 * do artefato.
 	 */
-	public Artefato(){
+	public Artefato() {
 		this.membros = new ArrayList<Membro>();
 		this.servicos = new ArrayList<IServico>();
 	}
-
 
 	public Collection<IServico> getServicos() {
 		return servicos;
@@ -86,7 +94,9 @@ public class Artefato extends Identificavel implements IArtefato{
 		this.servicos = servicos;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see br.ueg.unucet.quid.interfaces.IArtefato#getListaMembro()
 	 */
 	@Override
@@ -94,17 +104,25 @@ public class Artefato extends Identificavel implements IArtefato{
 		return this.membros;
 	}
 
-	/* (non-Javadoc)
-	 * @see br.ueg.unucet.quid.interfaces.IArtefato#setListaMembro(java.util.Collection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.ueg.unucet.quid.interfaces.IArtefato#setListaMembro(java.util.Collection
+	 * )
 	 */
 	@Override
 	public void setListaMembro(Collection<Membro> listaTipoMembroModelo) {
 		this.membros = listaTipoMembroModelo;
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see br.ueg.unucet.quid.interfaces.IArtefato#addMembro(br.ueg.unucet.quid.extensao.dominios.Membro)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.ueg.unucet.quid.interfaces.IArtefato#addMembro(br.ueg.unucet.quid.
+	 * extensao.dominios.Membro)
 	 */
 	@Override
 	public Retorno<String, Collection<String>> addMembro(Membro membro) {
@@ -116,30 +134,38 @@ public class Artefato extends Identificavel implements IArtefato{
 		} catch (ArtefatoExcessao e) {
 			retorno.setErro(e);
 			retorno.setMensagem(e.getMessage());
-			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA, e.getParametrosInvalidos());
+			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA,
+					e.getParametrosInvalidos());
 			retorno.setSucesso(false);
 			retorno.setTipoErro(TipoErroEnum.ERRO_SIMPLES);
 		}
 		return retorno;
 	}
 
-	/* (non-Javadoc)
-	 * @see br.ueg.unucet.quid.interfaces.IArtefato#removerMembro(br.ueg.unucet.quid.extensao.dominios.Membro)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.ueg.unucet.quid.interfaces.IArtefato#removerMembro(br.ueg.unucet.quid
+	 * .extensao.dominios.Membro)
 	 */
 	@Override
 	public Retorno<Object, Object> removerMembro(Membro membro) {
 		Retorno<Object, Object> retorno = new Retorno<Object, Object>();
-		if(membros.contains(membro)){
+		if (membros.contains(membro)) {
 			retorno.setSucesso(true);
 			membros.remove(membro);
-		}else{
+		} else {
 			retorno.setSucesso(false);
-			retorno.setMensagem(propertiesMessagesUtil.getValor("membro_nao_encontrado_nesse_artefato"));
+			retorno.setMensagem(propertiesMessagesUtil
+					.getValor("membro_nao_encontrado_nesse_artefato"));
 		}
 		return retorno;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see br.ueg.unucet.quid.interfaces.IArtefato#getListaServico()
 	 */
 	@Override
@@ -147,55 +173,72 @@ public class Artefato extends Identificavel implements IArtefato{
 		return this.servicos;
 	}
 
-	/* (non-Javadoc)
-	 * @see br.ueg.unucet.quid.interfaces.IArtefato#setListaServico(java.util.Collection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.ueg.unucet.quid.interfaces.IArtefato#setListaServico(java.util.Collection
+	 * )
 	 */
 	@Override
 	public void setListaServico(Collection<IServico> listaServico) {
 		this.servicos = listaServico;
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see br.ueg.unucet.quid.interfaces.IArtefato#addServico(br.ueg.unucet.quid.extensao.interfaces.IServico)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.ueg.unucet.quid.interfaces.IArtefato#addServico(br.ueg.unucet.quid
+	 * .extensao.interfaces.IServico)
 	 */
 	@Override
-	public Retorno<String, Collection<String>> addServico(IServico servico) { 
-		Retorno<String, Collection<String>> retorno =  this.artefatoControle.verificarServico(servico);
-		if(retorno.isSucesso()){
+	public Retorno<String, Collection<String>> addServico(IServico servico) {
+		Retorno<String, Collection<String>> retorno = this.artefatoControle
+				.verificarServico(servico);
+		if (retorno.isSucesso()) {
 			this.servicos.add(servico);
 		}
 		return retorno;
 	}
 
-	/* (non-Javadoc)
-	 * @see br.ueg.unucet.quid.interfaces.IArtefato#removerServico(br.ueg.unucet.quid.extensao.interfaces.IServico)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.ueg.unucet.quid.interfaces.IArtefato#removerServico(br.ueg.unucet.
+	 * quid.extensao.interfaces.IServico)
 	 */
 	@Override
 	public Retorno<String, String> removerServico(IServico servico) {
 		Retorno<String, String> retorno = new Retorno<String, String>();
-		if(this.membros.contains(servico)){
+		if (this.membros.contains(servico)) {
 			this.membros.remove(servico);
 			artefatoControle.reorganizarServico(servico);
 			retorno.setSucesso(true);
-		}else{
+		} else {
 			retorno.setSucesso(false);
 			retorno.setTipoErro(TipoErroEnum.ERRO_SIMPLES);
-			retorno.setMensagem(propertiesMessagesUtil.getValor("falha_remocao_servico"));
+			retorno.setMensagem(propertiesMessagesUtil
+					.getValor("falha_remocao_servico"));
 		}
 		return retorno;
 	}
 
-	/* (non-Javadoc)
-	 * @see br.ueg.unucet.quid.interfaces.IArtefato#executaServico(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.ueg.unucet.quid.interfaces.IArtefato#executaServico(java.lang.String)
 	 */
 	@Override
 	public Retorno<Object, Object> executaServico(String nomeServico) {
-		
+
 		return null;
 	}
-	
-	//GETTERS AND SETTERS
+
+	// GETTERS AND SETTERS
 
 	@Override
 	public String getTitulo() {
@@ -205,40 +248,94 @@ public class Artefato extends Identificavel implements IArtefato{
 	@Override
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
-		
+
 	}
 
 	@Override
 	public Categoria getCategoria() {
 		return this.categoria;
 	}
-	
-	public void setCategoria(Categoria categoria){
+
+	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
-
 
 	public Collection<Membro> getMembros() {
 		return membros;
 	}
 
-
 	public void setMembros(Collection<Membro> membros) {
 		this.membros = membros;
 	}
-
 
 	public IArtefatoControle<Artefato, Long> getArtefatoControle() {
 		return artefatoControle;
 	}
 
-
-	public void setArtefatoControle(IArtefatoControle<Artefato, Long> artefatoControle) {
+	public void setArtefatoControle(
+			IArtefatoControle<Artefato, Long> artefatoControle) {
 		this.artefatoControle = artefatoControle;
 	}
-	
-	
-	
-	
+
+	/**
+	 * @return the altura
+	 */
+	public int getAltura() {
+		return altura;
+	}
+
+	/**
+	 * @param altura
+	 *            the altura to set
+	 */
+	public void setAltura(int altura) {
+		this.altura = altura;
+	}
+
+	/**
+	 * @return the largura
+	 */
+	public int getLargura() {
+		return largura;
+	}
+
+	/**
+	 * @param largura
+	 *            the largura to set
+	 */
+	public void setLargura(int largura) {
+		this.largura = largura;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((this.getNome() == null) ? 0 : this.getNome().hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof Artefato))
+			return false;
+		Artefato other = (Artefato) obj;
+		if (this.getNome() == null) {
+			if (other.getNome() != null)
+				return false;
+		} else if (!this.getNome().equals(other.getNome()))
+			return false;
+		return true;
+	}
 
 }

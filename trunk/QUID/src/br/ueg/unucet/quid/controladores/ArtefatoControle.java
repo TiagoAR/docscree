@@ -31,7 +31,6 @@ import br.ueg.unucet.quid.interfaces.IMembroFrameworkControle;
 import br.ueg.unucet.quid.interfaces.IServicoControle;
 import br.ueg.unucet.quid.interfaces.IServicoServico;
 import br.ueg.unucet.quid.utilitarias.FabricaSerializacao;
-import br.ueg.unucet.quid.utilitarias.LeitoraPropertiesUtil;
 
 /**
  * @author QUID
@@ -72,10 +71,6 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 	 */
 	@Autowired
 	private IArtefatoServicoControle<ArtefatoServico, Long> artefatoServicoControle;
-	/**
-	 * Atributo responsavel por realizar a leitura de informacoes no arquivo .properties
-	 */
-	private LeitoraPropertiesUtil propertiesMessagesUtil;
 	
 	/**
 	 * Atributo responsavel por representar o artefato que esta sendo manipulado
@@ -330,7 +325,7 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 	 * @return Retorno de uma lista de artefatos encontrados
 	 */
 	private Retorno<String, Collection<Artefato>> realizarPesquisa(Artefato artefato2) {
-		Collection<Artefato> lista = pesquisarPorRestricao(artefato, new String[]{"artefato.nome", "artfato.codigo", "artfato.descricao","artfato.categoria.codigo","artfato.categoria.descricao"});
+		Collection<Artefato> lista = pesquisarPorRestricao(artefato2, new String[]{"artefato.nome", "artefato.codigo", "artefato.descricao","artefato.categoria.codigo","artfato.categoria.descricao"});
 		Retorno<String, Collection<Artefato>> retorno = new Retorno<String, Collection<Artefato>>();
 		if(lista == null || lista.isEmpty()){
 			retorno.setSucesso(false);

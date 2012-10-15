@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import br.ueg.unucet.quid.interfaces.IDAO;
 import br.ueg.unucet.quid.utilitarias.EmptyValue;
@@ -184,7 +185,9 @@ public class ProcuradorObjeto<T> {
 	 * @param mappingField Atributo que sera mapeado.
 	 */
 	private void mappingField(MappingField mappingField) throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		Object value = mappingField.getValue(objectFinder);
+		Transient annotation = (Transient) mappingField.getAnnotation(Transient.class);
+		if (annotation == null) {
+			Object value = mappingField.getValue(objectFinder);
 			OneToOne oneToOne =(OneToOne) mappingField.getAnnotation(OneToOne.class);
 			ManyToOne manyToOne = (ManyToOne) mappingField.getAnnotation(ManyToOne.class);
 			if((oneToOne == null)&&(manyToOne == null)){
@@ -194,6 +197,7 @@ public class ProcuradorObjeto<T> {
 			}else{
 				mappingInternalClassDomain(mappingField);
 			}
+		}
 		
 	}
 
