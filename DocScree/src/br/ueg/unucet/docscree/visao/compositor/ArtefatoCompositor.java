@@ -38,7 +38,6 @@ import br.ueg.unucet.docscree.utilitarios.Reflexao;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.quid.dominios.Artefato;
 import br.ueg.unucet.quid.dominios.Categoria;
-import br.ueg.unucet.quid.dominios.Retorno;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
 import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
@@ -71,6 +70,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	protected AnnotateDataBinder binderArtefato;
 	protected AnnotateDataBinder binderVisualizao;
 	protected AnnotateDataBinder binderMembro;
+	@AtributoVisao(nome="tipoMembroVisaoSelecionado", isCampoEntidade = false)
 	private SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado;
 	private Integer larguraTotalMembro;
 	private int contador = 0;
@@ -409,23 +409,28 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		return button;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void gerarMembro() {
 		getControle().setMensagens(new Mensagens());
 		if (puxarValorParametrosMembro() && puxarValorParametrosModelo()) {
 			if (this.larguraTotalMembro.compareTo(getLargura()) < 0) {
-				Retorno<Object, Object> retorno = null;
-				retorno = getControle().getFramework().mapearMembro(getTipoMembroVisaoSelecionado().getMembro());
-				if (retorno.isSucesso()) {
-					String idMembro = getTipoMembroVisaoSelecionado().getNome()+String.valueOf(contador++);
-					adicionarMembroAoArtefato(idMembro);
-					adicionarMembroAVisualizacao(idMembro);
-					setTipoMembroVisaoSelecionado(null);
-					getWindowPaleta().getChildren().clear();
-					getBinderPaleta().loadAll();
-					mostrarMensagem(true);
-				} else {
-					exibirMensagemErro(retorno.getMensagem());
+				boolean retorno;
+				try {
+					retorno = this.getControle().fazerAcao("mapearMembro", (SuperCompositor) this);
+					if (retorno) {
+						String idMembro = getTipoMembroVisaoSelecionado().getNome()+String.valueOf(contador++);
+						adicionarMembroAoArtefato(idMembro);
+						adicionarMembroAVisualizacao(idMembro);
+						setTipoMembroVisaoSelecionado(null);
+						getWindowPaleta().getChildren().clear();
+						getBinderPaleta().loadAll();
+					} 
+					mostrarMensagem(retorno);
+				} catch (Exception e) {
+					//TODO FAZER
+					e.printStackTrace();
 				}
+				
 			} else {
 				exibirMensagemErro("Somatória da largura do membro ("+ this.larguraTotalMembro +") deve ser menor que: " + String.valueOf(getLargura()));
 			}
