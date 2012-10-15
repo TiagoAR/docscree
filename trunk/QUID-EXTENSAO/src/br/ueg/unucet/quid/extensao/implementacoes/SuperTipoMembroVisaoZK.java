@@ -173,7 +173,7 @@ public abstract class SuperTipoMembroVisaoZK<E extends IComponenteInterface> ext
 	 * @return String do CSS.
 	 */
 	private String converterTamanhoFonte(IParametro<?> p) {
-		if (p.getValor() != null)
+		if (p.getValor() != null && !String.valueOf(p.getValor()).equals(String.valueOf(0)))
 			return " font-size: " + p.getValor() + "px; ";
 		return "font-size: 10px; ";
 	}
@@ -227,6 +227,8 @@ public abstract class SuperTipoMembroVisaoZK<E extends IComponenteInterface> ext
 	public void setListaParametros(Collection<IParametro<?>> parametros) {
 		this.membro.getTipoMembroModelo().setListaParametros(parametros);
 	}
+	
+	public abstract Object getVisualizacaoExemplo(Object componente, Object valorExemplo);
 
 	/**
 	 * @return the membro
