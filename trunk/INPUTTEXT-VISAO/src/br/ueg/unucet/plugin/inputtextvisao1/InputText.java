@@ -30,7 +30,7 @@ public class InputText extends SuperTipoMembroVisaoZK<InputTextInterface> {
 		this.componente =  new InputTextInterface();
 		setDescricao("Visão Padrão");
 		setVersao(1);
-		setRevisao(7);
+		setRevisao(8);
 	}
 
 	@Override
@@ -54,9 +54,9 @@ public class InputText extends SuperTipoMembroVisaoZK<InputTextInterface> {
 	}
 	
 	@Override
-	public Object getVisualizacaoExemplo() {
-		Label visualizacao = getComponente().getVisualizacao();
-		visualizacao.setValue("Exemplo");
+	public Object getVisualizacaoExemplo(Object componente, Object valorExemplo) {
+		Label visualizacao = (Label) componente;
+		visualizacao.setValue(valorExemplo.toString());
 		return visualizacao;
 	}
 
