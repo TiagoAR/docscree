@@ -49,10 +49,10 @@
 						<listheader label="TipoMembro" />
 					</listhead>
 					<listitem self="@{each=item }" value="@{item}" tooltiptext="@{item.nome }">
-						<listcell onClick="gerenciador.gerarPaletaParametros()">
+						<listcell onClick="gerenciador.gerarPaletaParametros(true)">
 							<image content="@{item.imagemZK }" />
 						</listcell>
-						<listcell label="@{item.nome }" onClick="gerenciador.gerarPaletaParametros()" >
+						<listcell label="@{item.nome }" onClick="gerenciador.gerarPaletaParametros(true)" >
 						</listcell>
 					</listitem>
 				</listbox>
@@ -94,7 +94,8 @@
 			</div>
 		</div>
 		<div>
-			<button label="Salvar" />
+			<button label="Salvar" onClick="gerenciador.acaoMapearArtefato();"/>
+			<button label="Cancelar" />
 		</div>
 	</div>
 </zk>

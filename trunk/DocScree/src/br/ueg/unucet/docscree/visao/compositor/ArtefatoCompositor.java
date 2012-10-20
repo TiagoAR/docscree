@@ -1,9 +1,10 @@
 package br.ueg.unucet.docscree.visao.compositor;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -61,7 +62,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	private static final String PARAMETROPOSY = "idParametroY";
 	private static final String PARAMETRONOME = "idParametroNome";
 	private static final String PARAMETRODESC = "idParametroDescricao";
-	private static final String ESTILODIV = " position: absolute; display: table;";
+	private static final String ESTILODIV = " position: absolute; display: table; ";
 	private static final String ESTILOCOMPONENTE = " padding: 0px; margin: 0px; padding-top: 1px;";
 
 	private Window areaMontagemWindow = null;
@@ -70,13 +71,11 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	protected AnnotateDataBinder binderArtefato;
 	protected AnnotateDataBinder binderVisualizao;
 	protected AnnotateDataBinder binderMembro;
+	private Integer larguraTotalMembro;
 	@AtributoVisao(nome="tipoMembroVisaoSelecionado", isCampoEntidade = false)
 	private SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado;
-	private Integer larguraTotalMembro;
-	private int contador = 0;
-	
 	@AtributoVisao(nome="listaMembrosDocScree", isCampoEntidade = false)
-	private List<MembroDocScree> listaMembrosAdicionados = new ArrayList<MembroDocScree>();
+	private Map<String, MembroDocScree> mapaMembrosAdicionados;
 	
 	@AtributoVisao(nome="nome", isCampoEntidade = true)
 	private String nome;
@@ -171,7 +170,7 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		this.areaVisualizacaoWindow = null;
 		this.binderArtefato = null;
 		this.binderVisualizao = null;
-		setListaMembrosAdicionados(new ArrayList<MembroDocScree>());
+		setMapaMembrosAdicionados(new HashMap<String, MembroDocScree>());
 	}
 	
 	public void exibirNovoArtefato() {
@@ -213,7 +212,13 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void acaoMapearArtefato() {
+		try {
+			boolean retorno = getControle().fazerAcao("mapearArtefato", (SuperCompositor) this);
+			this.mostrarMensagem(retorno);
+		} catch (Exception e) {
+		}
 		// TODO desenvolver
 	}
 	
@@ -237,7 +242,6 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		return super.getControle().listarTipoMembrosVisao();
 	}
 
-	// TODO rever
 	private HtmlBasedComponent gerarNovaInstancia(String idComponente, Membro membro) {
 		Div div = null;
 		try {
@@ -247,7 +251,8 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 			div = new Div();
 			div.setId(idComponente.replace("Componente", "Grid"));
 			div.setWidth(String.valueOf(membro.getComprimento())+"px");
-			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + ESTILODIV);
+			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + ESTILODIV + "cursor: pointer;");
+			setarEventDiv(div);
 			div.appendChild(novaInstancia);
 		} catch (InstantiationException e) {
 		} catch (IllegalAccessException e) {
@@ -259,19 +264,34 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		Div div = null;
 		try {
 			HtmlBasedComponent novaInstancia = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisaoVisualizacao().getClass().newInstance();
-			//HtmlBasedComponent instanciaAux = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisualizacaoExemplo(novaInstancia, "Exemplo");
 			novaInstancia.setId(idComponente);
 			novaInstancia.setStyle(getTipoMembroVisaoSelecionado().getCss(membro) + ESTILOCOMPONENTE);
 			div = new Div();
 			div.setId(idComponente.replace("Visualizacao", "Grid"));
 			div.setWidth(String.valueOf(membro.getComprimento())+"px");
-			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + ESTILODIV);
+			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + ESTILODIV + "cursor: pointer;");
+			setarEventDiv(div);
 			div.appendChild(novaInstancia);
 			getTipoMembroVisaoSelecionado().getVisualizacaoExemplo(novaInstancia, "Exemplo");
 		} catch (InstantiationException e) {
 		} catch (IllegalAccessException e) {
 		}
 		return div;
+	}
+	
+	private void setarEventDiv(Div div) {
+		div.addEventListener("onClick", new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				String idComponente = event.getTarget().getId();
+				idComponente = idComponente.replace("Grid", "Componente");
+				MembroDocScree membroDocScree = getMapaMembrosAdicionados().get(idComponente);
+				setTipoMembroVisaoSelecionado(membroDocScree.getTipoMembroVisao());
+				gerarPaletaParametros(false);
+			}
+			
+		});
 	}
 
 	protected Window getWindowArtefato() {
@@ -315,16 +335,21 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		return (Window) getComponent().getFellow("windowPaleta");
 	}
 
-	public void gerarPaletaParametros() {
+	public void gerarPaletaParametros(boolean isNovo) {
 		super.binder.saveAll();
 		if (this.getTipoMembroVisaoSelecionado() != null) {
 			Window windowPaleta = getWindowPaleta();
 			windowPaleta.getChildren().clear();
 			
-			windowPaleta.appendChild(gerarGridOpcao());
-			windowPaleta.appendChild(gerarGridMembros());
-			windowPaleta.appendChild(gerarGridPropriedades());
-			windowPaleta.appendChild(gerarButtonPropriedades());
+			if (isNovo) {
+				windowPaleta.appendChild(gerarGridOpcao());
+				windowPaleta.appendChild(gerarGridMembros());
+			}
+			windowPaleta.appendChild(gerarGridPropriedades(isNovo));
+			if (!isNovo) {
+				setarValoresParametrosMembro();
+			}
+			windowPaleta.appendChild(gerarButtonPropriedades(isNovo));
 			getBinderPaleta().loadAll();
 		}
 	}
@@ -385,22 +410,27 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		return grid;
 	}
 	
-	@SuppressWarnings("unchecked")
-	private Button gerarButtonPropriedades() {
+	private Button gerarButtonPropriedades(boolean isNovo) {
 		Button button = new Button();
-		button.setLabel("Inserir Membro");
-		button.addEventListener("onClick", new EventListener() {
+		String labelButton;
+		if (isNovo) {
+			labelButton = "Inserir";
+		} else {
+			labelButton = "Alterar";
+		}
+		button.setLabel(labelButton + " Membro");
+		button.addEventListener("onClick", new EventListener<Event>() {
 
 			/* (non-Javadoc)
 			 * @see org.zkoss.zk.ui.event.EventListener#onEvent(org.zkoss.zk.ui.event.Event)
 			 */
 			@Override
-			public void onEvent(Event arg0) throws Exception {
+			public void onEvent(final Event event) throws Exception {
 				new Runnable() {
 					
 					@Override
 					public void run() {
-						gerarMembro();
+						gerarMembro(((Button) event.getTarget()).getLabel().contains("Inserir"));
 					}
 				}.run();
 			}
@@ -410,25 +440,35 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void gerarMembro() {
+	public void gerarMembro(boolean isNovo) {
 		getControle().setMensagens(new Mensagens());
-		if (puxarValorParametrosMembro() && puxarValorParametrosModelo()) {
+		if (puxarValorParametrosMembro() && (!isNovo || puxarValorParametrosModelo())) {
 			if (this.larguraTotalMembro.compareTo(getLargura()) < 0) {
 				boolean retorno;
-				try {
-					retorno = this.getControle().fazerAcao("mapearMembro", (SuperCompositor) this);
-					if (retorno) {
-						String idMembro = getTipoMembroVisaoSelecionado().getNome()+String.valueOf(contador++);
-						adicionarMembroAoArtefato(idMembro);
-						adicionarMembroAVisualizacao(idMembro);
-						setTipoMembroVisaoSelecionado(null);
-						getWindowPaleta().getChildren().clear();
-						getBinderPaleta().loadAll();
-					} 
-					mostrarMensagem(retorno);
-				} catch (Exception e) {
-					//TODO FAZER
-					e.printStackTrace();
+				if (isNovo) {
+					try {
+						retorno = this.getControle().fazerAcao("mapearMembro", (SuperCompositor) this);
+						if (retorno) {
+							String idMembro = getTipoMembroVisaoSelecionado().getNome()+String.valueOf(getTipoMembroVisaoSelecionado().getMembro().getCodigo());
+							adicionarMembroAoArtefato(idMembro);
+							adicionarMembroAVisualizacao(idMembro);
+							setTipoMembroVisaoSelecionado(null);
+							getWindowPaleta().getChildren().clear();
+							getBinderPaleta().loadAll();
+							mostrarMensagem(retorno);
+						} 
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					String idMembro = getTipoMembroVisaoSelecionado().getNome()+String.valueOf(getTipoMembroVisaoSelecionado().getMembro().getCodigo());
+					removerMembroAlterados(idMembro);
+					editarMembroNoArtefato(idMembro);
+					adicionarMembroAVisualizacao(idMembro);
+					setTipoMembroVisaoSelecionado(null);
+					getWindowPaleta().getChildren().clear();
+					getBinderPaleta().loadAll();
+					mostrarMensagem(true);
 				}
 				
 			} else {
@@ -445,7 +485,6 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		super.binder.loadAll();
 	}
 	
-	// TODO ver com Guiliano responsabilidade do método - muito grande
 	private Integer puxarValorInteiro(String parametroID, String nomeParametro, Boolean camposInformados, boolean validarMaior0) {
 		Object objeto = getParametroMembroPorId(parametroID);
 		if (objeto != null && !objeto.toString().isEmpty()) {
@@ -508,16 +547,11 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	}
 	
 	private void adicionarMembroAoArtefato(String nomeParcial) {
-		String idComponente = "Componente" + nomeParcial;
-		HtmlBasedComponent componente = gerarNovaInstancia("Componente" + nomeParcial, getTipoMembroVisaoSelecionado().getMembro());
-		if (componente != null) {
-			this.getListaMembrosAdicionados().add(new MembroDocScree(getTipoMembroVisaoSelecionado(), idComponente));
-			componente.setParent(getWindowArtefato());
-			getWindowArtefato().appendChild(componente);
-			getBinderArtefato().loadAll();
-			getWindowPaleta().getChildren().clear();
-			getBinderPaleta().loadAll();
-		} 
+		lancarMembroAoArtefato(nomeParcial, true);
+	}
+	
+	private void editarMembroNoArtefato(String nomeParcial) {
+		lancarMembroAoArtefato(nomeParcial, false);
 	}
 	
 	private void adicionarMembroAVisualizacao(String nomeParcial) {
@@ -528,6 +562,30 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 			getWindowVisualizacaoArtefato().appendChild(componenteVisualizacao);
 			getBinderVisualizacaoArtefato().loadAll();
 		} 
+	}
+	
+	private void lancarMembroAoArtefato(String nomeParcial, boolean isNovo) {
+		String idComponente = "Componente" + nomeParcial;
+		HtmlBasedComponent componente = gerarNovaInstancia("Componente" + nomeParcial, getTipoMembroVisaoSelecionado().getMembro());
+		if (componente != null) {
+			if (isNovo) {
+				this.getMapaMembrosAdicionados().put(idComponente, new MembroDocScree(getTipoMembroVisaoSelecionado(), idComponente));
+			} else {
+				this.getMapaMembrosAdicionados().get(idComponente).setTipoMembroVisao(getTipoMembroVisaoSelecionado());
+			}
+			componente.setParent(getWindowArtefato());
+			getWindowArtefato().appendChild(componente);
+			getBinderArtefato().loadAll();
+			getWindowPaleta().getChildren().clear();
+			getBinderPaleta().loadAll();
+		} 
+	}
+	
+	private void removerMembroAlterados(String nomeParcial) {
+		String idGrid = "Grid" + nomeParcial;
+		
+		getWindowArtefato().getFellow(idGrid).detach();
+		getWindowVisualizacaoArtefato().getFellow(idGrid).detach();
 	}
 	
 	private Object getParametroMembroPorId(String id) {
@@ -563,14 +621,34 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		return (HtmlBasedComponent) getWindowPaleta().getFellow(id);
 	}
 	
-	private Grid gerarGridPropriedades() {
+	private Grid gerarGridPropriedades(boolean isNovo) {
 		Grid grid = new Grid();
 		grid.setHeight("400px;");
 		Rows rows = new Rows();
 		grid.appendChild(rows);
 		gerarParametrosMembro(rows);
-		gerarParametrosTipoMembro(rows);
+		if (isNovo) {
+			gerarParametrosTipoMembro(rows);
+		}
 		return grid;
+	}
+	
+	private void setarValoresParametrosMembro() {
+		Textbox textbox = (Textbox) getWindowPaleta().getFellow(PARAMETRONOME);
+		textbox.setDisabled(true);
+		textbox.setValue(getTipoMembroVisaoSelecionado().getMembro().getNome());
+		textbox = (Textbox) getWindowPaleta().getFellow(PARAMETRODESC);
+		textbox.setDisabled(true);
+		textbox.setValue(getTipoMembroVisaoSelecionado().getMembro().getDescricao());
+		
+		Spinner spinner = (Spinner) getWindowPaleta().getFellow(PARAMETROALTURA);
+		spinner.setValue(getTipoMembroVisaoSelecionado().getMembro().getAltura());
+		spinner = (Spinner) getWindowPaleta().getFellow(PARAMETROCOMPRIMENTO);
+		spinner.setValue(getTipoMembroVisaoSelecionado().getMembro().getComprimento());
+		spinner = (Spinner) getWindowPaleta().getFellow(PARAMETROPOSX);
+		spinner.setValue(getTipoMembroVisaoSelecionado().getMembro().getX());
+		spinner = (Spinner) getWindowPaleta().getFellow(PARAMETROPOSY);
+		spinner.setValue(getTipoMembroVisaoSelecionado().getMembro().getY());
 	}
 	
 	private void gerarParametrosTipoMembro(Rows rows) {
@@ -795,17 +873,18 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	}
 
 	/**
-	 * @return List<MembroDocScree> o(a) listaMembrosAdicionados
+	 * @return Map<String,MembroDocScree> o(a) mapaMembrosAdicionados
 	 */
-	public List<MembroDocScree> getListaMembrosAdicionados() {
-		return listaMembrosAdicionados;
+	public Map<String, MembroDocScree> getMapaMembrosAdicionados() {
+		return mapaMembrosAdicionados;
 	}
 
 	/**
-	 * @param List<MembroDocScree> o(a) listaMembrosAdicionados a ser setado(a)
+	 * @param Map<String,MembroDocScree> o(a) mapaMembrosAdicionados a ser setado(a)
 	 */
-	public void setListaMembrosAdicionados(List<MembroDocScree> listaMembrosAdicionados) {
-		this.listaMembrosAdicionados = listaMembrosAdicionados;
+	public void setMapaMembrosAdicionados(
+			Map<String, MembroDocScree> mapaMembrosAdicionados) {
+		this.mapaMembrosAdicionados = mapaMembrosAdicionados;
 	}
 
 }
