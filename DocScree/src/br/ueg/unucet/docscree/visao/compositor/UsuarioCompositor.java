@@ -212,7 +212,6 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 				super.mostrarMensagem(resultado);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -3,6 +3,7 @@ package br.ueg.unucet.docscree.controladores;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import br.ueg.unucet.docscree.modelo.MembroDocScree;
 import br.ueg.unucet.docscree.utilitarios.BloquearArtefatoControle;
@@ -92,6 +93,10 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 			SuperTipoMembroVisaoZK<?> tipoMembroVisao = (SuperTipoMembroVisaoZK<?>) getMapaAtributos().get("tipoMembroVisaoSelecionado");
 			retorno = getFramework().mapearMembro(tipoMembroVisao.getMembro());
 			if (retorno.isSucesso()) {
+				Retorno<String, Collection<Membro>> retornoPesquisa = getFramework().pesquisarMembro(tipoMembroVisao.getMembro().getNome(), tipoMembroVisao.getMembro().getTipoMembroModelo());
+				Collection<Membro> collection = retornoPesquisa.getParametros().get(Retorno.PARAMERTO_LISTA);
+				Membro membroMapeado = collection.iterator().next();
+				tipoMembroVisao.getMembro().setCodigo(membroMapeado.getCodigo());
 				return true;
 			} else {
 				getMensagens().getListaMensagens().add(retorno.getMensagem());
@@ -151,6 +156,32 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 	
 	public boolean acaoMontarArtefato() {
 		return isUsuarioMontador();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean acaoMapearArtefato() {
+		boolean resultado = true;
+		Map<String, MembroDocScree> listaMembrosDocScree = (Map<String, MembroDocScree>) this.getMapaAtributos().get("listaMembrosDocScree");
+		for (MembroDocScree membroDocScree : listaMembrosDocScree.values()) {
+			Retorno<String, Collection<String>> retorno = getEntidade().addMembro(membroDocScree.getTipoMembroVisao().getMembro());
+			if (!retorno.isSucesso()) {
+				resultado = false;
+				getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+				getMensagens().getListaMensagens().add("Erro no membro: "+ membroDocScree.getTipoMembroVisao().getMembro().getNome());
+				getMensagens().getListaMensagens().add(retorno.getMensagem());
+				break;
+			}
+		}
+		if (!resultado) {
+			for (MembroDocScree membroDocScree : listaMembrosDocScree.values()) {
+				Retorno<Object, Object> retorno = getEntidade().removerMembro(membroDocScree.getTipoMembroVisao().getMembro());
+				if (!retorno.isSucesso()) {
+					break;
+				}
+			}
+		}
+		getFramework().alterarArtefato(getEntidade());
+		return resultado;
 	}
 	
 	public Collection<ITipoMembroVisao> getMapaTipoMembrosVisao() {

@@ -21,13 +21,12 @@ import br.ueg.unucet.docscree.controladores.TipoMembroControle;
 import br.ueg.unucet.docscree.modelo.ArquivoCarregado;
 import br.ueg.unucet.docscree.modelo.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.UploadArquivo;
-import br.ueg.unucet.quid.dominios.TipoMembro;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Component
 @Scope("session")
 public class TipoMembroCompositor extends
-		GenericoCompositor<TipoMembroControle> {
+		SuperCompositor<TipoMembroControle> {
 
 	/**
 	 * 
@@ -39,29 +38,6 @@ public class TipoMembroCompositor extends
 	private Map<File, String> tipoMembros = new HashMap<File, String>();
 	
 	private ArquivoCarregado arquivoSelecionado;
-
-	@Override
-	public Class getTipoEntidade() {
-		return TipoMembro.class;
-	}
-
-	@Override
-	protected void limparCampos() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void limparFiltros() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void acaoFiltrar() {
-		// TODO Auto-generated method stub
-
-	}
 
 	public void uploadTipoMembro(UploadEvent event) {
 		try {

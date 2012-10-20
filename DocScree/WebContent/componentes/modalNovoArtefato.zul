@@ -1,10 +1,10 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<window id="modalNovoArtefato" title="Selecione o projeto!"
+<window id="modalNovoArtefato" title="Novo Artefato"
 	border="normal" apply="${artefatoCompositor }" closable="true"
 	action="show: slideDown;hide: slideUp" position="center,center"
 	width="550px">
 	<vlayout>
-		<label value="Defina o tamanho do Artefato:" />
+		<label value="Defina as propriedades do Artefato:" />
 		<grid>
 			<columns>
 				<column width="100px" />
