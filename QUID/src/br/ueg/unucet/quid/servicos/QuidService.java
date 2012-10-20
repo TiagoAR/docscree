@@ -1,6 +1,7 @@
 package br.ueg.unucet.quid.servicos;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.context.ApplicationContext;
@@ -213,6 +214,27 @@ public class QuidService implements IQUID{
 	public Retorno<String, Collection<Membro>> getListaMembro(ITipoMembroModelo tipoMembro) {
 		IMembroServico<MembroFramework> servico = (IMembroServico<MembroFramework>) appContext.getBean("MembroServico");
 		return servico.pesquisarMembro(tipoMembro);
+	}
+	
+	@Override
+	public Retorno<String, Collection<Membro>> pesquisarMembro(String nomeMembro, ITipoMembroModelo tipoMembro) {
+		@SuppressWarnings("unchecked")
+		IMembroServico<MembroFramework> servico = (IMembroServico<MembroFramework>) appContext.getBean("MembroServico");
+		Retorno<String,Collection<Membro>> retorno = servico.pesquisarMembro(nomeMembro, tipoMembro);
+		if (retorno.isSucesso()) {
+			Collection<Membro> colecao = retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
+			Collection<Membro> novaColecao = new ArrayList<Membro>();
+			for (Membro membro : colecao) {
+				if (membro.getNome().equals(nomeMembro)) {
+					novaColecao.add(membro);
+					break;
+				}
+			}
+			retorno.getParametros().put(Retorno.PARAMERTO_LISTA, novaColecao);
+			return retorno;
+		} else {
+			return retorno;
+		}
 	}
 
 	/* (non-Javadoc)
