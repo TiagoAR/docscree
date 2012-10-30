@@ -93,7 +93,7 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 	
 	public boolean acaoEditarProprioUsuario() {
 		if (super.getEntidade().getSenha().equals(super.getUsuarioLogado().getSenha())) {
-			if (super.getEntidade().getStatus().equals(StatusEnum.ATIVO)) {
+			if (super.getMapaAtributos().get("status").equals(Boolean.TRUE)) {
 				((UsuarioCompositor) getVisao()).setFldSenha((String) super.getMapaAtributos().get(
 						"confirmarSenha"));
 				return true;
@@ -213,11 +213,15 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 			if (!listaUsuario.isEmpty()
 					&& usuarioComparar.getEmail().equals(usuario.getEmail())
 					&& usuarioComparar.getSenha().equals(usuario.getSenha())) {
-				try {
-					resultado = true;
-					setUsuarioLogado(listaUsuario.iterator().next());
-				} catch (Exception e) {
-					e.printStackTrace();
+				if (usuarioComparar.getStatus().equals(StatusEnum.ATIVO)) {
+					try {
+						resultado = true;
+						setUsuarioLogado(usuarioComparar);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					super.mensagens.getListaMensagens().add("O Usuário não está ativo!");
 				}
 			} else {
 				super.mensagens.getListaMensagens().add("É necessário especificar um e-mail e senha cadastrados para logar!");
