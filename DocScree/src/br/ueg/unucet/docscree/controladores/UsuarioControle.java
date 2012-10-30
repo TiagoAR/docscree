@@ -93,14 +93,18 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 	
 	public boolean acaoEditarProprioUsuario() {
 		if (super.getEntidade().getSenha().equals(super.getUsuarioLogado().getSenha())) {
-			((UsuarioCompositor) getVisao()).setFldSenha((String) super.getMapaAtributos().get(
-					"confirmarSenha"));
-			return true;
+			if (super.getEntidade().getStatus().equals(StatusEnum.ATIVO)) {
+				((UsuarioCompositor) getVisao()).setFldSenha((String) super.getMapaAtributos().get(
+						"confirmarSenha"));
+				return true;
+			} else {
+				getMensagens().getListaMensagens().add("Não é possível desativar o próprio usuário!");
+			}
 		} else {
-			getMensagens().setTipoMensagem(TipoMensagem.ERRO);
 			getMensagens().getListaMensagens().add("Senha Anterior não confere, tente novamente.");
-			return false;
 		}
+		getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+		return false;
 	}
 	
 	/**

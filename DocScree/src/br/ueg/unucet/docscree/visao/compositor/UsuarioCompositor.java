@@ -257,8 +257,9 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 			redirecionar();
 		}
 		super.setEntidade((Persistivel) super.getUsuarioSessao());
-		((Usuario) super.getEntidade()).setSenha("");
 		super.getControle().setarEntidadeVisao(this);
+		setFldSenha("");
+		setFldConfirmarSenha("");
 		setNomeConfSenha("Nova Senha:");
 		setNomeSenha("Senha Anterior:");
 		setIsProprioUsuario(Boolean.TRUE);
