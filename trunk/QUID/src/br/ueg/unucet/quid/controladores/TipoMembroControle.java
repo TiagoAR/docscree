@@ -230,7 +230,13 @@ public class TipoMembroControle extends GenericControle<TipoMembro, Long> implem
 	public ITipoMembroModelo getTipoMembroModelo(ITipoMembroVisao tipoMembroVisao) {
 		for (ITipoMembroModelo tipoMembroModelo : this.tiposMembroModeloMapeados.values()) {
 			if (tipoMembroVisao.getNomeTipoMembroModelo().equals(tipoMembroModelo.getNome())) {
-				return tipoMembroModelo;
+				try {
+					return tipoMembroModelo.getClass().newInstance();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return null;
