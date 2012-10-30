@@ -68,6 +68,11 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	 */
 	@AtributoVisao(isCampoEntidade = false, nome = "perfilAcesso")
 	private String fldPerfilAcesso;
+	
+	private Boolean isProprioUsuario = Boolean.FALSE;
+	
+	private String nomeSenha = "Senha:";
+	private String nomeConfSenha = "Confirmar Senha:";
 
 	/* Fim atributos */
 
@@ -108,6 +113,10 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 		setFldPerfilAcesso("");
 		setFldSenha("");
 		setFldStatus(Boolean.TRUE);
+		
+		setNomeConfSenha("Confirmar Senha:");
+		setNomeSenha("Senha:");
+		setIsProprioUsuario(Boolean.FALSE);
 		super.binder.loadAll();
 	}
 
@@ -145,6 +154,19 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	 */
 	@Override
 	public void acaoSalvar() {
+		if (getIsProprioUsuario()) {
+			try {
+				boolean resultado = super.getControle().fazerAcao("editarProprioUsuario",
+						(SuperCompositor) this);
+				if (resultado) {
+				} else {
+					super.mostrarMensagem(resultado);
+					return;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		super.acaoSalvar();
 		super.getControle().acaoAtualizarUsuarioLogado();
 		this.salvarSessaoUsuario(super.getControle().getUsuarioLogado());
@@ -235,7 +257,11 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 			redirecionar();
 		}
 		super.setEntidade((Persistivel) super.getUsuarioSessao());
+		((Usuario) super.getEntidade()).setSenha("");
 		super.getControle().setarEntidadeVisao(this);
+		setNomeConfSenha("Nova Senha:");
+		setNomeSenha("Senha Anterior:");
+		setIsProprioUsuario(Boolean.TRUE);
 		super.binder.loadAll();
 	}
 
@@ -432,5 +458,47 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	 */
 	public void setFiltroPerfil(String filtroPerfil) {
 		this.filtroPerfil = filtroPerfil;
+	}
+
+	/**
+	 * @return Boolean o(a) isProprioUsuario
+	 */
+	public Boolean getIsProprioUsuario() {
+		return isProprioUsuario;
+	}
+
+	/**
+	 * @param Boolean o(a) isProprioUsuario a ser setado(a)
+	 */
+	public void setIsProprioUsuario(Boolean isProprioUsuario) {
+		this.isProprioUsuario = isProprioUsuario;
+	}
+
+	/**
+	 * @return String o(a) nomeSenha
+	 */
+	public String getNomeSenha() {
+		return nomeSenha;
+	}
+
+	/**
+	 * @param String o(a) nomeSenha a ser setado(a)
+	 */
+	public void setNomeSenha(String nomeSenha) {
+		this.nomeSenha = nomeSenha;
+	}
+
+	/**
+	 * @return String o(a) nomeConfSenha
+	 */
+	public String getNomeConfSenha() {
+		return nomeConfSenha;
+	}
+
+	/**
+	 * @param String o(a) nomeConfSenha a ser setado(a)
+	 */
+	public void setNomeConfSenha(String nomeConfSenha) {
+		this.nomeConfSenha = nomeConfSenha;
 	}
 }

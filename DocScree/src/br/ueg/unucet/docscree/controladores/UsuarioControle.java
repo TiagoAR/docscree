@@ -91,6 +91,18 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 		}
 	}
 	
+	public boolean acaoEditarProprioUsuario() {
+		if (super.getEntidade().getSenha().equals(super.getUsuarioLogado().getSenha())) {
+			((UsuarioCompositor) getVisao()).setFldSenha((String) super.getMapaAtributos().get(
+					"confirmarSenha"));
+			return true;
+		} else {
+			getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+			getMensagens().getListaMensagens().add("Senha Anterior não confere, tente novamente.");
+			return false;
+		}
+	}
+	
 	/**
 	 * @see GenericoControle#executarListagem()
 	 */
