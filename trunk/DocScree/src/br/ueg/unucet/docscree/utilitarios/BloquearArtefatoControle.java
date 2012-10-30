@@ -11,6 +11,7 @@ import br.ueg.unucet.quid.dominios.Usuario;
 
 public class BloquearArtefatoControle {
 	
+	//
 	private static long DEFAULT_DELAY = 1800000;
 	
 	private static BloquearArtefatoControle instancia = null;

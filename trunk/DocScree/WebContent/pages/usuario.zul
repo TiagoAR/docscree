@@ -21,12 +21,12 @@
 					<textbox value="@{gerenciador.fldEmail}" />
 				</row>
 				<row>
-					<label value="Senha:" />
+					<label value="@{gerenciador.nomeSenha }" />
 					<textbox value="@{gerenciador.fldSenha }"
 						type="password" />
 				</row>
 				<row>
-					<label value="Confirmar Senha:" />
+					<label value="@{gerenciador.nomeConfSenha }" />
 					<textbox value="@{gerenciador.fldConfirmarSenha }"
 						type="password" />
 				</row>
@@ -47,7 +47,7 @@
 		<separator />
 		<button label="Salvar" onClick="gerenciador.acaoSalvar()" />
 		<button label="Listar" onClick="gerenciador.acaoListar()" />
-		<button label="Cancelar" />
+		<button label="Cancelar" onClick="gerenciador.acaoCancelar()" />
 
 		<window title="Lista de Usuários" border="normal" closable="false"
 			mode="modal" width="750px" visible="false" id="windowLista">

@@ -107,6 +107,22 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 		}
 	}
 	
+	public boolean acaoAlterarMembro() {
+		if (this.acaoRenovarBloqueio()) {
+			Retorno<Object, Object> retorno = null;
+			SuperTipoMembroVisaoZK<?> tipoMembroVisao = (SuperTipoMembroVisaoZK<?>) getMapaAtributos().get("tipoMembroVisaoSelecionado");
+			retorno = getFramework().alterarMembro(tipoMembroVisao.getMembro());
+			if (retorno.isSucesso()) {
+				return true;
+			} else {
+				getMensagens().getListaMensagens().add(retorno.getMensagem());
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+	
 	public boolean acaoMapearMembrosAoArtefato() {
 		boolean retorno = true;
 		if (this.isUsuarioMontador()) {
@@ -198,16 +214,19 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 		List<SuperTipoMembroVisaoZK> lista = new ArrayList<SuperTipoMembroVisaoZK>();
 		for (ITipoMembroVisao tipoMembroVisao : getMapaTipoMembrosVisao()) {
 			if (tipoMembroVisao instanceof SuperTipoMembroVisaoZK) {
-				Retorno<String, ITipoMembroModelo> retorno = getFramework().getTipoMembroModelo(tipoMembroVisao);
-				ITipoMembroModelo tipoMembroModelo = retorno.getParametros().get(Retorno.PARAMETRO_NOVA_INSTANCIA);
-				Membro membro = new Membro();
-				membro.setTipoMembroModelo(tipoMembroModelo);
-				((SuperTipoMembroVisaoZK<?> )tipoMembroVisao).setMembro(membro);
 				lista.add((SuperTipoMembroVisaoZK) tipoMembroVisao);
 			}
 		}
 		return lista;
 		
+	}
+	
+	public Membro getMembroDoTipoMembro(ITipoMembroVisao tipoMembro) {
+		Retorno<String, ITipoMembroModelo> retorno = getFramework().getTipoMembroModelo(tipoMembro);
+		ITipoMembroModelo tipoMembroModelo = retorno.getParametros().get(Retorno.PARAMETRO_NOVA_INSTANCIA);
+		Membro membro = new Membro();
+		membro.setTipoMembroModelo(tipoMembroModelo);
+		return membro;
 	}
 	
 	public Collection<Membro> listarMembrosPorTipoMembro(ITipoMembroModelo tipoMembro) {
