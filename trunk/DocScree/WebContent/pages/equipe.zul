@@ -68,7 +68,7 @@
 						<button label="Salvar"
 							onClick="gerenciador.acaoSalvar()" />
 						<button label="Listar" onClick="gerenciador.acaoListar()" />
-						<button label="Cancelar" />
+						<button label="Cancelar" onClick="gerenciador.acaoCancelar()"/>
 					</cell>
 				</row>
 				

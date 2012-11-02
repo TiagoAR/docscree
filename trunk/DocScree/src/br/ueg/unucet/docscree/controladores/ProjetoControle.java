@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import br.ueg.unucet.docscree.interfaces.IProjetoVisao;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.docscree.visao.compositor.ProjetoCompositor;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
@@ -198,15 +197,4 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 		return null;
 	}
 	
-	/**
-	 * Método que "Abre" o Projeto, associando a instancia do projeto escolhido a sessão do usuário
-	 * 
-	 * @return
-	 */
-	public boolean acaoAbrirProjeto() {
-		IProjetoVisao projetoVisao = (IProjetoVisao) super.getMapaAtributos().get("visao");
-		projetoVisao.salvarSessaoProjeto();
-		return true;
-	}
-
 }

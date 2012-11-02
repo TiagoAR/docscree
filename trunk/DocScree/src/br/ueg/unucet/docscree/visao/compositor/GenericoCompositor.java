@@ -3,8 +3,10 @@ package br.ueg.unucet.docscree.visao.compositor;
 import java.util.List;
 
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.ComponentNotFoundException;
 import org.zkoss.zkplus.databind.BindingListModelListModel;
 import org.zkoss.zul.SimpleListModel;
+import org.zkoss.zul.Window;
 
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.GenericoControle;
@@ -117,7 +119,7 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 			boolean resultado = super.getControle().fazerAcao("listar", (SuperCompositor) this);
 			if (resultado) {
 				this.setListaEntidade(super.getControle().getLista());
-				Component componente = super.getComponent().getFellow("windowLista");
+				Component componente = getWindowLista();
 				componente.setVisible(true);
 				setListaEntidadeModelo(new BindingListModelListModel(new SimpleListModel(super.getControle().getLista())));
 				super.binder.loadAll();
@@ -128,6 +130,14 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 			super.mostrarMensagem(resultado);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	protected Window getWindowLista() {
+		try {
+			return (Window) super.getComponent().getFellow("windowLista");
+		} catch (ComponentNotFoundException e) {
+			return null;
 		}
 	}
 
@@ -187,7 +197,7 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	 * Método que fecha a janela de listagem.
 	 */
 	public void fecharModalLista() {
-		super.getComponent().getFellow("windowLista").setVisible(false);
+		getWindowLista().setVisible(false);
 		limparFiltros();
 	}
 	
