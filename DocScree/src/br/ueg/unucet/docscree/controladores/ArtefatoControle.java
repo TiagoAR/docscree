@@ -32,16 +32,12 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 	public boolean acaoSalvar() {
 		if (this.isUsuarioMontador()) {
 			Retorno<String, Collection<String>> retorno;
-			if (super.getEntidade().getCodigo() == null) {
-				Artefato instanciaArtefato = super.getFramework().getInstanciaArtefato();
-				instanciaArtefato.setNome(super.getEntidade().getNome());
-				instanciaArtefato.setDescricao(super.getEntidade().getDescricao());
-				instanciaArtefato.setAltura(super.getEntidade().getAltura());
-				instanciaArtefato.setLargura(super.getEntidade().getLargura());
-				retorno = super.getFramework().mapearArtefato(instanciaArtefato);
-			} else {
-				retorno = super.getFramework().alterarArtefato(super.getEntidade());
-			}
+			Artefato instanciaArtefato = super.getFramework().getInstanciaArtefato();
+			instanciaArtefato.setNome(super.getEntidade().getNome());
+			instanciaArtefato.setDescricao(super.getEntidade().getDescricao());
+			instanciaArtefato.setAltura(super.getEntidade().getAltura());
+			instanciaArtefato.setLargura(super.getEntidade().getLargura());
+			retorno = super.getFramework().mapearArtefato(instanciaArtefato);
 			if (retorno.isSucesso()) {
 				Artefato artefatoLancao = lancarArtefatoNaVisao((ArtefatoCompositor) getVisao());
 				BloquearArtefatoControle.obterInstancia().adicionarBloqueioArtefato(artefatoLancao, getUsuarioLogado());
@@ -90,7 +86,7 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 	public boolean acaoMapearMembro() {
 		if (this.acaoRenovarBloqueio()) {
 			Retorno<Object, Object> retorno = null;
-			SuperTipoMembroVisaoZK<?> tipoMembroVisao = (SuperTipoMembroVisaoZK<?>) getMapaAtributos().get("tipoMembroVisaoSelecionado");
+			SuperTipoMembroVisaoZK<?> tipoMembroVisao = getTipoMembroVisao();
 			retorno = getFramework().mapearMembro(tipoMembroVisao.getMembro());
 			if (retorno.isSucesso()) {
 				Retorno<String, Collection<Membro>> retornoPesquisa = getFramework().pesquisarMembro(tipoMembroVisao.getMembro().getNome(), tipoMembroVisao.getMembro().getTipoMembroModelo());
@@ -110,17 +106,33 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 	public boolean acaoAlterarMembro() {
 		if (this.acaoRenovarBloqueio()) {
 			Retorno<Object, Object> retorno = null;
-			SuperTipoMembroVisaoZK<?> tipoMembroVisao = (SuperTipoMembroVisaoZK<?>) getMapaAtributos().get("tipoMembroVisaoSelecionado");
-			retorno = getFramework().alterarMembro(tipoMembroVisao.getMembro());
-			if (retorno.isSucesso()) {
-				return true;
-			} else {
-				getMensagens().getListaMensagens().add(retorno.getMensagem());
-				return false;
-			}
+			retorno = getFramework().alterarMembro(getTipoMembroVisao().getMembro());
+			return montarRetornoObject(retorno);
 		} else {
 			return false;
 		}
+	}
+	
+	public boolean acaoRemoverMembro() {
+		if (this.acaoRenovarBloqueio()) {
+			Retorno<Object,Object> retorno = getFramework().removerMembro(getTipoMembroVisao().getMembro());
+			return montarRetornoObject(retorno);
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean montarRetornoObject(Retorno<Object, Object> retorno) {
+		if (retorno.isSucesso()) {
+			return true;
+		} else {
+			getMensagens().getListaMensagens().add(retorno.getMensagem());
+			return false;
+		}
+	}
+	
+	private SuperTipoMembroVisaoZK<?> getTipoMembroVisao() {
+		return (SuperTipoMembroVisaoZK<?>) getMapaAtributos().get("tipoMembroVisaoSelecionado");
 	}
 	
 	public boolean acaoMapearMembrosAoArtefato() {
@@ -177,6 +189,11 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 	@SuppressWarnings("unchecked")
 	public boolean acaoMapearArtefato() {
 		boolean resultado = true;
+		if (getEntidade().getCategoria() != null) {
+			if (getEntidade().getCategoria().getCodigo() == null) {
+				getEntidade().setCategoria(null);
+			}
+		}
 		Map<String, MembroDocScree> listaMembrosDocScree = (Map<String, MembroDocScree>) this.getMapaAtributos().get("listaMembrosDocScree");
 		for (MembroDocScree membroDocScree : listaMembrosDocScree.values()) {
 			Retorno<String, Collection<String>> retorno = getEntidade().addMembro(membroDocScree.getTipoMembroVisao().getMembro());

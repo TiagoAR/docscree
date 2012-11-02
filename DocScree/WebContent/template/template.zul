@@ -5,7 +5,7 @@
 	<style src="/css/style.css" />
 	<style src="/css/menu.css" />
 	
-	<div style="margin-right: 5%; margin-left: 5%;">
+	<div style="margin-right: 5%; margin-left: 5%;" >
 	
 		<div id="top" sclass="top" align="center">
 			<image src="/imagens/topo.png" />

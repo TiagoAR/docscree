@@ -61,32 +61,35 @@ public class EquipeControle extends GenericoControle<Equipe> {
 		if (!super.isUsuarioComum()) {
 			Retorno<String, Collection<String>> retorno;
 			Equipe entidade = super.getEntidade();
+			boolean contemGerente = this.contemGerente(entidade);
 			if (entidade.getCodigo() == null) {
-				boolean contemUsuario = false;
-				for (EquipeUsuario iterador : entidade.getEquipeUsuarios()) {
-					if (iterador.getUsuario().equals(super.getUsuarioLogado())) {
-						contemUsuario = true;
-						break;
-					}
-				}
-				if (!contemUsuario) {
+				if (!contemGerente) {
 					EquipeUsuario usuarioGerente = new EquipeUsuario();
 					usuarioGerente.setUsuario(super.getUsuarioLogado());
 					usuarioGerente.setPapelUsuario(PapelUsuario.GERENTE);
+					usuarioGerente.setEquipe(entidade);
 					entidade.getEquipeUsuarios().add(usuarioGerente);
 				}
 				retorno = super.getFramework().inserirEquipe(
 						entidade);
 			} else {
-				if (super.isUsuarioAdmin()
-						|| super.isMesmaEquipe(entidade)) {
-					retorno = super.getFramework().alterarEquipe(
-							entidade);
+				if (contemGerente) {
+					if (super.isUsuarioAdmin()
+							|| super.isMesmaEquipe(entidade)) {
+						retorno = super.getFramework().alterarEquipe(
+								entidade);
+					} else {
+						super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+						super.getMensagens()
+								.getListaMensagens()
+								.add("Gerente só pode editar equipes que faça parte");
+						return false;
+					}
 				} else {
 					super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
 					super.getMensagens()
 							.getListaMensagens()
-							.add("Gerente só pode editar equipes que faça parte");
+							.add("Não é permitido existir Equipe sem Usuário com papel de Gerente!");
 					return false;
 				}
 			}
@@ -95,6 +98,15 @@ public class EquipeControle extends GenericoControle<Equipe> {
 			super.montarMensagemErroPermissao("Usuário");
 			return false;
 		}
+	}
+	
+	private boolean contemGerente(Equipe equipe) {
+		for (EquipeUsuario iterador : equipe.getEquipeUsuarios()) {
+			if (iterador.getPapelUsuario().equals(PapelUsuario.GERENTE)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -160,11 +172,20 @@ public class EquipeControle extends GenericoControle<Equipe> {
 		if (retorno) {
 			IEquipeVisao visao = (IEquipeVisao) super.getMapaAtributos().get(
 					"visao");
-			if (!visao.getFldListaEquipeUsuario().contains(equipeUsuario)) {
+			boolean contemUsuario = false;
+			for (EquipeUsuario equipeUsuarioAdicionado : visao.getFldListaEquipeUsuario()) {
+				if (equipeUsuarioAdicionado.getUsuario().equals(equipeUsuario.getUsuario()) 
+						&& equipeUsuarioAdicionado.getPapelUsuario().equals(equipeUsuario.getPapelUsuario())) {
+					contemUsuario = true;
+					break;
+				}
+			}
+			if (!contemUsuario) {
 				visao.getFldListaEquipeUsuario().add(equipeUsuario);
+				visao.getFldListaEquipeUsuario();
 			} else {
 				super.getMensagens().getListaMensagens()
-						.add("Usuário já consta na lista!");
+						.add("Usuário já consta na lista com o papel escolhido!");
 				retorno = false;
 			}
 		}

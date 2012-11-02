@@ -167,33 +167,6 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
 		}
 	}
 
-	public void acaoAbrirProjeto() {
-		super.binder.saveAll();
-		try {
-			boolean retorno = super.getControle().fazerAcao("abrirProjeto",
-					(SuperCompositor) this);
-			if (retorno) {
-				limparCampos();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public List<Projeto> getListaProjetos() {
-		try {
-			limparFiltros();
-			boolean resultado = super.getControle().fazerAcao("listar",
-					(SuperCompositor) this);
-			if (resultado) {
-				this.setListaEntidade(super.getControle().getLista());
-			}
-		} catch (Exception e) {
-		}
-		return (List<Projeto>) this.getListaEntidade();
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -210,12 +183,6 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
 
 	public Window criarJanela() {
 		return null;
-	}
-
-	@Override
-	public void salvarSessaoProjeto() {
-		Executions.getCurrent().getSession()
-				.setAttribute("projeto", super.getEntidade());
 	}
 
 	/**

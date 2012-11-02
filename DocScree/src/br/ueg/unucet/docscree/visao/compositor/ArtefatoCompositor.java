@@ -103,8 +103,8 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 
 	@Override
 	protected void limparCampos() {
-		// TODO Auto-generated method stub
-
+		getComponent().detach();
+		Executions.sendRedirect("/pages/montar-artefato.zul");
 	}
 
 	@Override
@@ -184,21 +184,9 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 				if (Integer.valueOf(getLargura()).compareTo(LARGURA_MAXIMA) < 1 ) {
 					new Runnable() {
 						
-						@SuppressWarnings("unchecked")
 						@Override
 						public void run() {
-							try {
-								boolean resultado = getControle().fazerAcao("salvar", (SuperCompositor) ArtefatoCompositor.this);
-								if (resultado) {
-									getComponent().detach();
-									Executions.sendRedirect("/pages/montar-artefato.zul");
-								}
-								mostrarMensagem(resultado);
-								
-							} catch (Exception e) {
-								e.printStackTrace();
-								exibirMensagemErro("Não foi possível executar a ação!");
-							}
+							acaoSalvar();
 						}
 					}.run();
 				} else {
@@ -352,6 +340,9 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 				setarValoresParametrosTipoMembro();
 			}
 			windowPaleta.appendChild(gerarButtonPropriedades(isNovo));
+			if (!isNovo) {
+				windowPaleta.appendChild(gerarButtonRemover());
+			}
 			getBinderPaleta().loadAll();
 		}
 	}
@@ -412,6 +403,29 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		return grid;
 	}
 	
+	private Button gerarButtonRemover() {
+		Button button = new Button();
+		button.setLabel("Remover Membro");
+		button.addEventListener("onClick", new EventListener<Event>() {
+
+			/* (non-Javadoc)
+			 * @see org.zkoss.zk.ui.event.EventListener#onEvent(org.zkoss.zk.ui.event.Event)
+			 */
+			@Override
+			public void onEvent(final Event event) throws Exception {
+				new Runnable() {
+					
+					@Override
+					public void run() {
+						removerMembro();
+					}
+				}.run();
+			}
+			
+		});
+		return button;
+	}
+	
 	private Button gerarButtonPropriedades(boolean isNovo) {
 		Button button = new Button();
 		String labelButton;
@@ -432,7 +446,6 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 					
 					@Override
 					public void run() {
-						//TODO terminar
 						gerarMembro(((Button) event.getTarget()).getLabel().contains("Inserir"));
 					}
 				}.run();
@@ -448,17 +461,15 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 		if (puxarValorParametrosMembro() &&  puxarValorParametrosModelo()) {
 			if (this.larguraTotalMembro.compareTo(getLargura()) < 0) {
 				boolean retorno;
-				String idMembro;
 				try {
 					if (isNovo) {
 						retorno = this.getControle().fazerAcao("mapearMembro", (SuperCompositor) this);
 					} else {
 						retorno = this.getControle().fazerAcao("alterarMembro", (SuperCompositor) this);
-						idMembro = getTipoMembroVisaoSelecionado().getNome()+String.valueOf(getTipoMembroVisaoSelecionado().getMembro().getCodigo());
-						removerMembroAlterados(idMembro);
+						removerMembroAlterados(getIdMembro());
 					}
-					idMembro = getTipoMembroVisaoSelecionado().getNome()+String.valueOf(getTipoMembroVisaoSelecionado().getMembro().getCodigo());adicionarMembroAoArtefato(idMembro);
-					adicionarMembroAVisualizacao(idMembro);
+					adicionarMembroAoArtefato(getIdMembro());
+					adicionarMembroAVisualizacao(getIdMembro());
 					setTipoMembroVisaoSelecionado(null);
 					getWindowPaleta().getChildren().clear();
 					getBinderPaleta().loadAll();
@@ -472,6 +483,27 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 			}
 		} else {
 			chamarMensagemErro();
+		}
+	}
+	
+	private String getIdMembro() {
+		return getTipoMembroVisaoSelecionado().getNome()+String.valueOf(getTipoMembroVisaoSelecionado().getMembro().getCodigo());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void removerMembro() {
+		try {
+			boolean retorno = this.getControle().fazerAcao("removerMembro", (SuperCompositor) this);
+			if (retorno) {
+				removerMembroAlterados(getIdMembro());
+				getMapaMembrosAdicionados().remove("Componente" + getIdMembro());
+				setTipoMembroVisaoSelecionado(null);
+				getWindowPaleta().getChildren().clear();
+				getBinderPaleta().loadAll();
+			} 
+			super.mostrarMensagem(retorno);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

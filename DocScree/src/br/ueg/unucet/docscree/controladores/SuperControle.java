@@ -177,6 +177,7 @@ public abstract class SuperControle {
 				return false;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			if (this.mensagens.getListaMensagens().isEmpty()) {
 				String mensagemErro = "Erro ao chamar método, contate o administrador do sistema.";
 				if (e.getMessage() != null && !e.getMessage().isEmpty()) {

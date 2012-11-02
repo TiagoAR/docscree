@@ -1,6 +1,6 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <window id="modalAbrirProjeto" title="Selecione o projeto!"
-	border="normal" apply="${projetoCompositor }" closable="true"
+	border="normal" apply="${modalProjetoCompositor }" closable="true"
 	action="show: slideDown;hide: slideUp" position="center,center"
 	width="550px">
 	<vlayout>
