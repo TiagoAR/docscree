@@ -43,7 +43,7 @@ public class ArtefatoServico {
 	 * Atributo que informa de o servico anterior e obrigatoria a execucao. Caso seje o atributo servico
 	 * so sera executado caso o servico anterior retorne sucesso de execucao.
 	 */
-	private boolean anteriorObrigatorio;
+	private Boolean anteriorObrigatorio;
 	/**
 	 * Vetor de bytes dos parametros do servico.
 	 */
@@ -97,10 +97,16 @@ public class ArtefatoServico {
 	public void setServicoProximo(Servico servicoProximo) {
 		this.servicoProximo = servicoProximo;
 	}
-	public boolean isAnteriorObrigatorio() {
+	/**
+	 * @return the anteriorObrigatorio
+	 */
+	public Boolean getAnteriorObrigatorio() {
 		return anteriorObrigatorio;
 	}
-	public void setAnteriorObrigatorio(boolean anteriorObrigatorio) {
+	/**
+	 * @param anteriorObrigatorio the anteriorObrigatorio to set
+	 */
+	public void setAnteriorObrigatorio(Boolean anteriorObrigatorio) {
 		this.anteriorObrigatorio = anteriorObrigatorio;
 	}
 	

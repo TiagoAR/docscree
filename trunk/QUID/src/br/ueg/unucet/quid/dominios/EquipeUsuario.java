@@ -97,6 +97,8 @@ public class EquipeUsuario extends Persistivel {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
+		result = prime * result
+				+ ((papelUsuario == null) ? 0 : papelUsuario.hashCode());
 		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 		return result;
 	}
@@ -110,13 +112,15 @@ public class EquipeUsuario extends Persistivel {
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof EquipeUsuario))
 			return false;
 		EquipeUsuario other = (EquipeUsuario) obj;
+		if (papelUsuario != other.papelUsuario)
+			return false;
 		if (usuario == null) {
 			if (other.usuario != null)
 				return false;
-		} else if (!usuario.equals(other.usuario))
+		} else if (!usuario.getCodigo().equals(other.usuario.getCodigo()))
 			return false;
 		return true;
 	}

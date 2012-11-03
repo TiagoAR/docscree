@@ -5,7 +5,6 @@ import java.util.Collection;
 import br.ueg.unucet.quid.dominios.MembroFramework;
 import br.ueg.unucet.quid.excessoes.MembroExcessao;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
-import br.ueg.unucet.quid.extensao.interfaces.ITipoMembro;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
 
 /**
@@ -24,6 +23,8 @@ public interface IMembroFrameworkControle<T, oid> extends IControle<T, oid> {
 	void inserir(Membro membro) throws MembroExcessao;
 	
 	void alterar(Membro membro) throws MembroExcessao;
+
+	void remover(Membro membro) throws MembroExcessao;
 	
 	/**Realiza a pesquisa dos membros cadastrados no framework
 	 * @param nome Nome do membro a ser pesquisado. (Pesquisa parcial)

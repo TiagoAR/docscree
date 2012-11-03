@@ -255,4 +255,6 @@ public interface IQUID {
 	Retorno<String, Collection<Projeto>> pesquisarProjeto(Projeto projeto);
 	Retorno<String, Collection<Modelo>> listarModelo();
 	Retorno<String, Collection<Membro>> pesquisarMembro(String nomeMembro, ITipoMembroModelo tipoMembro);
+
+	Retorno<Object, Object> removerMembro(Membro membro);
 }

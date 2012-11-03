@@ -114,7 +114,7 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 	 * @param artefato Artefato que sera verificado
 	 * @return Os campos dos artefatos que estao incorretos/invalidos
 	 */
-	private Retorno<String, Collection<String>> verificarArtefato(Artefato artefato) {
+	private Retorno<String, Collection<String>> verificarArtefato(Artefato artefato, boolean novo) {
 		Retorno<String, Collection<String>> retorno = new Retorno<String, Collection<String>>();
 		Collection<String> parametros = new ArrayList<String>();
 		retorno.setSucesso(true);
@@ -130,7 +130,7 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 			retorno.setTipoErro(TipoErroEnum.ERRO_SIMPLES);
 			retorno.adicionarParametro(Retorno.PARAMETRO_NAO_INFORMADO_INVALIDO, parametros);
 		}else
-		if(artefatoDuplicado(artefato)){
+		if(novo && artefatoDuplicado(artefato)){
 			retorno.setSucesso(false);
 			retorno.setMensagem(this.propertiesMessagesUtil.getValor("erro_artefato_duplicado"));
 			retorno.setTipoErro(TipoErroEnum.ERRO_SIMPLES);
@@ -192,6 +192,15 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 	public Retorno<String, Collection<String>> mapearArtefato(Artefato artefato) {
 		this.artefato = artefato;
 		Retorno<String,Collection<String>> retorno = mapear(artefato);
+		return retorno;
+	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public Retorno<String, Collection<String>> alterarArtefato(Artefato artefato) {
+		this.artefato = artefato;
+		Retorno<String,Collection<String>> retorno;
+		retorno = alterarMapeamento(artefato);
 		return retorno;
 	}
 	
@@ -305,7 +314,7 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 		for(ArtefatoServico artefatoServico :listArtefatoServico){
 			IServico servico = this.servicoControle.getInstanciaServico(artefatoServico.getServico());
 			servico.setListaParametros((Collection<IParametro<?>>) FabricaSerializacao.obterInstancia().obterObjeto(artefatoServico.getParametrosServico()));
-			servico.setAnteriroObrigatorio(artefatoServico.isAnteriorObrigatorio());
+			servico.setAnteriroObrigatorio(artefatoServico.getAnteriorObrigatorio());
 			if(artefatoServico.getServicoAnterior() != null && artefatoServico.getServicoAnterior().getCodigo() != null){
 				servico.setAnterior(this.servicoControle.getInstanciaServico(artefatoServico.getServicoAnterior()));
 			}
@@ -345,10 +354,23 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 	 */
 	@SuppressWarnings("unchecked")
 	private Retorno<String, Collection<String>> mapear(Artefato artefatoAMapear) {
-		Retorno<String, Collection<String>> retorno = verificarArtefato(artefatoAMapear);
+		Retorno<String, Collection<String>> retorno = verificarArtefato(artefatoAMapear, true);
 		if(retorno.isSucesso()){
 			try {
 				retorno = mapearArtefatoFramework();
+			} catch (QuidExcessao e) {
+				retorno = (Retorno<String, Collection<String>>) construirRetornoErro(retorno, null, TipoErroEnum.ERRO_SIMPLES);
+			}
+		}
+		return retorno;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Retorno<String, Collection<String>> alterarMapeamento(Artefato artefatoAMapear) {
+		Retorno<String, Collection<String>> retorno = verificarArtefato(artefatoAMapear, false);
+		if(retorno.isSucesso()){
+			try {
+				retorno = alterarArtefatoFramework();
 			} catch (QuidExcessao e) {
 				retorno = (Retorno<String, Collection<String>>) construirRetornoErro(retorno, null, TipoErroEnum.ERRO_SIMPLES);
 			}
@@ -376,8 +398,26 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 		return retorno;
 	}
 	
-	
-	
+	private Retorno<String, Collection<String>> alterarArtefatoFramework() throws QuidExcessao{
+		alterar(artefato);
+		Collection<ArtefatoMembro> mapeamentoArtefatoMembro = gerarMapeamentoArtefatoMembro();
+		Collection<ArtefatoServico> mapeamentoArtefatoServico = gerarMapeamentoArtfatoServico();
+		for (ArtefatoMembro artefatoMembro : artefatoMembroControle.pesquisarMembrosArtefatos(artefato)) {
+			artefatoMembroControle.remover(ArtefatoMembro.class, artefatoMembro.getCodigo());
+		}
+		for (ArtefatoServico artefatoServico : artefatoServicoControle.pesquisarArtefatosServicoArtefato(artefato)) {
+			artefatoServicoControle.remover(ArtefatoServico.class, artefatoServico.getCodigo());
+		}
+		for(ArtefatoMembro artefatoMembro : mapeamentoArtefatoMembro){
+			artefatoMembroControle.inserir(artefatoMembro);
+		}
+		for(ArtefatoServico artefatoServico : mapeamentoArtefatoServico){
+			artefatoServicoControle.inserir(artefatoServico);
+		}
+		Retorno<String, Collection<String>> retorno = new Retorno<String, Collection<String>>();
+		retorno.setSucesso(true);
+		return retorno;
+	}
 	
 	/**
 	 * Metodo responsavel por realizar o mapeamento ArtefatoServico do artefato que esta sendo mapeado.
