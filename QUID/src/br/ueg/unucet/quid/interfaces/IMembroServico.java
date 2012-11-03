@@ -21,6 +21,8 @@ public interface IMembroServico<T> extends IServico<T> {
 	Retorno<Object, Object> inserir(Membro membro);
 	
 	Retorno<Object, Object> alterar(Membro membro);
+
+	Retorno<Object, Object> remover(Membro membro);
 	
 	/**
 	 * Metodo que realiza a pesquisa de membros cadastrados no framework com base em seu nome ou no seu TipoMembroModelo

@@ -58,4 +58,6 @@ public interface IArtefatoControle<T, oid> extends IControle<T, oid>{
 	 * @return Artefato carregado suas informacoes
 	 */
 	Artefato carregarArtefato(Artefato artefato);
+
+	Retorno<String, Collection<String>> alterarArtefato(Artefato artefato);
 }

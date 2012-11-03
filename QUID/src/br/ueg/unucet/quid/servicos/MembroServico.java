@@ -47,6 +47,18 @@ public class MembroServico extends GenericoServico<MembroFramework> implements I
 		}
 		return retorno;
 	}
+	
+	@Override
+	public Retorno<Object, Object> remover(Membro membro) {
+		Retorno<Object, Object> retorno = new Retorno<Object, Object>();
+		try {
+			membroControle.remover(membro);
+			retorno.setSucesso(true);
+		} catch (MembroExcessao e) {
+			retorno = (Retorno<Object, Object>) construirRetornoErro(e, TipoErroEnum.ERRO_SIMPLES, retorno);
+		}
+		return retorno;
+	}
 
 	/* (non-Javadoc)
 	 * @see br.ueg.unucet.quid.interfaces.IMembroServico#pesquisarMembro(java.lang.String, br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo)

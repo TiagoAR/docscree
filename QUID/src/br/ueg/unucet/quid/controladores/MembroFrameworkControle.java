@@ -73,12 +73,23 @@ public class MembroFrameworkControle extends GenericControle<MembroFramework, Lo
 	public void alterar(Membro membro) throws MembroExcessao{
 		validarMembroAlterar(membro);
 		MembroFramework membroFramework = transformarMembro(membro);
+		membroFramework.setCodigo(membro.getCodigo());
 		try {
 			alterar(membroFramework);
 		} catch (QuidExcessao e) {
-			throw new MembroExcessao(this.propertiesMessagesUtil.getValor("erro_insercao"));
+			throw new MembroExcessao(this.propertiesMessagesUtil.getValor("erro_update"));
 		}
 		
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, noRollbackFor=Exception.class)
+	public void remover(Membro membro) throws MembroExcessao{
+		try {
+			remover(MembroFramework.class, membro.getCodigo());
+		} catch (QuidExcessao e) {
+			throw new MembroExcessao(this.propertiesMessagesUtil.getValor("erro_remover"));
+		}
 	}
 	
 	
@@ -267,6 +278,7 @@ public class MembroFrameworkControle extends GenericControle<MembroFramework, Lo
 	 */
 	private MembroFramework transformarMembroPersistencia(Membro membro){
 		MembroFramework membroFramework = new MembroFramework();
+		membroFramework.setCodigo(membro.getCodigo());
 		membroFramework.setNome(membro.getNome());
 		membroFramework.setDescricao(membro.getDescricao());
 		return membroFramework;

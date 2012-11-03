@@ -28,7 +28,6 @@ import br.ueg.unucet.quid.interfaces.IArtefato;
 import br.ueg.unucet.quid.interfaces.IArtefatoControle;
 import br.ueg.unucet.quid.interfaces.IEquipeSevico;
 import br.ueg.unucet.quid.interfaces.IMembroServico;
-import br.ueg.unucet.quid.interfaces.IModelo;
 import br.ueg.unucet.quid.interfaces.IModeloServico;
 import br.ueg.unucet.quid.interfaces.IProjetoServico;
 import br.ueg.unucet.quid.interfaces.IQUID;
@@ -36,6 +35,7 @@ import br.ueg.unucet.quid.interfaces.IServicoServico;
 import br.ueg.unucet.quid.interfaces.ITipoMembroServico;
 import br.ueg.unucet.quid.interfaces.IUsuarioServico;
 
+@SuppressWarnings("unchecked")
 public class QuidService implements IQUID{
 	
 	private static QuidService quidService;
@@ -74,7 +74,7 @@ public class QuidService implements IQUID{
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#removerArtefato(br.ueg.unucet.quid.dominios.Artefato)
 	 */
 	@Override
-	public Retorno removerArtefato(Artefato artefato) {
+	public Retorno<?,?> removerArtefato(Artefato artefato) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -83,9 +83,9 @@ public class QuidService implements IQUID{
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#alterarArtefato(br.ueg.unucet.quid.dominios.Artefato)
 	 */
 	@Override
-	public Retorno alterarArtefato(Artefato artefato) {
-		// TODO Auto-generated method stub
-		return null;
+	public Retorno<String, Collection<String>> alterarArtefato(Artefato artefato) {
+		IArtefatoControle<Artefato, Long> artefatoControle = (IArtefatoControle<Artefato, Long>) appContext.getBean("ArtefatoControle");
+		return artefatoControle.alterarArtefato(artefato);
 	}
 
 	/* (non-Javadoc)
@@ -113,12 +113,18 @@ public class QuidService implements IQUID{
 		IMembroServico<MembroFramework> membroServico = (IMembroServico<MembroFramework>) appContext.getBean("MembroServico");
 		return membroServico.alterar(membro);
 	}
+	
+	@Override
+	public Retorno<Object, Object> removerMembro(Membro membro) {
+		IMembroServico<MembroFramework> membroServico = (IMembroServico<MembroFramework>) appContext.getBean("MembroServico");
+		return membroServico.remover(membro);
+	}
 
 	/* (non-Javadoc)
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#clonarArtefato(br.ueg.unucet.quid.interfaces.IArtefato, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Retorno clonarArtefato(IArtefato artefatoAClonar, String nome, String descricao) {
+	public Retorno<?,?> clonarArtefato(IArtefato artefatoAClonar, String nome, String descricao) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -127,7 +133,7 @@ public class QuidService implements IQUID{
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#getInterfacePreenchimento(br.ueg.unucet.quid.interfaces.IArtefato, br.ueg.unucet.quid.dominios.Projeto, java.lang.String)
 	 */
 	@Override
-	public Retorno getInterfacePreenchimento(IArtefato artefato, Projeto projeto, String tecnologiVisao) {
+	public Retorno<?,?> getInterfacePreenchimento(IArtefato artefato, Projeto projeto, String tecnologiVisao) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -136,7 +142,7 @@ public class QuidService implements IQUID{
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#cancelarPreenchimentoArtefato(br.ueg.unucet.quid.interfaces.IArtefato, br.ueg.unucet.quid.dominios.Projeto)
 	 */
 	@Override
-	public Retorno cancelarPreenchimentoArtefato(IArtefato artefato, Projeto projeto) {
+	public Retorno<?,?> cancelarPreenchimentoArtefato(IArtefato artefato, Projeto projeto) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -145,7 +151,7 @@ public class QuidService implements IQUID{
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#getInterfaceVisualizacao(br.ueg.unucet.quid.interfaces.IArtefato)
 	 */
 	@Override
-	public Retorno getInterfaceVisualizacao(IArtefato artefato) {
+	public Retorno<?,?> getInterfaceVisualizacao(IArtefato artefato) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -163,7 +169,7 @@ public class QuidService implements IQUID{
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#publicarArtefato(br.ueg.unucet.quid.interfaces.IArtefato, br.ueg.unucet.quid.extensao.interfaces.IServico)
 	 */
 	@Override
-	public Retorno publicarArtefato(IArtefato artefato, IServico servicoPublicacao) {
+	public Retorno<?,?> publicarArtefato(IArtefato artefato, IServico servicoPublicacao) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -190,7 +196,7 @@ public class QuidService implements IQUID{
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#voltarVersaoTipoMembro(br.ueg.unucet.quid.extensao.interfaces.ITipoMembro)
 	 */
 	@Override
-	public Retorno voltarVersaoTipoMembro(ITipoMembro tipoMembro) {
+	public Retorno<?,?> voltarVersaoTipoMembro(ITipoMembro tipoMembro) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -199,7 +205,7 @@ public class QuidService implements IQUID{
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#voltarVersaoServico(br.ueg.unucet.quid.extensao.interfaces.IServico)
 	 */
 	@Override
-	public Retorno voltarVersaoServico(IServico servico) {
+	public Retorno<?,?> voltarVersaoServico(IServico servico) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -218,7 +224,6 @@ public class QuidService implements IQUID{
 	
 	@Override
 	public Retorno<String, Collection<Membro>> pesquisarMembro(String nomeMembro, ITipoMembroModelo tipoMembro) {
-		@SuppressWarnings("unchecked")
 		IMembroServico<MembroFramework> servico = (IMembroServico<MembroFramework>) appContext.getBean("MembroServico");
 		Retorno<String,Collection<Membro>> retorno = servico.pesquisarMembro(nomeMembro, tipoMembro);
 		if (retorno.isSucesso()) {
