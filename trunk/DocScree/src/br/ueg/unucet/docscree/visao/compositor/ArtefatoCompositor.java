@@ -204,10 +204,22 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	public void acaoMapearArtefato() {
 		try {
 			boolean retorno = getControle().fazerAcao("mapearArtefato", (SuperCompositor) this);
+			if (retorno) {
+				limparTodaTela();
+				super.binder.loadAll();
+			}
 			this.mostrarMensagem(retorno);
 		} catch (Exception e) {
 		}
-		// TODO desenvolver
+	}
+	
+	private void limparTodaTela() {
+		List<org.zkoss.zk.ui.Component> children = getComponent().getChildren();
+		for (org.zkoss.zk.ui.Component component : children) {
+			if (component.getId() == null || !component.getId().equals("windowAvisos")) {
+				component.setVisible(false);
+			}
+		}
 	}
 	
 	private void exibirMensagemErro(String mensagem) {
@@ -326,10 +338,21 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 	public void gerarPaletaParametros(boolean isNovo) {
 		super.binder.saveAll();
 		if (this.getTipoMembroVisaoSelecionado() != null) {
+			
 			Window windowPaleta = getWindowPaleta();
 			windowPaleta.getChildren().clear();
 			
 			if (isNovo) {
+				SuperTipoMembroVisaoZK<?> novaInstancia = null;
+				try {
+					novaInstancia = getTipoMembroVisaoSelecionado().getClass().newInstance();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				setTipoMembroVisaoSelecionado(novaInstancia);
+				
 				getTipoMembroVisaoSelecionado().setMembro(getControle().getMembroDoTipoMembro(getTipoMembroVisaoSelecionado()));
 				windowPaleta.appendChild(gerarGridOpcao());
 				windowPaleta.appendChild(gerarGridMembros());
@@ -468,13 +491,14 @@ public class ArtefatoCompositor extends GenericoCompositor<ArtefatoControle> {
 						retorno = this.getControle().fazerAcao("alterarMembro", (SuperCompositor) this);
 						removerMembroAlterados(getIdMembro());
 					}
-					adicionarMembroAoArtefato(getIdMembro());
-					adicionarMembroAVisualizacao(getIdMembro());
-					setTipoMembroVisaoSelecionado(null);
-					getWindowPaleta().getChildren().clear();
-					getBinderPaleta().loadAll();
+					if (retorno) {
+						adicionarMembroAoArtefato(getIdMembro());
+						adicionarMembroAVisualizacao(getIdMembro());
+						setTipoMembroVisaoSelecionado(null);
+						getWindowPaleta().getChildren().clear();
+						getBinderPaleta().loadAll();
+					}
 					mostrarMensagem(retorno);
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
