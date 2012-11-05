@@ -31,6 +31,7 @@ import br.ueg.unucet.quid.interfaces.IMembroFrameworkControle;
 import br.ueg.unucet.quid.interfaces.IServicoControle;
 import br.ueg.unucet.quid.interfaces.IServicoServico;
 import br.ueg.unucet.quid.utilitarias.FabricaSerializacao;
+import br.ueg.unucet.quid.utilitarias.SerializadorObjetoUtil;
 
 /**
  * @author QUID
@@ -334,13 +335,20 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 	 * @return Retorno de uma lista de artefatos encontrados
 	 */
 	private Retorno<String, Collection<Artefato>> realizarPesquisa(Artefato artefato2) {
-		Collection<Artefato> lista = pesquisarPorRestricao(artefato2, new String[]{"artefato.nome", "artefato.codigo", "artefato.descricao","artefato.categoria.codigo","artfato.categoria.descricao"});
+		Collection<Artefato> lista = pesquisarPorRestricao(artefato2, new String[]{"artefato.nome", "artefato.codigo", "artefato.descricao", "artefato.altura", "artefato.largura","artefato.categoria.codigo","artefato.categoria.descricao"});
 		Retorno<String, Collection<Artefato>> retorno = new Retorno<String, Collection<Artefato>>();
 		if(lista == null || lista.isEmpty()){
 			retorno.setSucesso(false);
 			retorno.setMensagem(propertiesMessagesUtil.getValor("lista_vazia"));
 			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA, new ArrayList<Artefato>());
 		}else{
+			for (Artefato artefato : lista) {
+				Collection<ArtefatoMembro> membrosArtefatos = artefatoMembroControle.pesquisarMembrosArtefatos(artefato);
+				artefato.setMembros(gerarMapeamentoMembro(membrosArtefatos));
+//					artefatoMembroControle.remover(ArtefatoMembro.class, artefatoMembro.getCodigo());
+//				}
+//				for (ArtefatoServico artefatoServico : artefatoServicoControle.pesquisarArtefatosServicoArtefato(artefato)) {
+			}
 			retorno.setSucesso(true);
 			retorno.adicionarParametro(Retorno.PARAMERTO_LISTA, lista);
 		}
@@ -469,6 +477,26 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 			throw new ArtefatoExcessao(e.getMessage(), e);
 		}
 		return mapeamentos;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Collection<Membro> gerarMapeamentoMembro(Collection<ArtefatoMembro> listaArtefatoMembro) {
+		Collection<Membro> mapeamento = new ArrayList<Membro>();
+		for (ArtefatoMembro artefatoMembro : listaArtefatoMembro) {
+			Membro membro = new Membro();
+			membro.setCodigo(artefatoMembro.getMembroFramework().getCodigo());
+			membro.setAltura(artefatoMembro.getAltura());
+			membro.setComprimento(artefatoMembro.getComprimento());
+			membro.setDescricao(artefatoMembro.getMembroFramework().getDescricao());
+			membro.setNome(artefatoMembro.getMembroFramework().getNome());
+			// TODO ver
+			//membro.setTipoMembroModelo(artefatoMembro.getMembroFramework().getTipoMembro());
+			membro.getTipoMembroModelo().setListaParametros((Collection<IParametro<?>>) SerializadorObjetoUtil.toObject(artefatoMembro.getMembroFramework().getParametros()));
+			membro.setX(artefatoMembro.getX());
+			membro.setY(artefatoMembro.getY());
+			mapeamento.add(membro);
+		}
+		return mapeamento;
 	}
 	
 	//GETERS AND SETTERS

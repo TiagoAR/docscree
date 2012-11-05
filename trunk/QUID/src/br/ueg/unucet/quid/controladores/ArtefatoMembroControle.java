@@ -31,7 +31,9 @@ public class ArtefatoMembroControle extends GenericControle<ArtefatoMembro, Long
 	public Collection<ArtefatoMembro> pesquisarMembrosArtefatos(Artefato artefato){
 		ArtefatoMembro artefatoMembro = new ArtefatoMembro();
 		artefatoMembro.setArtefato(artefato);
-		return pesquisarPorRestricao(artefatoMembro, new String[]{"artefatomembro.codigo", "artefatomembro.artefato.codigo","artefatomembro.x","artefatomembro.y","artefatomembro.membroFramework.codigo","artefatomembro.membroFramework.nome","artefatomembro.membroFramework.descricao"});
+		return pesquisarPorRestricao(artefatoMembro, new String[]{"artefatomembro.codigo", "artefatomembro.artefato.codigo","artefatomembro.x","artefatomembro.altura", 
+				"artefatomembro.comprimento","artefatomembro.y","artefatomembro.membroFramework.codigo","artefatomembro.membroFramework.nome","artefatomembro.membroFramework.descricao",
+				"artefatomembro.membroFramework.tipoMembro.codigo", "artefatomembro.membroFramework.parametros"});
 	}
 	
 	
