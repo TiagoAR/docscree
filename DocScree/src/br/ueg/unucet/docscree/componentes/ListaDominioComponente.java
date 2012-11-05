@@ -4,7 +4,6 @@ import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zkplus.databind.BindingListModelListModel;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
-import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelArray;
 
 import br.ueg.unucet.docscree.interfaces.IComponenteDominio;

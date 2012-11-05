@@ -27,8 +27,9 @@
 					</menupopup>
 				</menu>
 				<menu label="Artefato" width="100px;">
-					<menupopup>
-						<menuitem label="Montar Novo" apply="${artefatoCompositor }" onClick="gerenciador.acaoAbrir()" />
+					<menupopup apply="${artefatoCompositor }">
+						<menuitem label="Montar Novo"  onClick="gerenciador.acaoNovoArtefatoModelo()" />
+						<menuitem label="Abrir ArtefatoModelo" onClick="gerenciador.acaoSelecionarArtefatoModelo()" />
 					</menupopup>
 				</menu>
 				<menu label="Mapear Componentes" width="150px;">

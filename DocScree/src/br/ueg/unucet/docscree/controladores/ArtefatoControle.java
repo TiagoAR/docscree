@@ -3,19 +3,15 @@ package br.ueg.unucet.docscree.controladores;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-import br.ueg.unucet.docscree.modelo.MembroDocScree;
 import br.ueg.unucet.docscree.utilitarios.BloquearArtefatoControle;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.docscree.visao.compositor.ArtefatoCompositor;
-import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Artefato;
 import br.ueg.unucet.quid.dominios.Retorno;
 import br.ueg.unucet.quid.enums.PapelUsuario;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
 import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
-import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroVisao;
 
 /**
@@ -23,7 +19,8 @@ import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroVisao;
  * @author Diego
  *
  */
-public class ArtefatoControle extends GenericoControle<Artefato> {
+@SuppressWarnings("rawtypes")
+public class ArtefatoControle extends SuperArtefatoControle{
 
 	/**
 	 * @see br.ueg.unucet.docscree.interfaces.ICRUDControle#acaoSalvar()
@@ -46,41 +43,27 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 		}
 		return false;
 	}
+
 	
-	public boolean acaoRenovarBloqueio() {
-		if (BloquearArtefatoControle.obterInstancia().renovarBloqueio(getEntidade(), getUsuarioLogado())) {
+	public boolean acaoAbrirArtefato() {
+		setarEntidadeVisao(getVisao());
+		boolean membrosMapeados = ((ArtefatoCompositor) getVisao()).mapearMembrosAoArtefato();
+		if (membrosMapeados) {
 			return true;
 		} else {
-			getMensagens().getListaMensagens().add("O Artefato que está tentando modificar não está mais bloqueado para seu usuário, tente abrí-lo novamente!");
+			getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+			getMensagens().getListaMensagens().add("O ArtefatoModelo contém TipoMembros que não pertencem ao DocScree, impossível abrí-lo!");
 			return false;
 		}
 	}
 
-	/**
-	 * @see br.ueg.unucet.docscree.interfaces.ICRUDControle#acaoExcluir()
-	 */
-	@Override
-	public boolean acaoExcluir() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/**
-	 * @see br.ueg.unucet.docscree.interfaces.ICRUDControle#setarEntidadeVisao(br.ueg.unucet.docscree.visao.compositor.SuperCompositor)
-	 */
-	@Override
-	public void setarEntidadeVisao(SuperCompositor<?> pVisao) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	/**
 	 * @see br.ueg.unucet.docscree.controladores.GenericoControle#executarListagem()
 	 */
 	@Override
 	protected Retorno<String, Collection<Artefato>> executarListagem() {
-		// TODO Auto-generated method stub
-		return null;
+		return getFramework().pesquisarArtefato(null, null, null);
 	}
 	
 	public boolean acaoMapearMembro() {
@@ -135,43 +118,6 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 		return (SuperTipoMembroVisaoZK<?>) getMapaAtributos().get("tipoMembroVisaoSelecionado");
 	}
 	
-	public boolean acaoMapearMembrosAoArtefato() {
-		boolean retorno = true;
-		if (this.isUsuarioMontador()) {
-			if (getEntidade().getArtefatoControle() == null) {
-				getEntidade().setArtefatoControle(getFramework().getInstanciaArtefato().getArtefatoControle());
-			}
-			if (this.acaoRenovarBloqueio()) {
-				@SuppressWarnings("unchecked")
-				List<MembroDocScree> listaMembros = (List<MembroDocScree>) getMapaAtributos().get("listaMembrosDocScree");
-				for (MembroDocScree membroDocScree : listaMembros) {
-					Retorno<String, Collection<String>> retornoAdicao = getEntidade().addMembro(membroDocScree.getTipoMembroVisao().getMembro());
-					if (!retornoAdicao.isSucesso()) {
-						retorno = false;
-						getMensagens().getListaMensagens().add(2, retornoAdicao.getMensagem());
-						break;
-					}
-				}
-				if (!retorno) {
-					for (MembroDocScree membroDocScree : listaMembros) {
-						Retorno<Object, Object> retornoRemover = getEntidade().removerMembro(membroDocScree.getTipoMembroVisao().getMembro());
-						if (!retornoRemover.isSucesso()) {
-							break;
-						}
-					}
-					getMensagens().setTipoMensagem(TipoMensagem.ERRO);
-					getMensagens().getListaMensagens().add(0, "Houve problema de inserção de algum Membro, verifique o erro e tente novamente");
-					getMensagens().getListaMensagens().add(1, "Mensagem do framework:");
-				}
-			} else {
-				retorno = false;
-			}
-		} else {
-			retorno = false;
-		}
-		return retorno;
-	}
-	
 	protected boolean isUsuarioMontador() {
 		if (super.listarPapeisDoUsuario().contains(PapelUsuario.MONTADOR)) {
 			return true;
@@ -186,7 +132,6 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 		return isUsuarioMontador();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public boolean acaoMapearArtefato() {
 		boolean resultado = true;
 		if (getEntidade().getCategoria() != null) {
@@ -194,27 +139,19 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 				getEntidade().setCategoria(null);
 			}
 		}
-		Map<String, MembroDocScree> listaMembrosDocScree = (Map<String, MembroDocScree>) this.getMapaAtributos().get("listaMembrosDocScree");
-		for (MembroDocScree membroDocScree : listaMembrosDocScree.values()) {
-			Retorno<String, Collection<String>> retorno = getEntidade().addMembro(membroDocScree.getTipoMembroVisao().getMembro());
-			if (!retorno.isSucesso()) {
-				resultado = false;
-				getMensagens().setTipoMensagem(TipoMensagem.ERRO);
-				getMensagens().getListaMensagens().add("Erro no membro: "+ membroDocScree.getTipoMembroVisao().getMembro().getNome());
-				getMensagens().getListaMensagens().add(retorno.getMensagem());
-				break;
-			}
-		}
-		if (!resultado) {
-			for (MembroDocScree membroDocScree : listaMembrosDocScree.values()) {
-				Retorno<Object, Object> retorno = getEntidade().removerMembro(membroDocScree.getTipoMembroVisao().getMembro());
-				if (!retorno.isSucesso()) {
-					break;
-				}
-			}
-		}
 		getFramework().alterarArtefato(getEntidade());
 		return resultado;
+	}
+	
+	public SuperTipoMembroVisaoZK<?> getTipoMembroVisaoPeloMembro(Membro membro) {
+		Retorno<String,ITipoMembroVisao> retorno = getFramework().getTipoMembroVisao(membro.getTipoMembroModelo());
+		if (retorno.isSucesso()) {
+			ITipoMembroVisao tipoMembroVisao = retorno.getParametros().get(Retorno.PARAMETRO_NOVA_INSTANCIA);
+			if (tipoMembroVisao instanceof SuperTipoMembroVisaoZK) {
+				return (SuperTipoMembroVisaoZK) tipoMembroVisao;
+			}
+		}
+		return null;
 	}
 	
 	public Collection<ITipoMembroVisao> getMapaTipoMembrosVisao() {
@@ -226,7 +163,6 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 		return lista;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public List<SuperTipoMembroVisaoZK> listarTipoMembrosVisao() {
 		List<SuperTipoMembroVisaoZK> lista = new ArrayList<SuperTipoMembroVisaoZK>();
 		for (ITipoMembroVisao tipoMembroVisao : getMapaTipoMembrosVisao()) {
@@ -235,45 +171,17 @@ public class ArtefatoControle extends GenericoControle<Artefato> {
 			}
 		}
 		return lista;
-		
 	}
 	
-	public Membro getMembroDoTipoMembro(ITipoMembroVisao tipoMembro) {
-		Retorno<String, ITipoMembroModelo> retorno = getFramework().getTipoMembroModelo(tipoMembro);
-		ITipoMembroModelo tipoMembroModelo = retorno.getParametros().get(Retorno.PARAMETRO_NOVA_INSTANCIA);
-		Membro membro = new Membro();
-		membro.setTipoMembroModelo(tipoMembroModelo);
-		return membro;
-	}
-	
-	public Collection<Membro> listarMembrosPorTipoMembro(ITipoMembroModelo tipoMembro) {
-		Collection<Membro> lista = new ArrayList<Membro>();
-		Retorno<String, Collection<Membro>> retorno = getFramework().getListaMembro(tipoMembro);
+	public List<Artefato> listarArtefatosModelo() {
+		Retorno<String,Collection<Artefato>> retorno = executarListagem();
 		if (retorno.isSucesso()) {
-			lista = retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
+			//TODO tratar para listar somentes ArtefatosModelo não preenchido.
+			Collection<Artefato> collection = retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
+			return new ArrayList<Artefato>(collection);
+		} else {
+			return new ArrayList<Artefato>();
 		}
-		return lista;
-	}
-
-	protected Artefato lancarArtefatoNaVisao(ArtefatoCompositor visao) {
-		Retorno<String,Collection<Artefato>> retorno = getFramework().pesquisarArtefato(getEntidade().getCategoria(), getEntidade().getNome(), getEntidade().getDescricao());
-		Collection<Artefato> collection = retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
-		Artefato artefato = collection.iterator().next();
-		
-		//TODO listagem não traz o artefato controle
-		artefato.setArtefatoControle(getFramework().getInstanciaArtefato().getArtefatoControle());
-		
-		visao.setNome(artefato.getNome());
-		visao.setDescricao(artefato.getDescricao());
-		visao.setCodigo(artefato.getCodigo());
-		visao.setArtefatoControle(artefato.getArtefatoControle());
-		visao.setCategoria(artefato.getCategoria());
-		visao.setMembros(artefato.getMembros());
-		visao.setServicos(artefato.getServicos());
-		visao.setTitulo(artefato.getTitulo());
-		visao.setEntidade(artefato);
-		
-		return artefato;
 	}
 
 }

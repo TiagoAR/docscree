@@ -1,0 +1,29 @@
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<window id="modalAbrirArtefato" title="Abrir ArtefatoModelo"
+	border="normal" apply="${artefatoCompositor }" closable="false"
+	action="show: slideDown;hide: slideUp" position="center,center"
+	width="550px">
+	<vlayout>
+		<label value="Selecione o Artefato:" />
+		<grid>
+			<columns>
+				<column width="100px" />
+				<column width="250px" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Nome:" />
+					<combobox model="@{gerenciador.listaArtefatosModelo}"
+						width="180px" selectedItem="@{gerenciador.artefatoAAbrir }" onOK="gerenciador.abrirArtefatoModelo()">
+						<comboitem self="@{each=item }" value="@{item}"
+							label="@{item.nome }" />
+					</combobox>
+				</row>
+			</rows>
+		</grid>
+		<cell align="center">
+			<button label="Abrir" onClick="gerenciador.abrirArtefatoModelo();" />
+			<button label="Cancelar" onClick="gerenciador.acaoFecharModal();" />
+		</cell>
+	</vlayout>
+</window>

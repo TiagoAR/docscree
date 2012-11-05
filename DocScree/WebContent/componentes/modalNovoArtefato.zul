@@ -1,6 +1,6 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<window id="modalNovoArtefato" title="Novo Artefato"
-	border="normal" apply="${artefatoCompositor }" closable="true"
+<window id="modalNovoArtefato" title="Novo ArtefatoModelo"
+	border="normal" apply="${artefatoCompositor }" closable="false"
 	action="show: slideDown;hide: slideUp" position="center,center"
 	width="550px">
 	<vlayout>
@@ -35,7 +35,7 @@
 		</grid>
 		<cell align="center">
 			<button label="Criar" onClick="gerenciador.exibirNovoArtefato();" />
-			<button label="Cancelar" onClick="modalNovoArtefato.detach()" />
+			<button label="Cancelar" onClick="gerenciador.acaoFecharModal();" />
 		</cell>
 	</vlayout>
 </window>
