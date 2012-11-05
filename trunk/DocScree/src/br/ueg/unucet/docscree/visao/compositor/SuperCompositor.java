@@ -1,5 +1,6 @@
 package br.ueg.unucet.docscree.visao.compositor;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import org.zkoss.zk.ui.Component;
@@ -112,8 +113,13 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	 */
 	protected E getControle() {
 		if (this.gControle == null) {
-			ParameterizedTypeImpl classeRfe = (ParameterizedTypeImpl) this
-					.getClass().getGenericSuperclass();
+			Type genericSuperclass = this.getClass().getGenericSuperclass();
+			Class<?> classe = this.getClass();
+			while (!(genericSuperclass instanceof ParameterizedTypeImpl)) {
+				classe = classe.getSuperclass();
+				genericSuperclass = classe.getGenericSuperclass();
+			}
+			ParameterizedTypeImpl classeRfe = (ParameterizedTypeImpl) genericSuperclass;
 			Class controle = (Class) classeRfe.getActualTypeArguments()[0];
 			try {
 				this.gControle = (E) controle.newInstance();

@@ -76,6 +76,9 @@ public class BloquearArtefatoControle {
 				listaArtefatoBloqueados.get(artefato.getNome()).setTimer(gerarTimer(artefato.getNome()));
 				return true;
 			}
+		} else {
+			adicionarBloqueioArtefato(artefato, usuarioArtefato);
+			return true;
 		}
 		return false;
 	}

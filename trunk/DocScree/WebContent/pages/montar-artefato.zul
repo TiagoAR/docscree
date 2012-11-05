@@ -78,12 +78,12 @@
 							</tabs>
 							<tabpanels>
 								<tabpanel>
-									<window width="100%" border="none" id="windowArtefato" 
+									<window width="@{gerenciador.larguraString }" border="none" id="windowArtefato" height="@{gerenciador.alturaString }" 
 											style="position: relative; background-color: white; border: 1px solid; overflow: auto;">
 									</window>
 								</tabpanel>
 								<tabpanel>
-									<window width="100%" border="none" id="windowArtefatoVisualizacao" 
+									<window width="@{gerenciador.larguraString }" border="none" id="windowArtefatoVisualizacao" height="@{gerenciador.alturaString }"
 											style="position: relative; background-color: white; border: 1px solid; overflow: auto;">
 									</window>
 								</tabpanel>
@@ -95,7 +95,7 @@
 		</div>
 		<div>
 			<button label="Salvar" onClick="gerenciador.acaoMapearArtefato();"/>
-			<button label="Cancelar" />
+			<button label="Cancelar" onClick="gerenciador.acaoCancelar();"/>
 		</div>
 	</div>
 </zk>

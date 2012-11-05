@@ -95,7 +95,7 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	}
 
 	/**
-	 * Método que executa a ação de Salvar Usuário e mostra mensagem de sucesso ou erro após ação
+	 * Método que executa a ação de Salvar entidade e mostra mensagem de sucesso ou erro após ação
 	 */
 	public void acaoSalvar() {
 		try {
@@ -111,7 +111,7 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	}
 
 	/**
-	 * Método que executa a ação de Listar Usuário e mostra mensagem de sucesso ou erro após ação.
+	 * Método que executa a ação de Listar entidade e mostra mensagem de sucesso ou erro após ação.
 	 */
 	public void acaoListar() {
 		try {
@@ -142,7 +142,7 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	}
 
 	/**
-	 * Método que executa a ação de Listar e mostra mensagem de sucesso ou erro
+	 * Método que executa a ação de Editar entidade e mostra mensagem de sucesso ou erro
 	 * após ação.
 	 */
 	public void acaoEditar() {
