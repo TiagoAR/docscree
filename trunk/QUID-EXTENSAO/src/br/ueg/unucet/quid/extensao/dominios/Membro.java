@@ -11,7 +11,7 @@ import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
  */
 @SuppressWarnings("serial")
 public class Membro extends Identificavel{
-	
+
 	/**
 	 * TipoMembroModelo que representa o Membro.
 	 */
@@ -79,13 +79,21 @@ public class Membro extends Identificavel{
 	}
 
 	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Membro: " + getNome();
+	}
+	
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((altura == null) ? 0 : altura.hashCode());
+		result = prime * result + ((getNome() == null) ? 0 : getNome().hashCode());
 		return result;
 	}
 
@@ -108,16 +116,5 @@ public class Membro extends Identificavel{
 			return false;
 		return true;
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Membro: " + getNome();
-	}
 	
-	
-	
-
 }
