@@ -55,7 +55,7 @@ public class ModalProjetoControle extends GenericoControle<Projeto> {
 	/**
 	 * Método que "Abre" o Projeto, associando a instancia do projeto escolhido a sessão do usuário
 	 * 
-	 * @return
+	 * @return boolean se ação foi executada
 	 */
 	public boolean acaoAbrirProjeto() {
 		IAbrirProjetoVisao projetoVisao = (IAbrirProjetoVisao) super.getMapaAtributos().get("visao");

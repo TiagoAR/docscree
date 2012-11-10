@@ -115,7 +115,7 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 	}
 
 	/**
-	 * @param String o(a) fldNome a ser setado(a)
+	 * @param fldNome o(a) fldNome a ser setado(a)
 	 */
 	public void setFldNome(String fldNome) {
 		this.fldNome = fldNome;
@@ -129,7 +129,7 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 	}
 
 	/**
-	 * @param String o(a) fldDescricao a ser setado(a)
+	 * @param fldDescricao o(a) fldDescricao a ser setado(a)
 	 */
 	public void setFldDescricao(String fldDescricao) {
 		this.fldDescricao = fldDescricao;
@@ -143,7 +143,7 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 	}
 
 	/**
-	 * @param Artefato o(a) artefatoModeloSelecionado a ser setado(a)
+	 * @param artefatoModeloSelecionado o(a) artefatoModeloSelecionado a ser setado(a)
 	 */
 	public void setArtefatoModeloSelecionado(Artefato artefatoModeloSelecionado) {
 		this.artefatoModeloSelecionado = artefatoModeloSelecionado;
@@ -157,7 +157,7 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 	}
 
 	/**
-	 * @param MembroModeloTreeModel o(a) modelItemModelo a ser setado(a)
+	 * @param modelItemModelo o(a) modelItemModelo a ser setado(a)
 	 */
 	public void setModelItemModelo(MembroModeloTreeModel modelItemModelo) {
 		this.modelItemModelo = modelItemModelo;
@@ -171,7 +171,7 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 	}
 
 	/**
-	 * @param Map<String,MembroModelo> o(a) itensModelo a ser setado(a)
+	 * @param itensModelo o(a) itensModelo a ser setado(a)
 	 */
 	public void setItensModelo(Map<String, MembroModelo> itensModelo) {
 		this.itensModelo = itensModelo;
@@ -185,7 +185,7 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 	}
 
 	/**
-	 * @param MembroModelo o(a) membroModeloSelecionado a ser setado(a)
+	 * @param membroModeloSelecionado o(a) membroModeloSelecionado a ser setado(a)
 	 */
 	public void setMembroModeloSelecionado(MembroModelo membroModeloSelecionado) {
 		this.membroModeloSelecionado = membroModeloSelecionado;

@@ -899,7 +899,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	/**
-	 * @param SuperTipoMembroVisaoZK
+	 * @param tipoMembroVisaoSelecionado
 	 *            o(a) tipoMembroVisaoSelecionado a ser setado(a)
 	 */
 	public void setTipoMembroVisaoSelecionado(
@@ -915,7 +915,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	/**
-	 * @param Map<String,MembroDocScree> o(a) mapaMembrosAdicionados a ser setado(a)
+	 * @param mapaMembrosAdicionados o(a) mapaMembrosAdicionados a ser setado(a)
 	 */
 	public void setMapaMembrosAdicionados(
 			Map<String, MembroDocScree> mapaMembrosAdicionados) {
@@ -930,7 +930,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	/**
-	 * @param Artefato o(a) artefatoAAbrir a ser setado(a)
+	 * @param artefatoAAbrir o(a) artefatoAAbrir a ser setado(a)
 	 */
 	public void setArtefatoAAbrir(Artefato artefatoAAbrir) {
 		this.artefatoAAbrir = artefatoAAbrir;
@@ -952,7 +952,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	/**
-	 * @param String o(a) nomeAntigo a ser setado(a)
+	 * @param nomeAntigo o(a) nomeAntigo a ser setado(a)
 	 */
 	public void setNomeAntigo(String nomeAntigo) {
 		this.nomeAntigo = nomeAntigo;
@@ -966,7 +966,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	/**
-	 * @param String o(a) descricaoAntiga a ser setado(a)
+	 * @param descricaoAntiga o(a) descricaoAntiga a ser setado(a)
 	 */
 	public void setDescricaoAntiga(String descricaoAntiga) {
 		this.descricaoAntiga = descricaoAntiga;
@@ -980,7 +980,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	/**
-	 * @param int o(a) alturaAntiga a ser setado(a)
+	 * @param alturaAntiga o(a) alturaAntiga a ser setado(a)
 	 */
 	public void setAlturaAntiga(int alturaAntiga) {
 		this.alturaAntiga = alturaAntiga;
@@ -994,7 +994,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	/**
-	 * @param int o(a) larguraAntiga a ser setado(a)
+	 * @param larguraAntiga o(a) larguraAntiga a ser setado(a)
 	 */
 	public void setLarguraAntiga(int larguraAntiga) {
 		this.larguraAntiga = larguraAntiga;
@@ -1008,7 +1008,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	/**
-	 * @param Execution o(a) executionAntigo a ser setado(a)
+	 * @param executionAntigo o(a) executionAntigo a ser setado(a)
 	 */
 	public void setExecutionAntigo(Execution executionAntigo) {
 		this.executionAntigo = executionAntigo;
@@ -1022,7 +1022,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	/**
-	 * @param org.zkoss.zk.ui.Component o(a) componenteAntigo a ser setado(a)
+	 * @param componenteAntigo o(a) componenteAntigo a ser setado(a)
 	 */
 	public void setComponenteAntigo(org.zkoss.zk.ui.Component componenteAntigo) {
 		this.componenteAntigo = componenteAntigo;
@@ -1036,7 +1036,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	/**
-	 * @param AnnotateDataBinder o(a) binderAntigo a ser setado(a)
+	 * @param binderAntigo o(a) binderAntigo a ser setado(a)
 	 */
 	public void setBinderAntigo(AnnotateDataBinder binderAntigo) {
 		this.binderAntigo = binderAntigo;
@@ -1050,7 +1050,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	/**
-	 * @param Long o(a) codigoAntigo a ser setado(a)
+	 * @param codigoAntigo o(a) codigoAntigo a ser setado(a)
 	 */
 	public void setCodigoAntigo(Long codigoAntigo) {
 		this.codigoAntigo = codigoAntigo;

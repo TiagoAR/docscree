@@ -219,6 +219,7 @@ public abstract class SuperControle {
 	 * Método executado antes de chamar a ação principal do controlador, se for
 	 * retornado false cancela as ações seguintes.
 	 * 
+	 * @param action nome da Ação
 	 * @return boolean
 	 */
 	protected boolean preAcao(String action) {
@@ -260,14 +261,14 @@ public abstract class SuperControle {
 	}
 
 	/**
-	 * @param Mensagens o(a) mensagens a ser setado(a)
+	 * @param mensagens o(a) mensagens a ser setado(a)
 	 */
 	public void setMensagens(Mensagens mensagens) {
 		this.mensagens = mensagens;
 	}
 
 	/**
-	 * @param Usuario o(a) usuarioLogado a ser setado(a)
+	 * @param usuarioLogado o(a) usuarioLogado a ser setado(a)
 	 */
 	public void setUsuarioLogado(Usuario usuarioLogado) {
 		this.usuarioLogado = usuarioLogado;

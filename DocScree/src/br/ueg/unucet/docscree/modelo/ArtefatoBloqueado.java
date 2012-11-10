@@ -26,8 +26,8 @@ public class ArtefatoBloqueado {
 	}
 
 	/**
-	 * @param Timer
-	 *            o(a) timer a ser setado(a)
+	 * @param timer
+	 *            o(a) Timer a ser setado(a)
 	 */
 	public void setTimer(Timer timer) {
 		this.timer = timer;
@@ -41,7 +41,7 @@ public class ArtefatoBloqueado {
 	}
 
 	/**
-	 * @param Artefato
+	 * @param artefato
 	 *            o(a) artefato a ser setado(a)
 	 */
 	public void setArtefato(Artefato artefato) {
@@ -56,7 +56,7 @@ public class ArtefatoBloqueado {
 	}
 
 	/**
-	 * @param Usuario o(a) usuarioArtefato a ser setado(a)
+	 * @param usuarioArtefato o(a) Usuario a ser setado(a)
 	 */
 	public void setUsuarioArtefato(Usuario usuarioArtefato) {
 		this.usuarioArtefato = usuarioArtefato;

@@ -32,7 +32,7 @@ public class ArquivoCarregado {
 	}
 
 	/**
-	 * @param File
+	 * @param file
 	 *            o(a) file a ser setado(a)
 	 */
 	public void setFile(File file) {
@@ -47,7 +47,7 @@ public class ArquivoCarregado {
 	}
 
 	/**
-	 * @param String
+	 * @param nomeArquivo
 	 *            o(a) nomeArquivo a ser setado(a)
 	 */
 	public void setNomeArquivo(String nomeArquivo) {
@@ -62,7 +62,7 @@ public class ArquivoCarregado {
 	}
 
 	/**
-	 * @param String
+	 * @param situacao
 	 *            o(a) situacao a ser setado(a)
 	 */
 	public void setSituacao(String situacao) {

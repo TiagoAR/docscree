@@ -68,7 +68,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	}
 
 	/**
-	 * @param String o(a) nome a ser setado(a)
+	 * @param nome o(a) nome a ser setado(a)
 	 */
 	public void setNome(String nome) {
 		this.nome = nome;
@@ -82,7 +82,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	}
 
 	/**
-	 * @param String o(a) descricao a ser setado(a)
+	 * @param descricao o(a) descricao a ser setado(a)
 	 */
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
@@ -96,7 +96,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	}
 
 	/**
-	 * @param Categoria o(a) categoria a ser setado(a)
+	 * @param categoria o(a) categoria a ser setado(a)
 	 */
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
@@ -110,7 +110,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	}
 
 	/**
-	 * @param String o(a) titulo a ser setado(a)
+	 * @param titulo o(a) titulo a ser setado(a)
 	 */
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
@@ -124,7 +124,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	}
 
 	/**
-	 * @param Collection<Membro> o(a) membros a ser setado(a)
+	 * @param membros o(a) membros a ser setado(a)
 	 */
 	public void setMembros(Collection<Membro> membros) {
 		this.membros = membros;
@@ -138,7 +138,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	}
 
 	/**
-	 * @param Collection<IServico> o(a) servicos a ser setado(a)
+	 * @param servicos o(a) servicos a ser setado(a)
 	 */
 	public void setServicos(Collection<IServico> servicos) {
 		this.servicos = servicos;
@@ -152,7 +152,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	}
 
 	/**
-	 * @param IArtefatoControle<Artefato,Long> o(a) artefatoControle a ser setado(a)
+	 * @param artefatoControle o(a) artefatoControle a ser setado(a)
 	 */
 	public void setArtefatoControle(
 			IArtefatoControle<Artefato, Long> artefatoControle) {
@@ -167,7 +167,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	}
 
 	/**
-	 * @param int o(a) altura a ser setado(a)
+	 * @param altura o(a) altura a ser setado(a)
 	 */
 	public void setAltura(int altura) {
 		this.altura = altura;
@@ -181,7 +181,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	}
 
 	/**
-	 * @param int o(a) largura a ser setado(a)
+	 * @param largura o(a) largura a ser setado(a)
 	 */
 	public void setLargura(int largura) {
 		this.largura = largura;

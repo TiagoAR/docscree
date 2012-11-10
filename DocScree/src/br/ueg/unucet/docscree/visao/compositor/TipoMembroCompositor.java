@@ -113,7 +113,7 @@ public class TipoMembroCompositor extends
 	}
 
 	/**
-	 * @param Map<File,String> o(a) tipoMembros a ser setado(a)
+	 * @param tipoMembros o(a) tipoMembros a ser setado(a)
 	 */
 	public void setTipoMembros(Map<File, String> tipoMembros) {
 		this.tipoMembros = tipoMembros;
@@ -127,7 +127,7 @@ public class TipoMembroCompositor extends
 	}
 
 	/**
-	 * @param ArquivoCarregado o(a) arquivoSelecionado a ser setado(a)
+	 * @param arquivoSelecionado o(a) arquivoSelecionado a ser setado(a)
 	 */
 	public void setArquivoSelecionado(ArquivoCarregado arquivoSelecionado) {
 		this.arquivoSelecionado = arquivoSelecionado;

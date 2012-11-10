@@ -214,7 +214,7 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
 	}
 
 	/**
-	 * @param String
+	 * @param fldNome
 	 *            o(a) fldNome a ser setado(a)
 	 */
 	public void setFldNome(String fldNome) {
@@ -229,7 +229,7 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
 	}
 
 	/**
-	 * @param String
+	 * @param fldDescricao
 	 *            o(a) fldDescricao a ser setado(a)
 	 */
 	public void setFldDescricao(String fldDescricao) {
@@ -244,7 +244,7 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
 	}
 
 	/**
-	 * @param Equipe
+	 * @param fldEquipe
 	 *            o(a) fldEquipe a ser setado(a)
 	 */
 	public void setFldEquipe(Equipe fldEquipe) {
@@ -259,7 +259,7 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
 	}
 
 	/**
-	 * @param Modelo
+	 * @param fldModelo
 	 *            o(a) fldModelo a ser setado(a)
 	 */
 	public void setFldModelo(Modelo fldModelo) {
@@ -274,7 +274,7 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
 	}
 
 	/**
-	 * @param Boolean
+	 * @param fldStatus
 	 *            o(a) fldStatus a ser setado(a)
 	 */
 	public void setFldStatus(Boolean fldStatus) {
@@ -289,7 +289,7 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
 	}
 
 	/**
-	 * @param String
+	 * @param filtroCodigo
 	 *            o(a) filtroCodigo a ser setado(a)
 	 */
 	public void setFiltroCodigo(String filtroCodigo) {
@@ -304,7 +304,7 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
 	}
 
 	/**
-	 * @param String
+	 * @param filtroNome
 	 *            o(a) filtroNome a ser setado(a)
 	 */
 	public void setFiltroNome(String filtroNome) {
@@ -319,7 +319,7 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
 	}
 
 	/**
-	 * @param String
+	 * @param filtroEquipe
 	 *            o(a) filtroEquipe a ser setado(a)
 	 */
 	public void setFiltroEquipe(String filtroEquipe) {
@@ -334,7 +334,7 @@ public class ProjetoCompositor extends GenericoCompositor<ProjetoControle>
 	}
 
 	/**
-	 * @param String
+	 * @param filtroModelo
 	 *            o(a) filtroModelo a ser setado(a)
 	 */
 	public void setFiltroModelo(String filtroModelo) {

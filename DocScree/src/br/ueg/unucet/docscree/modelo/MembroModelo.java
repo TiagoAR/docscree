@@ -93,7 +93,7 @@ public class MembroModelo extends Persistivel{
 	}
 
 	/**
-	 * @param Artefato
+	 * @param artefato
 	 *            o(a) artefato a ser setado(a)
 	 */
 	public void setArtefato(Artefato artefato) {
@@ -109,7 +109,7 @@ public class MembroModelo extends Persistivel{
 	}
 
 	/**
-	 * @param Integer
+	 * @param grau
 	 *            o(a) grau a ser setado(a)
 	 */
 	public void setGrau(Integer grau) {
@@ -124,7 +124,7 @@ public class MembroModelo extends Persistivel{
 	}
 
 	/**
-	 * @param Integer
+	 * @param ordem
 	 *            o(a) ordem a ser setado(a)
 	 */
 	public void setOrdem(Integer ordem) {
@@ -139,7 +139,7 @@ public class MembroModelo extends Persistivel{
 	}
 
 	/**
-	 * @param Integer
+	 * @param ordemPai
 	 *            o(a) ordemPai a ser setado(a)
 	 */
 	public void setOrdemPai(Integer ordemPai) {
@@ -154,7 +154,7 @@ public class MembroModelo extends Persistivel{
 	}
 
 	/**
-	 * @param MultiplicidadeEnum
+	 * @param multiplicidade
 	 *            o(a) multiplicidade a ser setado(a)
 	 */
 	public void setMultiplicidade(MultiplicidadeEnum multiplicidade) {
@@ -169,7 +169,7 @@ public class MembroModelo extends Persistivel{
 	}
 
 	/**
-	 * @param Integer
+	 * @param ordemPreenchimento
 	 *            o(a) ordemPreenchimento a ser setado(a)
 	 */
 	public void setOrdemPreenchimento(Integer ordemPreenchimento) {
@@ -184,8 +184,7 @@ public class MembroModelo extends Persistivel{
 	}
 
 	/**
-	 * @param Collection
-	 *            <IParametro<?>> o(a) listaParametros a ser setado(a)
+	 * @param listaParametros o(a) listaParametros a ser setado(a)
 	 */
 	public void setListaParametros(Collection<IParametro<?>> listaParametros) {
 		this.listaParametros = listaParametros;

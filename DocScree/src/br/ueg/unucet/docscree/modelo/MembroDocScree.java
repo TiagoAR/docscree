@@ -46,8 +46,7 @@ public class MembroDocScree {
 	}
 
 	/**
-	 * @param SuperTipoMembroVisaoZK
-	 *            <?> o(a) tipoMembroVisao a ser setado(a)
+	 * @param tipoMembroVisao o(a) tipoMembroVisao a ser setado(a)
 	 */
 	public void setTipoMembroVisao(SuperTipoMembroVisaoZK<?> tipoMembroVisao) {
 		this.tipoMembroVisao = tipoMembroVisao;
@@ -61,7 +60,7 @@ public class MembroDocScree {
 	}
 
 	/**
-	 * @param String o(a) idComponente a ser setado(a)
+	 * @param idComponente o(a) idComponente a ser setado(a)
 	 */
 	public void setIdComponente(String idComponente) {
 		this.idComponente = idComponente;
