@@ -3,6 +3,7 @@ package br.ueg.unucet.quid.interfaces;
 import java.util.Collection;
 
 import br.ueg.unucet.quid.dominios.MembroFramework;
+import br.ueg.unucet.quid.dominios.TipoMembro;
 import br.ueg.unucet.quid.excessoes.MembroExcessao;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
@@ -55,4 +56,6 @@ public interface IMembroFrameworkControle<T, oid> extends IControle<T, oid> {
 	 * @return Membro mapeado
 	 */
 	Membro transformarMembroFramework(MembroFramework membroFramework);
+
+	ITipoMembroModelo getModeloPeloTipoMembro(TipoMembro membro);
 }

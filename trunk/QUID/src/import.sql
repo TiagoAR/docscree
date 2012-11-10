@@ -1,0 +1,1 @@
+INSERT INTO usuario (email, nome, perfilacesso, senha, status) VALUES ('admin', 'Administrador', 'ADMINISTRADOR', 'admin', 'ATIVO');

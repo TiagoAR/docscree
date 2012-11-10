@@ -490,7 +490,7 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 			membro.setDescricao(artefatoMembro.getMembroFramework().getDescricao());
 			membro.setNome(artefatoMembro.getMembroFramework().getNome());
 			// TODO ver
-			//membro.setTipoMembroModelo(artefatoMembro.getMembroFramework().getTipoMembro());
+			membro.setTipoMembroModelo(controleMembro.getModeloPeloTipoMembro(artefatoMembro.getMembroFramework().getTipoMembro()));
 			membro.getTipoMembroModelo().setListaParametros((Collection<IParametro<?>>) SerializadorObjetoUtil.toObject(artefatoMembro.getMembroFramework().getParametros()));
 			membro.setX(artefatoMembro.getX());
 			membro.setY(artefatoMembro.getY());

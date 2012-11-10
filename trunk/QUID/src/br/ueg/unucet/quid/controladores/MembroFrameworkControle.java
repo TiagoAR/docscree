@@ -285,6 +285,11 @@ public class MembroFrameworkControle extends GenericControle<MembroFramework, Lo
 		
 	}
 	
+	@Override
+	public ITipoMembroModelo getModeloPeloTipoMembro(TipoMembro membro) {
+		return tipoMembroControle.getIntanciaTipoMembroControle(membro);
+	}
+	
 	/**
 	 * Metodo que realiza a conversao de um Membro para um membroFramework, trazendo todas suas informacoes
 	 * @param membro Membro que sera convertido

@@ -33,7 +33,8 @@ public class ArtefatoMembroControle extends GenericControle<ArtefatoMembro, Long
 		artefatoMembro.setArtefato(artefato);
 		return pesquisarPorRestricao(artefatoMembro, new String[]{"artefatomembro.codigo", "artefatomembro.artefato.codigo","artefatomembro.x","artefatomembro.altura", 
 				"artefatomembro.comprimento","artefatomembro.y","artefatomembro.membroFramework.codigo","artefatomembro.membroFramework.nome","artefatomembro.membroFramework.descricao",
-				"artefatomembro.membroFramework.tipoMembro.codigo", "artefatomembro.membroFramework.parametros"});
+				"artefatomembro.membroFramework.tipoMembro.codigo", "artefatomembro.membroFramework.tipoMembro.nome", "artefatomembro.membroFramework.tipoMembro.versao", 
+				"artefatomembro.membroFramework.parametros"});
 	}
 	
 	
