@@ -1,6 +1,10 @@
 br.ueg.unucet.docscree.anotacao
+br.ueg.unucet.docscree.componentes
 br.ueg.unucet.docscree.controladores
 br.ueg.unucet.docscree.interfaces
+br.ueg.unucet.docscree.modelo
 br.ueg.unucet.docscree.utilitarios
 br.ueg.unucet.docscree.utilitarios.enumerador
+br.ueg.unucet.docscree.visao.componentes
 br.ueg.unucet.docscree.visao.compositor
+br.ueg.unucet.docscree.visao.renderizadores
