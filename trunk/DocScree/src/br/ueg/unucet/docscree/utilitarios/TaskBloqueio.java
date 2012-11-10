@@ -18,7 +18,7 @@ public abstract class TaskBloqueio extends TimerTask {
 	}
 
 	/**
-	 * @param String o(a) nomeArtefato a ser setado(a)
+	 * @param nomeArtefato o(a) nomeArtefato a ser setado(a)
 	 */
 	public void setNomeArtefato(String nomeArtefato) {
 		this.nomeArtefato = nomeArtefato;

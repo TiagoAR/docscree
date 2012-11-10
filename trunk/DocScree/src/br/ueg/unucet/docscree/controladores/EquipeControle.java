@@ -25,8 +25,7 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 public class EquipeControle extends GenericoControle<Equipe> {
 
 	/**
-	 * @see br.ueg.unucet.docscree.controladores.SuperControle#preAcao(java.lang.
-	 *      String)
+	 * @see br.ueg.unucet.docscree.controladores.SuperControle#preAcao(String)
 	 */
 	@Override
 	protected boolean preAcao(String action) {

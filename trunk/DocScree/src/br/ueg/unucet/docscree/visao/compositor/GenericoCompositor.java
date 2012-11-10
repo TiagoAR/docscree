@@ -211,7 +211,7 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 	}
 
 	/**
-	 * @param Boolean
+	 * @param exibirInativos
 	 *            o(a) exibirInativos a ser setado(a)
 	 */
 	public void setExibirInativos(Boolean exibirInativos) {

@@ -250,7 +250,7 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	}
 
 	/**
-	 * @param Boolean
+	 * @param fldStatus
 	 *            o(a) fldStatus a ser setado(a)
 	 */
 	public void setFldStatus(Boolean fldStatus) {
@@ -268,8 +268,7 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	}
 
 	/**
-	 * @param Set
-	 *            <EquipeUsuario> o(a) fldListaEquipeUsuario a ser setado(a)
+	 * @param listaEquipeUsuario o(a) fldListaEquipeUsuario a ser setado(a)
 	 */
 	public void setFldListaEquipeUsuario(Set<EquipeUsuario> listaEquipeUsuario) {
 		this.fldListaEquipeUsuario = listaEquipeUsuario;
@@ -283,7 +282,7 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	}
 
 	/**
-	 * @param EquipeUsuario
+	 * @param equipeUsuario
 	 *            o(a) equipeUsuario a ser setado(a)
 	 */
 	public void setEquipeUsuario(EquipeUsuario equipeUsuario) {
@@ -301,8 +300,7 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	}
 
 	/**
-	 * @param BindingListModelListModel
-	 *            <EquipeUsuario> o(a) modelEquipeUsuario a ser setado(a)
+	 * @param modelEquipeUsuario o(a) modelEquipeUsuario a ser setado(a)
 	 */
 	public void setModelEquipeUsuario(
 			BindingListModelListModel<EquipeUsuario> modelEquipeUsuario) {
@@ -317,7 +315,7 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	}
 
 	/**
-	 * @param EquipeUsuario
+	 * @param equipeUsuarioSelecionado
 	 *            o(a) equipeUsuarioSelecionado a ser setado(a)
 	 */
 	public void setEquipeUsuarioSelecionado(
@@ -333,7 +331,7 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	}
 
 	/**
-	 * @param String
+	 * @param filtroCodigo
 	 *            o(a) filtroCodigo a ser setado(a)
 	 */
 	public void setFiltroCodigo(String filtroCodigo) {
@@ -348,7 +346,7 @@ public class EquipeCompositor extends GenericoCompositor<EquipeControle>
 	}
 
 	/**
-	 * @param String
+	 * @param filtroNome
 	 *            o(a) filtroNome a ser setado(a)
 	 */
 	public void setFiltroNome(String filtroNome) {

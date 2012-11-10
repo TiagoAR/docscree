@@ -35,7 +35,7 @@ public class MembroModeloTreeNode extends DefaultTreeNode<MembroModelo> {
 	}
 
 	/**
-	 * @param boolean o(a) aberto a ser setado(a)
+	 * @param aberto o(a) aberto a ser setado(a)
 	 */
 	public void setAberto(boolean aberto) {
 		this.aberto = aberto;

@@ -175,8 +175,7 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	}
 
 	/** 
-	 * @see br.ueg.unucet.docscree.visao.compositor.SuperCompositor#
-	 * forcarAtualizacaoCampos()
+	 * @see br.ueg.unucet.docscree.visao.compositor.SuperCompositor#forcarAtualizacaoCampos()
 	 */
 	@Override
 	protected void forcarAtualizacaoCampos() {
@@ -469,7 +468,7 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	}
 
 	/**
-	 * @param Boolean o(a) isProprioUsuario a ser setado(a)
+	 * @param isProprioUsuario o(a) isProprioUsuario a ser setado(a)
 	 */
 	public void setIsProprioUsuario(Boolean isProprioUsuario) {
 		this.isProprioUsuario = isProprioUsuario;
@@ -483,7 +482,7 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	}
 
 	/**
-	 * @param String o(a) nomeSenha a ser setado(a)
+	 * @param nomeSenha o(a) nomeSenha a ser setado(a)
 	 */
 	public void setNomeSenha(String nomeSenha) {
 		this.nomeSenha = nomeSenha;
@@ -497,7 +496,7 @@ public class UsuarioCompositor extends GenericoCompositor<UsuarioControle>
 	}
 
 	/**
-	 * @param String o(a) nomeConfSenha a ser setado(a)
+	 * @param nomeConfSenha o(a) nomeConfSenha a ser setado(a)
 	 */
 	public void setNomeConfSenha(String nomeConfSenha) {
 		this.nomeConfSenha = nomeConfSenha;
