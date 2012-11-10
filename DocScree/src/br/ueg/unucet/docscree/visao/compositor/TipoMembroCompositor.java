@@ -99,6 +99,11 @@ public class TipoMembroCompositor extends
 		}
 		return arquivoCarregados;
 	}
+	
+	public void acaoCancelar() {
+		setTipoMembros(new HashMap<File, String>());
+		super.binder.loadAll();
+	}
 
 	/**
 	 * @return Map<File,String> o(a) tipoMembros

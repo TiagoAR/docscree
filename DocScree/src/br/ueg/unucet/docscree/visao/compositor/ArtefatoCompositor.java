@@ -23,9 +23,7 @@ import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Grid;
-import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelArray;
-import org.zkoss.zul.Row;
 import org.zkoss.zul.Rows;
 import org.zkoss.zul.Separator;
 import org.zkoss.zul.Spinner;
@@ -204,11 +202,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 	
 	private void inicializarVariaveisCriarArtefato() {
-		this.areaMontagemWindow = null;
-		this.areaVisualizacaoWindow = null;
-		this.binderArtefato = null;
-		this.binderVisualizao = null;
-		setMapaMembrosAdicionados(new HashMap<String, MembroDocScree>());
+		this.inicializarTelasMapeadores();
 		setMembros(new ArrayList<Membro>());
 		setServicos(new ArrayList<IServico>());
 	}
@@ -247,7 +241,8 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			boolean retorno = getControle().fazerAcao("renovarBloqueio", (SuperCompositor) this);
 			if (retorno) {
 				abrirTelaMontarArtefato();
-				retorno = getControle().fazerAcao("abrirArtefato", (SuperCompositor) this);
+				Executions.getCurrent().getSession().setAttribute("ArtefatoAbrir", getEntidade());
+				retorno = true;
 			} else {
 				setEntidade(antigoArtefato);
 			}
@@ -256,6 +251,10 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			e.printStackTrace();
 		}
 		super.binder.loadAll();
+	}
+	
+	public void executarAbrirArtefato() throws Exception {
+		getControle().fazerAcao("abrirArtefato", (SuperCompositor) this);
 	}
 	
 	public void acaoMapearArtefato() {
@@ -270,13 +269,31 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		}
 	}
 	
+	private void inicializarTelasMapeadores() {
+		this.areaMontagemWindow = null;
+		this.areaVisualizacaoWindow = null;
+		this.binderArtefato = null;
+		this.binderVisualizao = null;
+		setMapaMembrosAdicionados(new HashMap<String, MembroDocScree>());
+	}
+	
 	public boolean mapearMembrosAoArtefato() {
+		this.inicializarTelasMapeadores();
 		boolean retorno = true;
 		for (Membro membro : getMembros()) {
+			// TODO criar método único ver GERARPALETATIPOMEMBRO..
 			SuperTipoMembroVisaoZK<?> superTipoMembroVisaoZK = getControle().getTipoMembroVisaoPeloMembro(membro);
-			if (superTipoMembroVisaoZK != null) {
-				superTipoMembroVisaoZK.setMembro(membro);
-				setTipoMembroVisaoSelecionado(superTipoMembroVisaoZK);
+			SuperTipoMembroVisaoZK<?> novaInstancia = null;
+			try {
+				novaInstancia = superTipoMembroVisaoZK.getClass().newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			if (novaInstancia != null) {
+				novaInstancia.setMembro(membro);
+				setTipoMembroVisaoSelecionado(novaInstancia);
 				lancarMembroAVisualizacao(true, true);
 			} else {
 				retorno = false;
@@ -304,6 +321,15 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 	
 	public void carregarArtefato() {
+		if (Executions.getCurrent().getSession().hasAttribute("ArtefatoAbrir")) {
+			setEntidade((Persistivel) Executions.getCurrent().getSession().getAttribute("ArtefatoAbrir"));
+			Executions.getCurrent().getSession().removeAttribute("ArtefatoAbrir");
+			try {
+				executarAbrirArtefato();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		super.binder.loadAll();
 	}
 
@@ -409,7 +435,9 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	public void gerarPaletaParametros(boolean isNovo) {
-		super.binder.saveAll();
+		if (isNovo) {
+			super.binder.saveAll();
+		}
 		if (this.getTipoMembroVisaoSelecionado() != null) {
 			
 			Window windowPaleta = getWindowPaleta();
@@ -464,7 +492,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			}
 			
 		});
-		rows.appendChild(gerarRow(checkbox));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {checkbox}));
 		grid.appendChild(rows);
 		return grid;
 	}
@@ -495,7 +523,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			}
 			
 		});
-		rows.appendChild(gerarRow(combobox));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {combobox}));
 		return grid;
 	}
 	
@@ -699,7 +727,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 				this.getMapaMembrosAdicionados().get(idComponente).setTipoMembroVisao(getTipoMembroVisaoSelecionado());
 				getMembros().remove(getTipoMembroVisaoSelecionado().getMembro());
 			}
-			if (abrindoArtefato) {
+			if (!abrindoArtefato) {
 				this.getMembros().add(getTipoMembroVisaoSelecionado().getMembro());
 			}
 			componente.setParent(getWindowArtefato());
@@ -802,7 +830,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		Collection<IParametro<?>> listaParametros = this.getTipoMembroVisaoSelecionado().getListaParametros();
 		for (IParametro<?> parametro : listaParametros) {
 			HtmlBasedComponent componenteDominio = null;
-			rows.appendChild(gerarRow(gerarLabel(parametro.getRotulo())));
+			rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarLabel(parametro.getRotulo())}));
 			try {
 				componenteDominio = super.getComponentePorDominio(parametro, WIDTH);
 			} catch (ClassNotFoundException e) {
@@ -813,38 +841,26 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 				componenteDominio = this.gerarTextBoxGenerico();
 			}
 			componenteDominio.setId("PARAMETRO"+parametro.getNome());
-			rows.appendChild(gerarRow(componenteDominio));
+			rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {componenteDominio}));
 		}
 	}
 	
 	private void gerarParametrosMembro(Rows rows) {
-		rows.appendChild(gerarRow(gerarLabel("Nome do membro")));
-		rows.appendChild(gerarRow(gerarTextbox(PARAMETRONOME, "Digite o Nome do Membro")));
-		rows.appendChild(gerarRow(gerarLabel("Descrição do membro")));
-		rows.appendChild(gerarRow(gerarTextbox(PARAMETRODESC, "Digite a Descrição do Membro")));
-		rows.appendChild(gerarRow(gerarLabel("Posição X")));
-		rows.appendChild(gerarRow(gerarSpinner(PARAMETROPOSX, "Digite a Posição X", 0)));
-		rows.appendChild(gerarRow(gerarLabel("Posição Y")));
-		rows.appendChild(gerarRow(gerarSpinner(PARAMETROPOSY, "Digite a Posição Y", 0)));
-		rows.appendChild(gerarRow(gerarLabel("Altura")));
-		rows.appendChild(gerarRow(gerarSpinner(PARAMETROALTURA, "Digite a altura", 0)));
-		rows.appendChild(gerarRow(gerarLabel("Comprimento")));
-		rows.appendChild(gerarRow(gerarSpinner(PARAMETROCOMPRIMENTO, "Digite o Comprimento", 300)));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarLabel("Nome do membro")}));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarTextbox(PARAMETRONOME, "Digite o Nome do Membro")}));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarLabel("Descrição do membro")}));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarTextbox(PARAMETRODESC, "Digite a Descrição do Membro")}));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarLabel("Posição X")}));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarSpinner(PARAMETROPOSX, "Digite a Posição X", 0)}));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarLabel("Posição Y")}));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarSpinner(PARAMETROPOSY, "Digite a Posição Y", 0)}));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarLabel("Altura")}));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarSpinner(PARAMETROALTURA, "Digite a altura", 0)}));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarLabel("Comprimento")}));
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarSpinner(PARAMETROCOMPRIMENTO, "Digite o Comprimento", 300)}));
 		Separator separator = new Separator();
 		separator.setStyle("border-top: 1px solid; width: 100%;");
-		rows.appendChild(gerarRow(separator));
-	}
-	
-	private Row gerarRow(org.zkoss.zk.ui.Component componente) {
-		Row row = new Row();
-		row.appendChild(componente);
-		return row;
-	}
-	
-	private Label gerarLabel(String valor) {
-		Label label = new Label();
-		label.setValue(valor+":");
-		return label;
+		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {separator}));
 	}
 	
 	private Spinner gerarSpinner(String id, String tooltip, int maxlength) {

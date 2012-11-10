@@ -77,14 +77,21 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 	 */
 	@Override
 	public boolean acaoSalvar() {
-		if (!super.isUsuarioComum() || getUsuarioLogado().getCodigo().equals(super.getEntidade().getCodigo())) {
-			Retorno<String, Collection<String>> retorno;
-			if (super.getEntidade().getCodigo() == null) {
-				retorno = super.getFramework().inserirUsuario(super.getEntidade());
+		if (!super.isUsuarioComum() 
+				|| (getUsuarioLogado().getCodigo().equals(super.getEntidade().getCodigo()) 
+						&& getUsuarioLogado().getPerfilAcesso().equals(super.getEntidade().getPerfilAcesso()))) {
+			if (!(super.isUsuarioGerente() && super.getEntidade().getPerfilAcesso().equals(PerfilAcessoEnum.ADMINISTRADOR))) {
+				Retorno<String, Collection<String>> retorno;
+				if (super.getEntidade().getCodigo() == null) {
+					retorno = super.getFramework().inserirUsuario(super.getEntidade());
+				} else {
+					retorno = super.getFramework().alterarUsuario(super.getEntidade());
+				}
+				return super.montarRetorno(retorno);
 			} else {
-				retorno = super.getFramework().alterarUsuario(super.getEntidade());
+				montarMensagemErroPermissao("Gerente");
+				return false;
 			}
-			return super.montarRetorno(retorno);
 		} else {
 			montarMensagemErroPermissao("Usuário");
 			return false;

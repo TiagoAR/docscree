@@ -14,11 +14,11 @@
 			<rows>
 				<row>
 					<label value="Nome:" />
-					<textbox value="@{gerenciador.fldNome}" />
+					<textbox value="@{gerenciador.fldNome}" maxlength="255" />
 				</row>
 				<row>
 					<label value="Descrição:" />
-					<textbox value="@{gerenciador.fldDescricao}" />
+					<textbox value="@{gerenciador.fldDescricao}" maxlength="255" />
 				</row>
 				<row>
 					<label value="Equipe:" />
@@ -48,7 +48,7 @@
 		<separator />
 		<button label="Salvar" onClick="gerenciador.acaoSalvar()" />
 		<button label="Listar" onClick="gerenciador.acaoListar()" />
-		<button label="Cancelar" />
+		<button label="Cancelar" onClick="gerenciador.acaoCancelar()" />
 		
 		<window title="Lista de Projetos" border="normal" closable="false"
 		mode="modal" width="750px" visible="false" id="windowLista">
@@ -57,16 +57,16 @@
 			id="listboxLista">
 			<auxhead>
 				<auxheader>
-					<textbox value="@{gerenciador.filtroCodigo }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+					<textbox value="@{gerenciador.filtroCodigo }" onChange="gerenciador.acaoFiltrar()" instant="true" width="70px"/>
 				</auxheader>
 				<auxheader colspan="2">
-					<textbox value="@{gerenciador.filtroNome }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+					<textbox value="@{gerenciador.filtroNome }" onChange="gerenciador.acaoFiltrar()" instant="true" width="70px"/>
 				</auxheader>
 				<auxheader>
-					<textbox value="@{gerenciador.filtroEquipe }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+					<textbox value="@{gerenciador.filtroEquipe }" onChange="gerenciador.acaoFiltrar()" instant="true" width="70px"/>
 				</auxheader>
 				<auxheader>
-					<textbox value="@{gerenciador.filtroModelo }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+					<textbox value="@{gerenciador.filtroModelo }" onChange="gerenciador.acaoFiltrar()" instant="true" width="70px"/>
 				</auxheader>
 				<auxheader colspan="3"></auxheader>
 			</auxhead>
@@ -88,27 +88,34 @@
 				<listcell label="@{item.modelo.nome }" />
 				<listcell label="@{item.status }" />
 				<listcell>
-					<button label="Editar" > 
-						<attribute name="onClick">
-							self.getParent().getParent().setSelected(true);
-							gerenciador.acaoEditar();
-						</attribute>
-					</button>
+						<div align="center">
+							<button label="Editar" width="60px"> 
+								<attribute name="onClick">
+									self.getParent().getParent().getParent().setSelected(true);
+									gerenciador.acaoEditar();
+								</attribute>
+							</button>
+						</div>
 				</listcell>
 				<listcell>
-					<button label="Desativar" >
-						<attribute name="onClick">
-							self.getParent().getParent().setSelected(true);
-							gerenciador.acaoExcluir();
-						</attribute>
-					</button>
+						<div align="center">
+							<button label="Desativar" width="60px">
+								<attribute name="onClick">
+									self.getParent().getParent().getParent().setSelected(true);
+									gerenciador.acaoExcluir();
+								</attribute>
+							</button>
+						</div>
 				</listcell>
 			</listitem>
 		</listbox>
-		<checkbox label="Exibir equipes inativas" checked="@{gerenciador.exibirInativos}" 
-						onClick="gerenciador.acaoFiltrar()" />
-						
-		<button label="Fechar" onClick="gerenciador.fecharModalLista()" />
+		<vlayout>
+			<checkbox label="Exibir equipes inativas" checked="@{gerenciador.exibirInativos}" 
+							onClick="gerenciador.acaoFiltrar()" />
+			<div align="center">			
+				<button label="Fechar" onClick="gerenciador.fecharModalLista()" />
+			</div>
+		</vlayout>
 	</window>
 	</groupbox>
 	

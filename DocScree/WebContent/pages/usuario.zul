@@ -14,21 +14,21 @@
 			<rows>
 				<row>
 					<label value="Nome:" />
-					<textbox value="@{gerenciador.fldNome}" />
+					<textbox value="@{gerenciador.fldNome}" focus="true" maxlength="255"/>
 				</row>
 				<row>
 					<label value="E-mail:" />
-					<textbox value="@{gerenciador.fldEmail}" />
+					<textbox value="@{gerenciador.fldEmail}" maxlength="255"/>
 				</row>
 				<row>
 					<label value="@{gerenciador.nomeSenha }" />
 					<textbox value="@{gerenciador.fldSenha }"
-						type="password" />
+						type="password" maxlength="255"/>
 				</row>
 				<row>
 					<label value="@{gerenciador.nomeConfSenha }" />
 					<textbox value="@{gerenciador.fldConfirmarSenha }"
-						type="password" />
+						type="password" maxlength="255"/>
 				</row>
 				<row>
 					<label value="Perfil de Usuário:" />
@@ -56,16 +56,16 @@
 				id="listboxLista">
 				<auxhead>
 					<auxheader>
-						<textbox value="@{gerenciador.filtroCodigo }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+						<textbox value="@{gerenciador.filtroCodigo }" onChange="gerenciador.acaoFiltrar()" instant="true" width="85px"/>
 					</auxheader>
 					<auxheader>
-						<textbox value="@{gerenciador.filtroNome }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+						<textbox value="@{gerenciador.filtroNome }" onChange="gerenciador.acaoFiltrar()" instant="true" width="85px"/>
 					</auxheader>
 					<auxheader>
-						<textbox value="@{gerenciador.filtroEmail }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+						<textbox value="@{gerenciador.filtroEmail }" onChange="gerenciador.acaoFiltrar()" instant="true" width="85px"/>
 					</auxheader>
 					<auxheader>
-						<textbox value="@{gerenciador.filtroPerfil }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+						<textbox value="@{gerenciador.filtroPerfil }" onChange="gerenciador.acaoFiltrar()" instant="true" width="85px"/>
 					</auxheader>
 					<auxheader colspan="3"></auxheader>
 				</auxhead>
@@ -85,27 +85,34 @@
 					<listcell label="@{item.perfilAcesso }" />
 					<listcell label="@{item.status }" />
 					<listcell>
-						<button label="Editar" > 
-							<attribute name="onClick">
-								self.getParent().getParent().setSelected(true);
-								gerenciador.acaoEditar();
-							</attribute>
-						</button>
+						<div align="center">
+							<button label="Editar" width="60px"> 
+								<attribute name="onClick">
+									self.getParent().getParent().getParent().setSelected(true);
+									gerenciador.acaoEditar();
+								</attribute>
+							</button>
+						</div>
 					</listcell>
-					<listcell>
-						<button label="Desativar" >
-							<attribute name="onClick">
-								self.getParent().getParent().setSelected(true);
-								gerenciador.acaoExcluir();
-							</attribute>
-						</button>
+					<listcell >
+						<div align="center">
+							<button label="Desativar" width="60px">
+								<attribute name="onClick">
+									self.getParent().getParent().getParent().setSelected(true);
+									gerenciador.acaoExcluir();
+								</attribute>
+							</button>
+						</div>
 					</listcell>
 				</listitem>
 			</listbox>
-			<checkbox label="Exibir usuários inativos" checked="@{gerenciador.exibirInativos}" 
-				onClick="gerenciador.acaoFiltrar()" />
-
-			<button label="X" onClick="gerenciador.fecharModalLista()" />
+			<vlayout>
+				<checkbox label="Exibir usuários inativos" checked="@{gerenciador.exibirInativos}" 
+					onClick="gerenciador.acaoFiltrar()" />
+				<div align="center">
+					<button label="Fechar" onClick="gerenciador.fecharModalLista()" />
+				</div>
+			</vlayout>
 		</window>
 	</groupbox>
 

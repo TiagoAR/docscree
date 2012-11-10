@@ -14,12 +14,12 @@
 				<row>
 					<label value="Nome:" />
 					<textbox width="180px" id="nomeArtefato" onOK="descricaoArtefato.focus()"
-						value="@{gerenciador.nome }" />
+						value="@{gerenciador.nome }" maxlength="255"/>
 				</row>
 				<row>
 					<label value="Descrição" />
 					<textbox width="180px" id="descricaoArtefato" onOK="alturaArtefato.focus()"
-						value="@{gerenciador.descricao }"/>
+						value="@{gerenciador.descricao }" maxlength="255"/>
 				</row>
 				<row>
 					<label value="Altura:" />
