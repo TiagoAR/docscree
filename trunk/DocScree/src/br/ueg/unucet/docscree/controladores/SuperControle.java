@@ -88,14 +88,17 @@ public abstract class SuperControle {
 	}
 	
 	/**
-	 * Método que verifica se o usuário logado pertence a equipe passada como parâmetro.
+	 * Método que verifica se o usuário logado é gerente e pertence a equipe passada como parâmetro.
 	 * 
 	 * @param pEquipe equipe a ser verificada
 	 * @return boolean se o usuário logado pertence ou não a equipe
 	 */
 	protected boolean isMesmaEquipe(Equipe pEquipe) {
+		if (!((Usuario) this.getMapaAtributos().get("usuarioLogado")).getPerfilAcesso().equals(PerfilAcessoEnum.GERENTE)) {
+			return false;
+		}
 		for (EquipeUsuario equipeUsuario : ((Usuario) this.getMapaAtributos().get("usuarioLogado")).getEquipeUsuarios()) {
-			if (equipeUsuario.getEquipe().equals(pEquipe)) {
+			if (equipeUsuario.getEquipe().equals(pEquipe) && equipeUsuario.getPapelUsuario().equals(PapelUsuario.GERENTE)) {
 				return true;
 			}
 		}

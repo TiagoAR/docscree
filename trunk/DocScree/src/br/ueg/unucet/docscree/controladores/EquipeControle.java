@@ -59,40 +59,40 @@ public class EquipeControle extends GenericoControle<Equipe> {
 	@Override
 	public boolean acaoSalvar() {
 		if (!super.isUsuarioComum()) {
-			Retorno<String, Collection<String>> retorno;
-			Equipe entidade = super.getEntidade();
-			boolean contemGerente = this.contemGerente(entidade);
-			if (entidade.getCodigo() == null) {
-				if (!contemGerente) {
-					EquipeUsuario usuarioGerente = new EquipeUsuario();
-					usuarioGerente.setUsuario(super.getUsuarioLogado());
-					usuarioGerente.setPapelUsuario(PapelUsuario.GERENTE);
-					usuarioGerente.setEquipe(entidade);
-					entidade.getEquipeUsuarios().add(usuarioGerente);
-				}
-				retorno = super.getFramework().inserirEquipe(
-						entidade);
-			} else {
-				if (contemGerente) {
-					if (super.isUsuarioAdmin()
-							|| super.isMesmaEquipe(entidade)) {
-						retorno = super.getFramework().alterarEquipe(
-								entidade);
+				Retorno<String, Collection<String>> retorno;
+				Equipe entidade = super.getEntidade();
+				boolean contemGerente = this.contemGerente(entidade);
+				if (entidade.getCodigo() == null) {
+					if (!contemGerente) {
+						EquipeUsuario usuarioGerente = new EquipeUsuario();
+						usuarioGerente.setUsuario(super.getUsuarioLogado());
+						usuarioGerente.setPapelUsuario(PapelUsuario.GERENTE);
+						usuarioGerente.setEquipe(entidade);
+						entidade.getEquipeUsuarios().add(usuarioGerente);
+					}
+					retorno = super.getFramework().inserirEquipe(
+							entidade);
+				} else {
+					if (contemGerente) {
+						if (super.isUsuarioAdmin()
+								|| super.isMesmaEquipe(entidade)) {
+							retorno = super.getFramework().alterarEquipe(
+									entidade);
+						} else {
+							super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+							super.getMensagens()
+									.getListaMensagens()
+									.add("Gerente só pode editar equipes que faça parte");
+							return false;
+						}
 					} else {
 						super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
 						super.getMensagens()
 								.getListaMensagens()
-								.add("Gerente só pode editar equipes que faça parte");
+								.add("Não é permitido existir Equipe sem Usuário com papel de Gerente!");
 						return false;
 					}
-				} else {
-					super.getMensagens().setTipoMensagem(TipoMensagem.ERRO);
-					super.getMensagens()
-							.getListaMensagens()
-							.add("Não é permitido existir Equipe sem Usuário com papel de Gerente!");
-					return false;
 				}
-			}
 			return super.montarRetorno(retorno);
 		} else {
 			super.montarMensagemErroPermissao("Usuário");

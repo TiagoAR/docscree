@@ -2,11 +2,15 @@ package br.ueg.unucet.docscree.visao.compositor;
 
 import java.util.Collection;
 
+import org.zkoss.zk.ui.HtmlBasedComponent;
+
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.ArtefatoControle;
+import br.ueg.unucet.docscree.interfaces.IComponenteDominio;
 import br.ueg.unucet.quid.dominios.Artefato;
 import br.ueg.unucet.quid.dominios.Categoria;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
+import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 import br.ueg.unucet.quid.extensao.interfaces.IServico;
 import br.ueg.unucet.quid.interfaces.IArtefatoControle;
 
@@ -46,7 +50,14 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	@AtributoVisao(nome="largura", isCampoEntidade = true)
 	private int largura;
 	
-
+	protected HtmlBasedComponent getComponentePorDominio(IParametro<?> parametro, String width) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+		try {
+			IComponenteDominio componente = this.getInstanciaComponente(parametro);
+			return componente.getComponente(parametro, width);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 	//GETTERS AND SETTERS
 	/**

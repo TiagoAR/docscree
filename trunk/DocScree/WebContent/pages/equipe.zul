@@ -17,7 +17,7 @@
 				<row>
 					<label value="Nome:" />
 					<cell colspan="3">
-						<textbox value="@{gerenciador.fldNome}" />
+						<textbox value="@{gerenciador.fldNome}" maxlength="255" />
 					</cell>
 				</row>
 				<row>
@@ -84,10 +84,10 @@
 				id="listboxLista">
 				<auxhead>
 					<auxheader>
-						<textbox value="@{gerenciador.filtroCodigo }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+						<textbox value="@{gerenciador.filtroCodigo }" onChange="gerenciador.acaoFiltrar()" instant="true" width="125px"/>
 					</auxheader>
 					<auxheader>
-						<textbox value="@{gerenciador.filtroNome }" onChange="gerenciador.acaoFiltrar()" instant="true"/>
+						<textbox value="@{gerenciador.filtroNome }" onChange="gerenciador.acaoFiltrar()" instant="true" width="125px"/>
 					</auxheader>
 					<auxheader colspan="3"></auxheader>
 				</auxhead>
@@ -103,27 +103,34 @@
 					<listcell label="@{item.nome }" />
 					<listcell label="@{item.status }" />
 					<listcell>
-						<button label="Editar" > 
-							<attribute name="onClick">
-								self.getParent().getParent().setSelected(true);
-								gerenciador.acaoEditar();
-							</attribute>
-						</button>
+						<div align="center">
+							<button label="Editar" width="60px"> 
+								<attribute name="onClick">
+									self.getParent().getParent().getParent().setSelected(true);
+									gerenciador.acaoEditar();
+								</attribute>
+							</button>
+						</div>
 					</listcell>
 					<listcell>
-						<button label="Desativar" >
-							<attribute name="onClick">
-								self.getParent().getParent().setSelected(true);
-								gerenciador.acaoExcluir();
-							</attribute>
-						</button>
+						<div align="center">
+							<button label="Desativar" width="60px">
+								<attribute name="onClick">
+									self.getParent().getParent().getParent().setSelected(true);
+									gerenciador.acaoExcluir();
+								</attribute>
+							</button>
+						</div>
 					</listcell>
 				</listitem>
 			</listbox>
-			<checkbox label="Exibir equipes inativas" checked="@{gerenciador.exibirInativos}" 
-				onClick="gerenciador.acaoFiltrar()" />
-
-			<button label="Fechar" onClick="gerenciador.fecharModalLista()" />
+			<vlayout>
+				<checkbox label="Exibir equipes inativas" checked="@{gerenciador.exibirInativos}" 
+					onClick="gerenciador.acaoFiltrar()" />
+				<div align="center">
+					<button label="Fechar" onClick="gerenciador.fecharModalLista()" />
+				</div>
+			</vlayout>
 		</window>
 	</groupbox>
 

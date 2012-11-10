@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.SerializableEventListener;
 import org.zkoss.zk.ui.select.Selectors;
@@ -15,6 +14,7 @@ import org.zkoss.zul.Button;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Row;
 import org.zkoss.zul.Timer;
 import org.zkoss.zul.Window;
 
@@ -263,14 +263,18 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		});
 	}
 	
-	// TODO descer para o superArtefato
-	public HtmlBasedComponent getComponentePorDominio(IParametro<?> parametro, String width) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		try {
-			IComponenteDominio componente = this.getInstanciaComponente(parametro);
-			return componente.getComponente(parametro, width);
-		} catch (Exception e) {
-			return null;
+	protected Row gerarRow(org.zkoss.zk.ui.Component[] componente) {
+		Row row = new Row();
+		for (Component component : componente) {
+			row.appendChild(component);
 		}
+		return row;
+	}
+	
+	protected Label gerarLabel(String valor) {
+		Label label = new Label();
+		label.setValue(valor+":");
+		return label;
 	}
 	
 	public IComponenteDominio getInstanciaComponente(IParametro<?> parametro) throws InstantiationException, IllegalAccessException, ClassNotFoundException {

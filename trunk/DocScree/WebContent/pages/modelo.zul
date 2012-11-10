@@ -1,6 +1,81 @@
-<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<?page title="Manter Modelo" contentType="text/html;charset=UTF-8"?>
+
 <zk>
-<window title="new page title" border="normal">
-New Content Here!
-</window>
+	<groupbox self="@{define(content)}" id="gpBoxModelo" width="650px"
+		closable="false" apply="${modeloCompositor}">
+		<caption label="Modelo" />
+		<grid sizedByContent="true" style="border: none;">
+			<columns>
+				<column width="170px" />
+				<column width="300px" />
+				<column width="170px" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Nome:" />
+					<textbox value="@{gerenciador.fldNome}" />
+				</row>
+				<row>
+					<label value="Descrição:" />
+					<textbox value="@{gerenciador.fldDescricao}" />
+				</row>
+				<row spans="3">
+					<hlayout>
+						<listbox	id="listArtefatosModelos" width="240px" rows="6" 
+									selectedItem="@{gerenciador.artefatoModeloSelecionado }"
+									model="@{gerenciador.modelArtefatoModelo}">
+							<listitem self="@{each=item }" value="@{item}">
+								<listcell label="@{item.nome }" />
+							</listitem>
+						</listbox>
+						<vbox>
+							<button label="Adicionar" width="80px" />
+							<button label="Remover" width="80px" />
+						</vbox>
+						<tree	id="treeItemModelo" width="240px" rows="6"
+								treeitemRenderer="@{gerenciador.itemModeloTreeRenderer}"
+								model="@{gerenciador.modelItemModelo}">
+						</tree>
+					</hlayout>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<div align="center">
+			<button label="Salvar" onClick="gerenciador.acaoSalvar()" />
+		</div>
+		
+		<window id="modalItemModelo" title="Especificar Item do Modelo" border="normal" closable="false"
+		mode="modal" width="750px" visible="true" >
+			<grid sizedByContent="true" style="border: none;">
+				<columns>
+					<column width="170px" />
+					<column width="300px" />
+				</columns>
+				<rows id="rowsItemModelo">
+					<row>
+						<label value="Nome:" />
+						<label value="@{gerenciador.membroModeloSelecionado.artefato.nome }"/>
+					</row>
+					<row>
+						<label value="Grau:"/>
+						<intbox value="@{gerenciador.membroModeloSelecionado.grau }"/>
+					</row>
+					<row>
+						<label value="Ordem:" />
+						<intbox value="@{gerenciador.membroModeloSelecionado.ordem }"/>
+					</row>
+					<row>
+						<label value="Multiplicidade:" />
+						<combobox>
+						
+						</combobox>
+					</row>
+				</rows>
+			</grid>
+		</window>
+	</groupbox>
+	
 </zk>

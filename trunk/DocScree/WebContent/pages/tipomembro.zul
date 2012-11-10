@@ -42,7 +42,7 @@
 				</row>
 				<row>
 					<button label="Adicionar Componentes" onClick="gerenciador.mapearTipoMembro()" width="155px"/>
-					<button label="Cancelar"/>
+					<button label="Cancelar" onClick="gerenciador.acaoCancelar()"/>
 				</row>
 			</rows>
 		</grid>

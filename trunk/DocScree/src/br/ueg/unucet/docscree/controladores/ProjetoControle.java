@@ -95,6 +95,7 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 				return false;
 			}
 		}
+		super.montarMensagemErroPermissao("Usuario");
 		return false;
 	}
 
@@ -128,6 +129,7 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 		visao.setFldEquipe(projeto.getEquipe());
 		visao.setFldModelo(projeto.getModelo());
 		visao.setFldNome(projeto.getNome());
+		visao.setFldDescricao(projeto.getDescricao());
 		boolean ativo = projeto.getStatus().equals(StatusEnum.ATIVO);
 		visao.setFldStatus(ativo);
 	}
