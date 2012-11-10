@@ -36,7 +36,7 @@ public class Equipe extends Persistivel {
 	/**
 	 * Lista de equipe usuarios que pertence a equipe.
 	 */
-	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="equipe")
+	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="equipe", orphanRemoval= true)
 	private Set<EquipeUsuario> equipeUsuarios;
 
 	// GETTERS AND SETTERS

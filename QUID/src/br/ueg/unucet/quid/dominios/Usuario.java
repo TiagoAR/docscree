@@ -2,7 +2,6 @@ package br.ueg.unucet.quid.dominios;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -47,7 +46,7 @@ public class Usuario extends Persistivel {
 	@Enumerated(EnumType.STRING)
 	private PerfilAcessoEnum perfilAcesso;
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="usuario")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy="usuario")
 	private Set<EquipeUsuario> equipeUsuarios;
 
 	public Usuario() {
