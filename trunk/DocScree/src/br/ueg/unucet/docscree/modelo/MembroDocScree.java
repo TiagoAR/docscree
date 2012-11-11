@@ -39,7 +39,7 @@ public class MembroDocScree {
 	}
 
 	/**
-	 * @return SuperTipoMembroVisaoZK<?> o(a) tipoMembroVisao
+	 * @return SuperTipoMembroVisaoZK o(a) tipoMembroVisao
 	 */
 	public SuperTipoMembroVisaoZK<?> getTipoMembroVisao() {
 		return tipoMembroVisao;
@@ -66,7 +66,7 @@ public class MembroDocScree {
 		this.idComponente = idComponente;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -78,7 +78,7 @@ public class MembroDocScree {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

@@ -15,6 +15,7 @@ import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroVisao;
 
 /**
+ * Controlador específico do caso de uso Montar ArtefatoModelo
  * 
  * @author Diego
  *
@@ -44,7 +45,11 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		return false;
 	}
 
-	
+	/**
+	 * Método que abre um ArtefatoModelo, joga a entidade para a visão para montagem
+	 * 
+	 * @return boolean se ação foi executada ou não
+	 */
 	public boolean acaoAbrirArtefato() {
 		setarEntidadeVisao(getVisao());
 		boolean membrosMapeados = ((ArtefatoCompositor) getVisao()).mapearMembrosAoArtefato();
@@ -66,6 +71,12 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		return getFramework().pesquisarArtefato(null, null, null);
 	}
 	
+	/**
+	 * Método que mapea um Membro, ou seja, faz a persistência de um novo Membro no framework,
+	 * ainda não o relacionamento com o ArtefatoModelo
+	 * 
+	 * @return boolean se a ação foi executada
+	 */
 	public boolean acaoMapearMembro() {
 		if (this.acaoRenovarBloqueio()) {
 			Retorno<Object, Object> retorno = null;
@@ -86,6 +97,11 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		}
 	}
 	
+	/**
+	 * Método que altera o Membro já persistido no framework
+	 * 
+	 * @return boolean se ação foi executada
+	 */
 	public boolean acaoAlterarMembro() {
 		if (this.acaoRenovarBloqueio()) {
 			Retorno<Object, Object> retorno = null;
@@ -96,6 +112,11 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		}
 	}
 	
+	/**
+	 * Ação que remove membro do framework
+	 * 
+	 * @return boolean se ação foi executada
+	 */
 	public boolean acaoRemoverMembro() {
 		if (this.acaoRenovarBloqueio()) {
 			Retorno<Object,Object> retorno = getFramework().removerMembro(getTipoMembroVisao().getMembro());
@@ -105,6 +126,12 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		}
 	}
 	
+	/**
+	 * Método que monta a mensagem de retorno através de um Retorno<Object, Object> vindo do framework
+	 * 
+	 * @param retorno vindo do framework
+	 * @return boolean resultado do Retorno
+	 */
 	private boolean montarRetornoObject(Retorno<Object, Object> retorno) {
 		if (retorno.isSucesso()) {
 			return true;
@@ -114,10 +141,20 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		}
 	}
 	
+	/**
+	 * Retorna o SuperTipoMembroVisaoZK que foi selecionado na visão através do mapa de atributos
+	 * 
+	 * @return SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado
+	 */
 	private SuperTipoMembroVisaoZK<?> getTipoMembroVisao() {
 		return (SuperTipoMembroVisaoZK<?>) getMapaAtributos().get("tipoMembroVisaoSelecionado");
 	}
 	
+	/**
+	 * Método que verifica se em alguma Equipe o usuário tem papel de Montador
+	 * 
+	 * @return boolean se o usuário tem papel de montador em alguma Equipe
+	 */
 	protected boolean isUsuarioMontador() {
 		if (super.listarPapeisDoUsuario().contains(PapelUsuario.MONTADOR)) {
 			return true;
@@ -128,10 +165,21 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		}
 	}
 	
+	/**
+	 * Método que verifica se é possivel executar a montagem do ArtefatoModelo
+	 * 
+	 * @return boolean se o usuário tem papel de Montador
+	 */
 	public boolean acaoMontarArtefato() {
 		return isUsuarioMontador();
 	}
 	
+	/**
+	 * Método que mapeia ArtefatoModelo, ou seja, altera o ArtefatoModelo e gera relacionamentos com os Serviços
+	 * e Membros adicionados a ele.
+	 * 
+	 * @return boolean se ação foi executada
+	 */
 	public boolean acaoMapearArtefato() {
 		boolean resultado = true;
 		if (getEntidade().getCategoria() != null) {
@@ -143,6 +191,12 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		return resultado;
 	}
 	
+	/**
+	 * Método que retorna um SuperTipoMembroVisaoZK a partir de um Membro
+	 * 
+	 * @param membro
+	 * @return SuperTipoMembroVisaoZK do Membro
+	 */
 	public SuperTipoMembroVisaoZK<?> getTipoMembroVisaoPeloMembro(Membro membro) {
 		Retorno<String,ITipoMembroVisao> retorno = getFramework().getTipoMembroVisao(membro.getTipoMembroModelo());
 		if (retorno.isSucesso()) {
@@ -154,6 +208,12 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		return null;
 	}
 	
+	/**
+	 * Método que retorna a Coleção de TipoMembroVisao do Framework, sem converter em SuperTipoMembroVisaoZK
+	 * ou analisar se é um TipoMembroVisao do DocScree
+	 * 
+	 * @return Coleção de ITipoMembroVisao
+	 */
 	public Collection<ITipoMembroVisao> getMapaTipoMembrosVisao() {
 		Retorno<String,Collection<ITipoMembroVisao>> retorno = super.getFramework().listaTipoMembroVisao();
 		Collection<ITipoMembroVisao> lista = new ArrayList<ITipoMembroVisao>();
@@ -163,6 +223,11 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		return lista;
 	}
 	
+	/**
+	 * Método que retorna os TipoMembroVisao pertecentes ao DocScree cadastrados no Framework.
+	 * 
+	 * @return List<SuperTipoMembroVisaoZK>
+	 */
 	public List<SuperTipoMembroVisaoZK> listarTipoMembrosVisao() {
 		List<SuperTipoMembroVisaoZK> lista = new ArrayList<SuperTipoMembroVisaoZK>();
 		for (ITipoMembroVisao tipoMembroVisao : getMapaTipoMembrosVisao()) {
@@ -173,6 +238,11 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		return lista;
 	}
 	
+	/**
+	 * Método que lista os ArtefatosModelos cadastrados no Framework para abri-lo e editá-lo.
+	 * 
+	 * @return List<Artefato> 
+	 */
 	public List<Artefato> listarArtefatosModelo() {
 		Retorno<String,Collection<Artefato>> retorno = executarListagem();
 		if (retorno.isSucesso()) {
