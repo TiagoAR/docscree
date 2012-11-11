@@ -99,6 +99,12 @@ public class EquipeControle extends GenericoControle<Equipe> {
 		}
 	}
 	
+	/**
+	 * Método que verifica se contém um Gerente na Equipe
+	 * 
+	 * @param equipe a ser verificada
+	 * @return boolean se contem Gerente na Equipe
+	 */
 	private boolean contemGerente(Equipe equipe) {
 		for (EquipeUsuario iterador : equipe.getEquipeUsuarios()) {
 			if (iterador.getPapelUsuario().equals(PapelUsuario.GERENTE)) {
@@ -231,7 +237,7 @@ public class EquipeControle extends GenericoControle<Equipe> {
 	/**
 	 * Executa a listagem de equipe via framework.
 	 * 
-	 * @return Retorno<String, Collection<Equipe>> retorno do framework
+	 * @return Retorno retorno do framework
 	 */
 	@Override
 	protected Retorno<String, Collection<Equipe>> executarListagem() {

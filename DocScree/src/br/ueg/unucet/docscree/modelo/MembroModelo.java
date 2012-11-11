@@ -11,12 +11,22 @@ import br.ueg.unucet.quid.extensao.enums.MultiplicidadeEnum;
 import br.ueg.unucet.quid.extensao.implementacoes.Parametro;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 
+/**
+ * POJO do ItemModelo adicionado a um Modelo, é a classe intermediária para ser editada
+ * enquanto constroe o Modelo e depois persistir o ItemModelo ao framework
+ * 
+ * @author Diego
+ *
+ */
 public class MembroModelo extends Persistivel{
 
 	/**
-	 * 
+	 * Generate Serial ID
 	 */
 	private static final long serialVersionUID = -5793496649609686591L;
+	/**
+	 * Identificador para o parâmetro "Nome"
+	 */
 	public static final String PARAMETRO_NOME = "NOME";
 	
 	/**
@@ -51,16 +61,27 @@ public class MembroModelo extends Persistivel{
 	 */
 	private Collection<IParametro<?>> listaParametros;
 	
+	/**
+	 * Construtor Default que inicializa a lista de Parâmetros
+	 */
 	public MembroModelo() {
 		iniciarParametros();
 	}
 	
+	/**
+	 * Método que inicializa a lista de Parâmetros
+	 */
 	private void iniciarParametros() {
 		List<IParametro<?>> lista = new ArrayList<IParametro<?>>();
 		lista.add(getParametroNome());
 		setListaParametros(lista);
 	}
 	
+	/**
+	 * Monta o Parâmetro Nome
+	 * 
+	 * @return IParametro Nome
+	 */
 	private IParametro<String> getParametroNome() {
 		Parametro<String> parametro = new Parametro<String>(String.class);
 		parametro.setNome(PARAMETRO_NOME);
@@ -177,7 +198,7 @@ public class MembroModelo extends Persistivel{
 	}
 
 	/**
-	 * @return Collection<IParametro<?>> o(a) listaParametros
+	 * @return Collection o(a) listaParametros
 	 */
 	public Collection<IParametro<?>> getListaParametros() {
 		return listaParametros;

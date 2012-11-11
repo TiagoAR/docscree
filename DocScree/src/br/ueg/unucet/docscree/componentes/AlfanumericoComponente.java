@@ -20,7 +20,7 @@ public class AlfanumericoComponente extends CaracteresComponente {
 	 */
 	private static final String CHARVALIDOS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.,-";
 
-	/* (non-Javadoc)
+	/**
 	 * @see br.ueg.unucet.docscree.componentes.CaracteresComponente#getComponente(br.ueg.unucet.quid.extensao.interfaces.IParametro, java.lang.String)
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -29,8 +29,12 @@ public class AlfanumericoComponente extends CaracteresComponente {
 		Textbox textbox = (Textbox) super.getComponente(parametro, width);
 		textbox.addEventListener("onChanging", new EventListener() {
 
-			/* (non-Javadoc)
-			 * @see org.zkoss.zk.ui.event.EventListener#onEvent(org.zkoss.zk.ui.event.Event)
+			/**
+			 * Método que executa o evento de verificar se o caracter digitado é válido
+			 * quando é alterado o valor do Textbox (onChanging)
+			 * 
+			 * @param event
+			 * @throws Exception
 			 */
 			@Override
 			public void onEvent(Event event) throws Exception {

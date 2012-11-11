@@ -89,7 +89,7 @@ public abstract class GenericoControle<E extends Persistivel> extends SuperContr
 	/**
 	 * Método que executa a listagem específica para cada caso de uso
 	 * 
-	 * @return Retorno<String, Collection<E>> retorno do framework
+	 * @return Retorno retorno do framework
 	 */
 	protected abstract Retorno<String, Collection<E>> executarListagem();
 	

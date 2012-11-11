@@ -11,23 +11,41 @@ import br.ueg.unucet.quid.dominios.Projeto;
 import br.ueg.unucet.quid.dominios.Retorno;
 import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 
+/**
+ * Controle sobre o Modal de Abertura de Projeto
+ * 
+ * @author Diego
+ *
+ */
 public class ModalProjetoControle extends GenericoControle<Projeto> {
 
+	/**
+	 * Método sobrescrito não usado
+	 */
 	@Override
 	public boolean acaoSalvar() {
 		return false;
 	}
 
+	/**
+	 * Método sobrescrito não usado
+	 */
 	@Override
 	public boolean acaoExcluir() {
 		return false;
 	}
 
+	/**
+	 * Método sobrescrito não usado
+	 */
 	@Override
 	public void setarEntidadeVisao(SuperCompositor<?> pVisao) {
 		
 	}
 
+	/**
+	 * @see GenericoControle#executarListagem()
+	 */
 	@Override
 	protected Retorno<String, Collection<Projeto>> executarListagem() {
 		Projeto projeto = new Projeto();
