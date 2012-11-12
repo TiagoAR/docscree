@@ -3,6 +3,7 @@ package br.ueg.unucet.docscree.controladores;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import br.ueg.unucet.docscree.interfaces.ICRUDControle;
 import br.ueg.unucet.docscree.utilitarios.BloquearArtefatoControle;
 import br.ueg.unucet.docscree.visao.compositor.ArtefatoCompositor;
 import br.ueg.unucet.docscree.visao.compositor.SuperArtefatoCompositor;
@@ -13,19 +14,34 @@ import br.ueg.unucet.quid.extensao.dominios.Membro;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroVisao;
 
+/**
+ * Super Controlador dos casos de uso que se referem a entidade ArtefatoModelo
+ * 
+ * @author Diego
+ *
+ */
 public class SuperArtefatoControle extends GenericoControle<Artefato> {
 
+	/**
+	 * @see ICRUDControle#acaoSalvar()
+	 */
 	@Override
 	public boolean acaoSalvar() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/**
+	 * @see ICRUDControle#acaoExcluir()
+	 */
 	@Override
 	public boolean acaoExcluir() {
 		return false;
 	}
 
+	/**
+	 * @see ICRUDControle#setarEntidadeVisao(SuperCompositor)
+	 */
 	@Override
 	public void setarEntidadeVisao(SuperCompositor<?> pVisao) {
 		SuperArtefatoCompositor<?> visao = (SuperArtefatoCompositor<?>) pVisao;
@@ -42,12 +58,21 @@ public class SuperArtefatoControle extends GenericoControle<Artefato> {
 		visao.setServicos(artefatoSelecionado.getServicos());
 	}
 
+	/**
+	 * @see GenericoControle#executarListagem()
+	 */
 	@Override
 	protected Retorno<String, Collection<Artefato>> executarListagem() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
+	/**
+	 * Método que verifica se o ArtefatoModelo está bloqueado para o usuário e o renova.
+	 * Caso não exista bloqueio é gerado um novo para o usuário que pediu.
+	 * Caso o ArtefatoModelo esteja bloqueado para o usuário adiciona mensagem a lista de mensagens.
+	 * 
+	 * @return boolean se foi renovado o bloqueio
+	 */
 	public boolean acaoRenovarBloqueio() {
 		if (BloquearArtefatoControle.obterInstancia().renovarBloqueio(getEntidade(), getUsuarioLogado())) {
 			return true;
@@ -57,6 +82,12 @@ public class SuperArtefatoControle extends GenericoControle<Artefato> {
 		}
 	}
 
+	/**
+	 * Método que lança os valores do ArtefatoModelo aos campos da visão
+	 * 
+	 * @param visao
+	 * @return ArtefatoModelo associado a visão
+	 */
 	protected Artefato lancarArtefatoNaVisao(ArtefatoCompositor visao) {
 		Retorno<String,Collection<Artefato>> retorno = getFramework().pesquisarArtefato(getEntidade().getCategoria(), getEntidade().getNome(), getEntidade().getDescricao());
 		Collection<Artefato> collection = retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
@@ -78,6 +109,12 @@ public class SuperArtefatoControle extends GenericoControle<Artefato> {
 		return artefato;
 	}
 	
+	/**
+	 * Método que retorna instancia do Membro através do parâmetro ITipoMembroVisao
+	 * 
+	 * @param tipoMembro a ser procurado
+	 * @return Membro instancia do Membro
+	 */
 	public Membro getMembroDoTipoMembro(ITipoMembroVisao tipoMembro) {
 		Retorno<String, ITipoMembroModelo> retorno = getFramework().getTipoMembroModelo(tipoMembro);
 		ITipoMembroModelo tipoMembroModelo = retorno.getParametros().get(Retorno.PARAMETRO_NOVA_INSTANCIA);
@@ -86,6 +123,12 @@ public class SuperArtefatoControle extends GenericoControle<Artefato> {
 		return membro;
 	}
 	
+	/**
+	 * Traz lista de Membros persistidos no Framework do TipoMembroModelo passado como parâmetro
+	 * 
+	 * @param tipoMembro para trazer lista de Membros do mesmo
+	 * @return Collection de Membros
+	 */
 	public Collection<Membro> listarMembrosPorTipoMembro(ITipoMembroModelo tipoMembro) {
 		Collection<Membro> lista = new ArrayList<Membro>();
 		Retorno<String, Collection<Membro>> retorno = getFramework().getListaMembro(tipoMembro);

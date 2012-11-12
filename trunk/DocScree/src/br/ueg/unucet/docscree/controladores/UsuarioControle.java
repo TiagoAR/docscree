@@ -98,6 +98,12 @@ public class UsuarioControle extends GenericoControle<Usuario> {
 		}
 	}
 	
+	/**
+	 * Método que efetua a ação de editar o próprio usuário. 
+	 * Efetua update no banco e altera dados na sessão
+	 * 
+	 * @return boolean se método foi executado
+	 */
 	public boolean acaoEditarProprioUsuario() {
 		if (super.getEntidade().getSenha().equals(super.getUsuarioLogado().getSenha())) {
 			if (super.getMapaAtributos().get("status").equals(Boolean.TRUE)) {
