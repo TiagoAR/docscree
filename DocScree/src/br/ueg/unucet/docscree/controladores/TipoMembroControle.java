@@ -8,9 +8,20 @@ import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.docscree.visao.compositor.TipoMembroCompositor;
 import br.ueg.unucet.quid.dominios.Retorno;
 
+/**
+ * Controlador específico do TipoMembro, faz upload de TipoMembros
+ * 
+ * @author Diego
+ *
+ */
 @SuppressWarnings("unchecked")
 public class TipoMembroControle extends SuperControle {
 
+	/**
+	 * Método que mapeia arquivo jar do TipoMembro ao framework
+	 * 
+	 * @return
+	 */
 	public boolean acaoMapearTipoMembro() {
 		Map<File, String> tipoMembros = (Map<File, String>) getMapaAtributos().get("tipoMembros");
 		if (!tipoMembros.isEmpty()) {

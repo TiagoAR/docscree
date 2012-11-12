@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import br.ueg.unucet.docscree.interfaces.ICRUDControle;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.docscree.visao.compositor.ProjetoCompositor;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
@@ -25,6 +26,8 @@ import br.ueg.unucet.quid.extensao.enums.StatusEnum;
 public class ProjetoControle extends GenericoControle<Projeto> {
 
 	/**
+	 * Efetua as conversões dos campos na tela para serem adicionadas a entidade
+	 * 
 	 * @see br.ueg.unucet.docscree.controladores.SuperControle#preAcao(java.lang.String)
 	 */
 	@Override
@@ -63,6 +66,9 @@ public class ProjetoControle extends GenericoControle<Projeto> {
 		return true;
 	}
 
+	/**
+	 * @see ICRUDControle#acaoSalvar()
+	 */
 	@Override
 	public boolean acaoSalvar() {
 		if (!super.isUsuarioComum()) {

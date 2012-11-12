@@ -5,15 +5,38 @@ import java.util.Timer;
 import br.ueg.unucet.quid.dominios.Artefato;
 import br.ueg.unucet.quid.dominios.Usuario;
 
+/**
+ * POJO que representa um ArtefatoModelo bloqueado para abrir/editar
+ * 
+ * @author Diego
+ *
+ */
 public class ArtefatoBloqueado {
 	
+	/**
+	 * Timer que executará desbloqueio do ArtefatoModelo após inatividade
+	 */
 	private Timer timer;
+	/**
+	 * ArtefatoModelo bloqueado
+	 */
 	private Artefato artefato;
+	/**
+	 * Usuário para qual o ArtefatoModelo está bloqueado, usuário que poderá abrir/editar
+	 */
 	private Usuario usuarioArtefato;
 	
+	/**
+	 * Default construtor
+	 */
 	public ArtefatoBloqueado() {
 	}
 	
+	/**
+	 * Construtor que associa ArtefatoModelo
+	 * 
+	 * @param artefato
+	 */
 	public ArtefatoBloqueado(Artefato artefato) {
 		this.artefato = artefato;
 	}
@@ -62,7 +85,7 @@ public class ArtefatoBloqueado {
 		this.usuarioArtefato = usuarioArtefato;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -74,7 +97,7 @@ public class ArtefatoBloqueado {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
