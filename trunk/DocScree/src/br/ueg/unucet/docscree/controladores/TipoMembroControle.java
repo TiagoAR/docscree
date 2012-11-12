@@ -20,7 +20,7 @@ public class TipoMembroControle extends SuperControle {
 	/**
 	 * Método que mapeia arquivo jar do TipoMembro ao framework
 	 * 
-	 * @return
+	 * @return boolean se TipoMembro foi mapeado
 	 */
 	public boolean acaoMapearTipoMembro() {
 		Map<File, String> tipoMembros = (Map<File, String>) getMapaAtributos().get("tipoMembros");
