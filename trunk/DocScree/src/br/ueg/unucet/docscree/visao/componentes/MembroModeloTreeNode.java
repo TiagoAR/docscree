@@ -4,6 +4,11 @@ import org.zkoss.zul.DefaultTreeNode;
 
 import br.ueg.unucet.docscree.modelo.MembroModelo;
 
+/**
+ * 
+ * @author Diego
+ *
+ */
 public class MembroModeloTreeNode extends DefaultTreeNode<MembroModelo> {
 
 	/**
@@ -39,6 +44,37 @@ public class MembroModeloTreeNode extends DefaultTreeNode<MembroModelo> {
 	 */
 	public void setAberto(boolean aberto) {
 		this.aberto = aberto;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getData() == null) ? 0 : getData().hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof MembroModeloTreeNode))
+			return false;
+		MembroModeloTreeNode other = (MembroModeloTreeNode) obj;
+		if (getData() == null) {
+			if (other.getData() != null)
+				return false;
+		} else if (!getData().equals(other.getData()))
+			return false;
+		return true;
 	}
 
 }

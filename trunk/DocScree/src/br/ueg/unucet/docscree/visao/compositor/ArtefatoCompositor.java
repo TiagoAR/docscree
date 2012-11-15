@@ -483,10 +483,10 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			@Override
 			public void onEvent(CheckEvent event) throws Exception {
 				if (event.isChecked()) {
-					getComponentePaletaPorId("gridListaMembros").setVisible(true);
+					getComponentePorId("gridListaMembros", getWindowPaleta()).setVisible(true);
 					getBinderPaleta().loadAll();
 				} else {
-					getComponentePaletaPorId("gridListaMembros").setVisible(false);
+					getComponentePorId("gridListaMembros", getWindowPaleta()).setVisible(false);
 					getBinderPaleta().loadAll();
 				}
 			}
@@ -517,7 +517,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 				Membro membro = event.getSelectedObjects().iterator().next();
 				Collection<IParametro<?>> listaParametros = membro.getTipoMembroModelo().getListaParametros();
 				for (IParametro<?> parametro : listaParametros) {
-					getInstanciaComponente(parametro).setValor(getComponentePaletaPorId("PARAMETRO"+parametro.getNome()), parametro.getValor());
+					getInstanciaComponente(parametro).setValor(getComponentePorId("PARAMETRO"+parametro.getNome(), getWindowPaleta()), parametro.getValor());
 				}
 				getBinderPaleta().loadAll();
 			}
@@ -688,14 +688,14 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return camposInformados.booleanValue();
 	}
 	
+	// TODO dar uma olhada
 	private boolean puxarValorParametrosModelo() {
+		super.setarValorAListaParametros(this.getTipoMembroVisaoSelecionado().getListaParametros(), getWindowPaleta());
+		
 		Collection<IParametro<?>> listaParametros = this.getTipoMembroVisaoSelecionado().getListaParametros();
 		boolean parametrosObrigatoriosPreenchidos = true;
 		for (IParametro<?> parametro : listaParametros) {
-			Object objeto = getParametroModeloPorId("PARAMETRO"+parametro.getNome(), parametro);
-			if (objeto != null && !objeto.toString().isEmpty() && objeto.toString() != String.valueOf(0)) {
-				parametro.setValor(String.valueOf(objeto));
-			} else if (parametro.isObrigatorio()) {
+			if (parametro.isObrigatorio()) {
 				parametrosObrigatoriosPreenchidos = false;
 				getControle().getMensagens().getListaMensagens().add("O parâmetro " + parametro.getRotulo()+ " é obrigatório!");
 			}
@@ -746,7 +746,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 	
 	private Object getParametroMembroPorId(String id) {
-		HtmlBasedComponent componente = getComponentePaletaPorId(id);
+		HtmlBasedComponent componente = getComponentePorId(id, getWindowPaleta());
 		Object resultado = "";
 		try {
 			resultado = Reflexao.getValorObjeto(componente, "value");
@@ -759,23 +759,8 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return resultado;
 	}
 	
-	private Object getParametroModeloPorId(String id, IParametro<?> parametro) {
-		HtmlBasedComponent componente = getComponentePaletaPorId(id);
-		try {
-			IComponenteDominio componenteDominio = super.getInstanciaComponente(parametro);
-			return componenteDominio.getValor(componente);
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	private void setarParametroModeloPorId(String id, IParametro<?> parametro) {
-		HtmlBasedComponent componente = getComponentePaletaPorId(id);
+		HtmlBasedComponent componente = getComponentePorId(id, getWindowPaleta());
 		try {
 			IComponenteDominio componenteDominio = super.getInstanciaComponente(parametro);
 			componenteDominio.setValor(componente, parametro.getValor());
@@ -788,17 +773,13 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		}
 	}
 	
-	private HtmlBasedComponent getComponentePaletaPorId(String id) {
-		return (HtmlBasedComponent) getWindowPaleta().getFellow(id);
-	}
-	
 	private Grid gerarGridPropriedades() {
 		Grid grid = new Grid();
 		grid.setHeight("400px;");
 		Rows rows = new Rows();
 		grid.appendChild(rows);
 		gerarParametrosMembro(rows);
-		gerarParametrosTipoMembro(rows);
+		gerarParametrosTipoMembro(rows, getTipoMembroVisaoSelecionado(), WIDTH);
 		return grid;
 	}
 	
@@ -823,25 +804,6 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	private void setarValoresParametrosTipoMembro() {
 		for (IParametro<?> parametro : getTipoMembroVisaoSelecionado().getMembro().getTipoMembroModelo().getListaParametros()) {
 			setarParametroModeloPorId("PARAMETRO"+parametro.getNome(), parametro);
-		}
-	}
-	
-	private void gerarParametrosTipoMembro(Rows rows) {
-		Collection<IParametro<?>> listaParametros = this.getTipoMembroVisaoSelecionado().getListaParametros();
-		for (IParametro<?> parametro : listaParametros) {
-			HtmlBasedComponent componenteDominio = null;
-			rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarLabel(parametro.getRotulo())}));
-			try {
-				componenteDominio = super.getComponentePorDominio(parametro, WIDTH);
-			} catch (ClassNotFoundException e) {
-			} catch (InstantiationException e) {
-			} catch (IllegalAccessException e) {
-			}
-			if (componenteDominio == null) {
-				componenteDominio = this.gerarTextBoxGenerico();
-			}
-			componenteDominio.setId("PARAMETRO"+parametro.getNome());
-			rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {componenteDominio}));
 		}
 	}
 	
@@ -880,12 +842,6 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		textbox.setId(id);
 		textbox.setWidth(WIDTH);
 		textbox.setTooltiptext(tooltip);
-		return textbox;
-	}
-	
-	private Textbox gerarTextBoxGenerico() {
-		Textbox textbox = new Textbox();
-		textbox.setWidth(WIDTH);
 		return textbox;
 	}
 	

@@ -4,6 +4,11 @@ import org.zkoss.zul.DefaultTreeModel;
 
 import br.ueg.unucet.docscree.modelo.MembroModelo;
 
+/**
+ * 
+ * @author Diego
+ *
+ */
 public class MembroModeloTreeModel extends DefaultTreeModel<MembroModelo> {
 
 	/**
@@ -11,7 +16,7 @@ public class MembroModeloTreeModel extends DefaultTreeModel<MembroModelo> {
 	 */
 	private static final long serialVersionUID = 4498400566868961514L;
 	
-	MembroModeloTreeNode raiz;
+	private MembroModeloTreeNode raiz;
 
 	public MembroModeloTreeModel(MembroModeloTreeNode root) {
 		super(root);
@@ -113,4 +118,11 @@ public class MembroModeloTreeModel extends DefaultTreeModel<MembroModelo> {
         return null;
     }
 
+	/**
+	 * @return MembroModeloTreeNode o(a) raiz
+	 */
+	public MembroModeloTreeNode getRaiz() {
+		return raiz;
+	}
+    
 }

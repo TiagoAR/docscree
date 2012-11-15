@@ -27,6 +27,7 @@ public class MembroModeloTreeRenderer implements TreeitemRenderer<MembroModeloTr
         if (itemModelo.getOrdem() > 0) {
         	indice += "." + String.valueOf(itemModelo.getOrdem()).trim();
         }
+        indice += "-";
         hl.appendChild(new Label(indice));
         hl.appendChild(new Label(itemModelo.getArtefato().getNome()));
         hl.setSclass("h-inline-block");
