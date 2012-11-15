@@ -3,6 +3,7 @@ package br.ueg.unucet.quid.extensao.implementacoes;
 import java.util.Collection;
 
 import br.ueg.unucet.quid.extensao.dominios.Identificavel;
+import br.ueg.unucet.quid.extensao.interfaces.IContemParametro;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembro;
 import br.ueg.unucet.quid.extensao.interfaces.IVersionavel;
@@ -12,8 +13,12 @@ import br.ueg.unucet.quid.extensao.interfaces.IVersionavel;
  * @author QUID
  *
  */
-public abstract class SuperTipoMembro extends Identificavel implements ITipoMembro, IVersionavel {
+public abstract class SuperTipoMembro extends Identificavel implements ITipoMembro, IVersionavel, IContemParametro {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1683490897953942797L;
 	/**
 	 * Lista de parametros sobre o TipoMembro.
 	 */
@@ -31,10 +36,12 @@ public abstract class SuperTipoMembro extends Identificavel implements ITipoMemb
 	 */
 	private Object valor;
 	
+	@Override
 	public Collection<IParametro<?>> getListaParametros(){
 		return this.listaParametros;
 	}
 	
+	@Override
 	public void setListaParametros(Collection<IParametro<?>> parametros){
 		this.listaParametros = parametros;
 	}
