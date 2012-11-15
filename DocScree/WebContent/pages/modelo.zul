@@ -31,7 +31,7 @@
 							</listitem>
 						</listbox>
 						<vbox>
-							<button label="Adicionar" width="80px" />
+							<button label="Adicionar" width="80px" onClick="gerenciador.acaoAdicionarArtefatoModelo()" />
 							<button label="Remover" width="80px" />
 						</vbox>
 						<tree	id="treeItemModelo" width="240px" rows="6"
@@ -47,8 +47,8 @@
 			<button label="Salvar" onClick="gerenciador.acaoSalvar()" />
 		</div>
 		
-		<window id="modalItemModelo" title="Especificar Item do Modelo" border="normal" closable="false"
-		mode="modal" width="750px" visible="true" >
+		<window	id="modalItemModelo" title="Especificar Item do Modelo" border="normal" closable="false"
+				mode="modal" width="490px" visible="false">
 			<grid sizedByContent="true" style="border: none;">
 				<columns>
 					<column width="170px" />
@@ -56,7 +56,7 @@
 				</columns>
 				<rows id="rowsItemModelo">
 					<row>
-						<label value="Nome:" />
+						<label value="Nome ArtefatoModelo:" />
 						<label value="@{gerenciador.membroModeloSelecionado.artefato.nome }"/>
 					</row>
 					<row>
@@ -69,12 +69,24 @@
 					</row>
 					<row>
 						<label value="Multiplicidade:" />
-						<combobox>
-						
+						<combobox	model="@{gerenciador.multiplicidadeEnum}"
+									width="254px"
+									selectedItem="@{gerenciador.membroModeloSelecionado.multiplicidade }" >
+							<comboitem	self="@{each=item }" value="@{item}"
+										label="@{item }" />
 						</combobox>
+					</row>
+					<row>
+						<label value="Ordem de preenchimento:" />
+						<intbox value="@{gerenciador.membroModeloSelecionado.ordemPreenchimento }"/>
 					</row>
 				</rows>
 			</grid>
+			<separator />
+			<div align="center">
+				<button label="Ok" onClick="gerenciador.acaoAdicionarItemModelo();"/>
+				<button label="Cancelar" onClick="modalItemModelo.setVisible(false);"/>
+			</div>
 		</window>
 	</groupbox>
 	

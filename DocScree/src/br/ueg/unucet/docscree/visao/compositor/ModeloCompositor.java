@@ -1,24 +1,32 @@
 package br.ueg.unucet.docscree.visao.compositor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.zkoss.zk.ui.HtmlBasedComponent;
+import org.zkoss.zkplus.databind.AnnotateDataBinder;
 import org.zkoss.zkplus.databind.BindingListModelListModel;
+import org.zkoss.zul.Row;
 import org.zkoss.zul.Rows;
 import org.zkoss.zul.SimpleListModel;
+import org.zkoss.zul.Window;
 
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.ModeloControle;
+import br.ueg.unucet.docscree.interfaces.IComponenteDominio;
 import br.ueg.unucet.docscree.modelo.MembroModelo;
+import br.ueg.unucet.docscree.modelo.Mensagens;
 import br.ueg.unucet.docscree.visao.componentes.MembroModeloTreeModel;
 import br.ueg.unucet.docscree.visao.componentes.MembroModeloTreeNode;
 import br.ueg.unucet.docscree.visao.renderizadores.MembroModeloTreeRenderer;
 import br.ueg.unucet.quid.dominios.Artefato;
 import br.ueg.unucet.quid.dominios.Modelo;
 import br.ueg.unucet.quid.extensao.enums.MultiplicidadeEnum;
+import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Component
@@ -36,15 +44,18 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 	@AtributoVisao(isCampoEntidade=true, nome="descricao")
 	private String fldDescricao;
 	@AtributoVisao(isCampoEntidade=false, nome="itemModelo")
-	private Map<String, MembroModelo> itensModelo;
+	private Map<String, MembroModelo> itensModelo = new HashMap<String, MembroModelo>();
 	//Atributos auxiliares para visão
 	@AtributoVisao(isCampoEntidade=false, nome="artefatoModeloSelecionado")
 	private Artefato artefatoModeloSelecionado;
 	
+	@AtributoVisao(isCampoEntidade=false, nome="membroModeloSelecionado")
 	private MembroModelo membroModeloSelecionado;
 	
-	private MembroModeloTreeModel modelItemModelo = new MembroModeloTreeModel(new MembroModeloTreeNode(null));
+	private MembroModeloTreeModel modelItemModelo = new MembroModeloTreeModel(new MembroModeloTreeNode(null, new MembroModeloTreeNode[] {}));
 	private MembroModeloTreeRenderer treeRenderer = null;
+	
+	private AnnotateDataBinder binderModalArtefatoModelo = null;
 	
 
 	@Override
@@ -75,9 +86,77 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		
 	}
 	
+	public void carregarDados() {
+		setArtefatoModeloSelecionado(null);
+		setModelItemModelo(new MembroModeloTreeModel(new MembroModeloTreeNode(null)));
+	}
+	
+	/**
+	 * Método que executa a ação do botão Adicionar, exibindo modal para preencher os dados do Item Modelo
+	 */
 	public void acaoAdicionarArtefatoModelo() {
-		setMembroModeloSelecionado(criarItemModeloDoArtefato());
-		//TODO abrir aqui
+		if (getArtefatoModeloSelecionado() != null) {
+			setMembroModeloSelecionado(criarItemModeloDoArtefato());
+			for (IParametro<?> parametro : getMembroModeloSelecionado().getListaParametros()) {
+				try {
+					String idComponente = "PARAMETRO"+parametro.getNome();
+					String idRow = "ROW" + parametro.getNome();
+					if (getRowsItemModelo().hasFellow(idRow)) {
+						getRowsItemModelo().getFellow(idRow).detach();
+					}
+					HtmlBasedComponent componente = super.getComponentePorDominio(parametro, null);
+					componente.setId(idComponente);
+					IComponenteDominio componenteDominio = super.getInstanciaComponente(parametro);
+					componenteDominio.setValor(componente, parametro.getValor());
+					Row row = super.gerarRow(new org.zkoss.zk.ui.Component[] {super.gerarLabel(parametro.getRotulo()), componente});
+					row.setId(idRow);
+					getRowsItemModelo().appendChild(row);
+				} catch (Exception e) {
+					//Se ocorrer exception é erro de implementação do Desenvolvedor do TipoMembro/MembroModelo
+				}
+			}
+			abrirModalItemModelo();
+			getBinderItemModelo().loadAll();
+		} else {
+			Mensagens mensagens = new Mensagens();
+			mensagens.getListaMensagens().add("É necessário escolher um ArtefatoModelo para adicionar");
+			mostrarMensagem(false);
+		}
+	}
+	
+	public void acaoAdicionarItemModelo() {
+		super.binder.saveAll();
+		super.setarValorAListaParametros(getMembroModeloSelecionado().getListaParametros(), getModalItemModelo());
+		boolean retorno = false;
+		try {
+			retorno = getControle().fazerAcao("validarItemModelo", (SuperCompositor)this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (retorno && renderizarNoArvore(getMembroModeloSelecionado())) {
+			getItensModelo().put(gerarKeyMembroModelo(getMembroModeloSelecionado()), getMembroModeloSelecionado());
+			getModalItemModelo().setVisible(false);
+		} else {
+			retorno = false;
+		}
+		mostrarMensagem(retorno);
+	}
+	
+	private boolean renderizarNoArvore(MembroModelo itemModelo) {
+		if (itemModelo.getOrdem() == 0) {
+			getModelItemModelo().add(getModelItemModelo().getRaiz(), new MembroModeloTreeNode(itemModelo, new MembroModeloTreeNode[] {}));
+		} else {
+			try {
+				int indice = getModelItemModelo().getIndexOfChild(getModelItemModelo().getRaiz(), new MembroModeloTreeNode(getItensModelo().get(itemModelo.getGrau()+ "-0")));
+				MembroModeloTreeNode pai = (MembroModeloTreeNode) getModelItemModelo().getChild(getModelItemModelo().getRaiz(), indice);
+				getModelItemModelo().add(pai, new MembroModeloTreeNode(itemModelo));
+			} catch (Exception e) {
+				e.printStackTrace();// TODO retirar
+				getControle().getMensagens().getListaMensagens().add("Deve ser criado o pai do nó com mesmo grau e ordem \"0\"");
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	private MembroModelo criarItemModeloDoArtefato() {
@@ -87,8 +166,16 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		return modelo;
 	}
 	
+	public void abrirModalItemModelo() {
+		getModalItemModelo().doModal();
+	}
+	
+	private String gerarKeyMembroModelo(MembroModelo itemModelo) {
+		return itemModelo.getGrau() + "-" + itemModelo.getOrdem();
+	}
+	
 	public BindingListModelListModel<Artefato> getModelArtefatoModelo() {
-		return new BindingListModelListModel<Artefato>(new SimpleListModel<Artefato>(new ArrayList()));
+		return new BindingListModelListModel<Artefato>(new SimpleListModel<Artefato>(new ArrayList(getListaArtefatos())));
 	}
 	
 	public MembroModeloTreeRenderer getItemModeloTreeRenderer() {
@@ -102,8 +189,28 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		return MultiplicidadeEnum.values();
 	}
 	
+	/**
+	 * Método que retorna listagem de ArtefatosModelo
+	 * 
+	 * @return Collection lista de ArtefatosModelo
+	 */
+	public Collection<Artefato> getListaArtefatos() {
+		return getControle().listarArtefatosModelo();
+	}
+	
 	public Rows getRowsItemModelo() {
-		return (Rows) getComponent().getFellow("modalItemModelo").getFellow("rowsItemModelo");
+		return (Rows) getModalItemModelo().getFellow("rowsItemModelo");
+	}
+	
+	public Window getModalItemModelo() {
+		return (Window) getComponent().getFellow("modalItemModelo");
+	}
+	
+	public AnnotateDataBinder getBinderItemModelo() {
+		if (this.binderModalArtefatoModelo == null) {
+			this.binderModalArtefatoModelo = new AnnotateDataBinder(getModalItemModelo());
+		}
+		return this.binderModalArtefatoModelo;
 	}
 	
 	//GETTERS AND SETTERS

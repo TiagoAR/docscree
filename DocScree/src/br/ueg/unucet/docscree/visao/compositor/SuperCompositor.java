@@ -1,10 +1,12 @@
 package br.ueg.unucet.docscree.visao.compositor;
 
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.SerializableEventListener;
 import org.zkoss.zk.ui.select.Selectors;
@@ -15,6 +17,8 @@ import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Row;
+import org.zkoss.zul.Rows;
+import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Timer;
 import org.zkoss.zul.Window;
 
@@ -22,6 +26,7 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 import br.ueg.unucet.docscree.controladores.SuperControle;
 import br.ueg.unucet.docscree.interfaces.IComponenteDominio;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
+import br.ueg.unucet.quid.extensao.interfaces.IContemParametro;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 
 /**
@@ -203,6 +208,64 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 			gerarMensagemErro(mensagens);
 			adicionarBotaoFechar(mensagens);
 		}
+	}
+	
+	protected void gerarParametrosTipoMembro(Rows rows, IContemParametro componenteComParametro, String width) {
+		Collection<IParametro<?>> listaParametros = componenteComParametro.getListaParametros();
+		for (IParametro<?> parametro : listaParametros) {
+			HtmlBasedComponent componenteDominio = null;
+			rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarLabel(parametro.getRotulo())}));
+			try {
+				componenteDominio = getComponentePorDominio(parametro, width);
+			} catch (ClassNotFoundException e) {
+			} catch (InstantiationException e) {
+			} catch (IllegalAccessException e) {
+			}
+			if (componenteDominio == null) {
+				componenteDominio = this.gerarTextBoxGenerico(width);
+			}
+			componenteDominio.setId("PARAMETRO"+parametro.getNome());
+			rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {componenteDominio}));
+		}
+	}
+	
+	protected HtmlBasedComponent getComponentePorDominio(IParametro<?> parametro, String width) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+		try {
+			IComponenteDominio componente = this.getInstanciaComponente(parametro);
+			return componente.getComponente(parametro, width);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	protected void setarValorAListaParametros(Collection<IParametro<?>> listaParametros, Component pai) {
+		for (IParametro<?> parametro : listaParametros) {
+			Object objeto = getValorParametroPorId("PARAMETRO"+parametro.getNome(), parametro, pai);
+			if (objeto != null && !objeto.toString().isEmpty() && objeto.toString() != String.valueOf(0)) {
+				parametro.setValor(String.valueOf(objeto));
+			}
+		}
+	}
+	
+	protected Object getValorParametroPorId(String id, IParametro<?> parametro, Component pai) {
+		HtmlBasedComponent componente = getComponentePorId(id, pai);
+		try {
+			IComponenteDominio componenteDominio = getInstanciaComponente(parametro);
+			return componenteDominio.getValor(componente);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	protected HtmlBasedComponent getComponentePorId(String id, Component pai) {
+		return (HtmlBasedComponent) pai.getFellow(id);
+	}
+	
+	protected Textbox gerarTextBoxGenerico(String width) {
+		Textbox textbox = new Textbox();
+		textbox.setWidth(width);
+		return textbox;
 	}
 	
 	/**

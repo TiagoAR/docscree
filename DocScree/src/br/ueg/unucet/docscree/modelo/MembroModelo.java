@@ -7,6 +7,7 @@ import java.util.List;
 import br.ueg.unucet.quid.anotations.SemComponente;
 import br.ueg.unucet.quid.dominios.Artefato;
 import br.ueg.unucet.quid.extensao.dominios.Persistivel;
+import br.ueg.unucet.quid.extensao.enums.DominioEntradaEnum;
 import br.ueg.unucet.quid.extensao.enums.MultiplicidadeEnum;
 import br.ueg.unucet.quid.extensao.implementacoes.Parametro;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
@@ -27,7 +28,7 @@ public class MembroModelo extends Persistivel{
 	/**
 	 * Identificador para o parâmetro "Nome"
 	 */
-	public static final String PARAMETRO_NOME = "NOME";
+	public static final String PARAMETRO_IDENTIFICADOR = "IDENTIFICADOR";
 	
 	/**
 	 * Artefato que compoem o item do modelo.
@@ -84,8 +85,9 @@ public class MembroModelo extends Persistivel{
 	 */
 	private IParametro<String> getParametroNome() {
 		Parametro<String> parametro = new Parametro<String>(String.class);
-		parametro.setNome(PARAMETRO_NOME);
-		parametro.setRotulo("Nome");
+		parametro.setNome(PARAMETRO_IDENTIFICADOR);
+		parametro.setRotulo("Identificador");
+		parametro.setDominioEntrada(DominioEntradaEnum.CARACTERES);
 		parametro.setObrigatorio(true);
 		return parametro;
 	}
@@ -119,7 +121,7 @@ public class MembroModelo extends Persistivel{
 	 */
 	public void setArtefato(Artefato artefato) {
 		this.artefato = artefato;
-		getParametroPorNome(PARAMETRO_NOME).setValor(this.artefato.getNome());
+		getParametroPorNome(PARAMETRO_IDENTIFICADOR).setValor(this.artefato.getNome());
 	}
 
 	/**
@@ -209,6 +211,43 @@ public class MembroModelo extends Persistivel{
 	 */
 	public void setListaParametros(Collection<IParametro<?>> listaParametros) {
 		this.listaParametros = listaParametros;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((grau == null) ? 0 : grau.hashCode());
+		result = prime * result + ((ordem == null) ? 0 : ordem.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof MembroModelo))
+			return false;
+		MembroModelo other = (MembroModelo) obj;
+		if (grau == null) {
+			if (other.grau != null)
+				return false;
+		} else if (!grau.equals(other.grau))
+			return false;
+		if (ordem == null) {
+			if (other.ordem != null)
+				return false;
+		} else if (!ordem.equals(other.ordem))
+			return false;
+		return true;
 	}
 
 }
