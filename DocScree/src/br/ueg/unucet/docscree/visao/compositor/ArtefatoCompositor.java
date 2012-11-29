@@ -371,7 +371,9 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		}
 		if (this.getTipoMembroVisaoSelecionado() != null) {
 			try {
+				Membro membro = getTipoMembroVisaoSelecionado().getMembro();
 				this.setTipoMembroVisaoSelecionado(getTipoMembroVisaoSelecionado().getClass().newInstance());
+				getTipoMembroVisaoSelecionado().setMembro(membro);
 			} catch (Exception e) {
 				
 			}
