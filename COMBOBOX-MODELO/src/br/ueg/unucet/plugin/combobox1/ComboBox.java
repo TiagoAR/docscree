@@ -10,6 +10,7 @@ import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroModelo;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
 
+@SuppressWarnings("serial")
 public class ComboBox extends SuperTipoMembroModelo implements
 		ITipoMembroModelo {
 	/**
@@ -21,7 +22,7 @@ public class ComboBox extends SuperTipoMembroModelo implements
 		setNome("combobox");
 		setDescricao("Caixa de selecao de opcao");
 		setVersao(1);
-		setRevisao(1);
+		setRevisao(2);
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class ComboBox extends SuperTipoMembroModelo implements
 		while (iterator.hasNext()) {			
 			IParametro<String> param = iterator.next();
 			System.out.println(param);
-			if (param.getNome() == ComboBox.LISTA_VALORES) {
+			if (param.getNome().equals(ComboBox.LISTA_VALORES.toString())) {
 				if (param.getValor() != null) {
 					String[] valores = param.getValor().split(",");
 					if ( valores.length>1) {
