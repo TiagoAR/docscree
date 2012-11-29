@@ -298,7 +298,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	private HtmlBasedComponent gerarNovaInstanciaVisualizacao(String idComponente, Membro membro) {
 		Div div = null;
 		try {
-			HtmlBasedComponent novaInstancia = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisaoVisualizacao().getClass().newInstance();
+			HtmlBasedComponent novaInstancia = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisaoVisualizacao();
 			novaInstancia.setId(idComponente);
 			novaInstancia.setStyle(getTipoMembroVisaoSelecionado().getCss(membro) + ESTILOCOMPONENTE);
 			div = new Div();
@@ -308,8 +308,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			setarEventDiv(div);
 			div.appendChild(novaInstancia);
 			getTipoMembroVisaoSelecionado().getVisualizacaoExemplo(novaInstancia, "Exemplo");
-		} catch (InstantiationException e) {
-		} catch (IllegalAccessException e) {
+		} catch (Exception e) {
 		}
 		return div;
 	}
@@ -371,7 +370,11 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			super.binder.saveAll();
 		}
 		if (this.getTipoMembroVisaoSelecionado() != null) {
-			
+			try {
+				this.setTipoMembroVisaoSelecionado(getTipoMembroVisaoSelecionado().getClass().newInstance());
+			} catch (Exception e) {
+				
+			}
 			Window windowPaleta = getWindowPaleta();
 			windowPaleta.getChildren().clear();
 			

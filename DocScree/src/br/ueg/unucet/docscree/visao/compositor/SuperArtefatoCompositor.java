@@ -130,7 +130,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	protected HtmlBasedComponent gerarNovaInstancia(String idComponente, Membro membro) {
 		Div div = null;
 		try {
-			HtmlBasedComponent novaInstancia = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisaoPreenchimento().getClass().newInstance();
+			HtmlBasedComponent novaInstancia = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisaoPreenchimento();
 			novaInstancia.setId(idComponente);
 			novaInstancia.setStyle(getTipoMembroVisaoSelecionado().getCss(membro) + ESTILOCOMPONENTE);
 			div = new Div();
@@ -138,8 +138,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 			div.setWidth(String.valueOf(membro.getComprimento())+"px");
 			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + ESTILODIV);
 			div.appendChild(novaInstancia);
-		} catch (InstantiationException e) {
-		} catch (IllegalAccessException e) {
+		} catch (Exception e) {
 		}
 		return div;
 	}
