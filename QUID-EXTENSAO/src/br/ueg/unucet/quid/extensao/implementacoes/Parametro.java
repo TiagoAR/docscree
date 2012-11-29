@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import br.ueg.unucet.quid.extensao.enums.DominioEntradaEnum;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
-import br.ueg.unucet.quid.extensao.utilitarias.ConversorGenericoString;
 
 /**
  * Classe que identifica um parametro para o TipoMembro do framework.
@@ -13,6 +12,7 @@ import br.ueg.unucet.quid.extensao.utilitarias.ConversorGenericoString;
  *
  * @param <T> Classe do parametro.
  */
+@SuppressWarnings("serial")
 public class Parametro<T> implements IParametro<T> {
 
 	/**
@@ -114,6 +114,7 @@ public class Parametro<T> implements IParametro<T> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		@SuppressWarnings("rawtypes")
 		Parametro other = (Parametro) obj;
 		if (dominioEntrada != other.dominioEntrada)
 			return false;
@@ -157,6 +158,7 @@ public class Parametro<T> implements IParametro<T> {
 	 * @param valor2 Valor a ser feito o cast.
 	 * @return Objeto do valor a ser feito o cast.
 	 */
+	@SuppressWarnings("unchecked")
 	protected T cast(String valor2) {
 		T valorSetar = null;
 		try {
@@ -182,5 +184,10 @@ public class Parametro<T> implements IParametro<T> {
 
 	public void setClasse(Class<T> classe) {
 		this.classe = classe;
+	}
+
+	@Override
+	public void setValorClass(T valor) {
+		this.valor = valor;
 	}
 }

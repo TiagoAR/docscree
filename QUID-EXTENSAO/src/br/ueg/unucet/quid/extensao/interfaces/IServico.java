@@ -10,6 +10,11 @@ import java.util.Collection;
 public interface IServico extends IVersionavel{
 	
 
+	static final String PARAMETRO_RESPOSTA_RESULTADO = "RESULTADO";
+	static final String PARAMETRO_RESPOSTA_EXCECAO = "EXCECAO";
+	static final String PARAMETRO_ARTEFATO_MODELO = "ARTEFATO_MODELO";
+	static final String PARAMETRO_USUARIO = "USUARIO";
+	static final String PARAMETRO_PROJETO = "PROJETO";
 	
 	/** Retona o TipoMembro modelo que representa o servico, caso ele necessite. 
 	 * @return ITipoMembroModelo que representa o artefato.
@@ -48,6 +53,7 @@ public interface IServico extends IVersionavel{
 	 * @param parametros Parametros da execucao do servico.
 	 * @return Parametros de retorno da execucao do servico.
 	 */
+	@SuppressWarnings("rawtypes")
 	Collection<IParametro> executaAcao();
 	
 	/**Retorna lista de parametros do servico
