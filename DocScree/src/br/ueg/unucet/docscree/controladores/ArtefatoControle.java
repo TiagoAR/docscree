@@ -6,13 +6,19 @@ import java.util.List;
 
 import br.ueg.unucet.docscree.utilitarios.BloquearArtefatoControle;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
-import br.ueg.unucet.docscree.visao.compositor.ArtefatoCompositor;
+import br.ueg.unucet.docscree.visao.compositor.SuperArtefatoCompositor;
 import br.ueg.unucet.quid.dominios.Artefato;
+import br.ueg.unucet.quid.dominios.ItemModelo;
+import br.ueg.unucet.quid.dominios.Projeto;
 import br.ueg.unucet.quid.dominios.Retorno;
-import br.ueg.unucet.quid.enums.PapelUsuario;
+import br.ueg.unucet.quid.dominios.Usuario;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
+import br.ueg.unucet.quid.extensao.implementacoes.Parametro;
 import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
+import br.ueg.unucet.quid.extensao.interfaces.IParametro;
+import br.ueg.unucet.quid.extensao.interfaces.IServico;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroVisao;
+import br.ueg.unucet.quid.servicosquid.ServicoPersistencia;
 
 /**
  * Controlador específico do caso de uso Montar ArtefatoModelo
@@ -37,7 +43,7 @@ public class ArtefatoControle extends SuperArtefatoControle{
 			instanciaArtefato.setLargura(super.getEntidade().getLargura());
 			retorno = super.getFramework().mapearArtefato(instanciaArtefato);
 			if (retorno.isSucesso()) {
-				Artefato artefatoLancao = lancarArtefatoNaVisao((ArtefatoCompositor) getVisao());
+				Artefato artefatoLancao = lancarArtefatoNaVisao((SuperArtefatoCompositor) getVisao());
 				BloquearArtefatoControle.obterInstancia().adicionarBloqueioArtefato(artefatoLancao, getUsuarioLogado());
 			}
 			return super.montarRetorno(retorno);
@@ -52,7 +58,7 @@ public class ArtefatoControle extends SuperArtefatoControle{
 	 */
 	public boolean acaoAbrirArtefato() {
 		setarEntidadeVisao(getVisao());
-		boolean membrosMapeados = ((ArtefatoCompositor) getVisao()).mapearMembrosAoArtefato();
+		boolean membrosMapeados = ((SuperArtefatoCompositor) getVisao()).mapearMembrosAoArtefato();
 		if (membrosMapeados) {
 			return true;
 		} else {
@@ -141,6 +147,57 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		}
 	}
 	
+	public boolean acaoChamarServicoPersistencia() {
+		
+		Collection<IParametro<?>> parametros = new ArrayList<IParametro<?>>();
+		parametros.add(criarParametroArtefatoModelo());
+		parametros.add(criarParametroProjeto());
+		parametros.add(criarParametroUsuario());
+		parametros.add(criarParametroLong(ServicoPersistencia.PARAMETRO_ID_ARTEFATO_PREENCHIDO, null));
+		parametros.add(criarParametroInteiro(ServicoPersistencia.PARAMETRO_VERSAO, 1));
+		parametros.add(criarParametroInteiro(ServicoPersistencia.PARAMETRO_REVISAO, 1));
+		Retorno<Object,Object> retorno = getEntidade().executaServico("ServicoPersistenciaBD", parametros);
+		if (retorno.isSucesso()) {
+			return true;
+		}
+		return false;
+	}
+	
+	protected IParametro<Artefato> criarParametroArtefatoModelo() {
+		Parametro<Artefato> parametro = new Parametro<Artefato>(Artefato.class);
+		parametro.setNome(IServico.PARAMETRO_ARTEFATO_MODELO);
+		parametro.setValorClass(getEntidade());
+		return parametro;
+	}
+	
+	protected IParametro<Usuario> criarParametroUsuario() {
+		Parametro<Usuario> parametro = new Parametro<Usuario>(Usuario.class);
+		parametro.setNome(IServico.PARAMETRO_USUARIO);
+		parametro.setValorClass(getUsuarioLogado());
+		return parametro;
+	}
+	
+	protected IParametro<Projeto> criarParametroProjeto() {
+		Parametro<Projeto> parametro = new Parametro<Projeto>(Projeto.class);
+		parametro.setNome(IServico.PARAMETRO_PROJETO);
+		parametro.setValorClass(getProjeto());
+		return parametro;
+	}
+	
+	protected IParametro<Integer> criarParametroInteiro(String nome, Integer valor) {
+		Parametro<Integer> parametro = new Parametro<Integer>(Integer.class);
+		parametro.setNome(nome);
+		parametro.setValorClass(valor);
+		return parametro;
+	}
+	
+	protected IParametro<Long> criarParametroLong(String nome, Long valor) {
+		Parametro<Long> parametro = new Parametro<Long>(Long.class);
+		parametro.setNome(nome);
+		parametro.setValorClass(valor);
+		return parametro;
+	}
+	
 	/**
 	 * Retorna o SuperTipoMembroVisaoZK que foi selecionado na visão através do mapa de atributos
 	 * 
@@ -151,27 +208,21 @@ public class ArtefatoControle extends SuperArtefatoControle{
 	}
 	
 	/**
-	 * Método que verifica se em alguma Equipe o usuário tem papel de Montador
-	 * 
-	 * @return boolean se o usuário tem papel de montador em alguma Equipe
-	 */
-	protected boolean isUsuarioMontador() {
-		if (super.listarPapeisDoUsuario().contains(PapelUsuario.MONTADOR)) {
-			return true;
-		} else {
-			getMensagens().setTipoMensagem(TipoMensagem.ERRO);
-			getMensagens().getListaMensagens().add("Somente usuário cadastrados como Montador na equipe podem acessar a funcionalidade!");
-			return false;
-		}
-	}
-	
-	/**
 	 * Método que verifica se é possivel executar a montagem do ArtefatoModelo
 	 * 
 	 * @return boolean se o usuário tem papel de Montador
 	 */
 	public boolean acaoMontarArtefato() {
-		return isUsuarioMontador();
+		return super.isUsuarioMontador();
+	}
+	
+	/**
+	 * Método que verifica se é o usuário é preenchedor
+	 * 
+	 * @return boolean se o usuário tem papel de Preenchedor
+	 */
+	public boolean acaoPreencherArtefato() {
+		return super.isUsuarioPreenchedor();
 	}
 	
 	/**
@@ -252,6 +303,22 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		} else {
 			return new ArrayList<Artefato>();
 		}
+	}
+	
+	/**
+	 * Método que lista os ArtefatosModelos cadastrados no Projeto.
+	 * 
+	 * @return List<Artefato> 
+	 */
+	public List<Artefato> listarArtefatosModeloPorProjeto(Projeto projeto) {
+		List<Artefato> lista = new ArrayList<Artefato>();
+		for (ItemModelo itemModelo : projeto.getModelo().getItemModelo()) {
+			Retorno<String,Collection<Artefato>> retorno = getFramework().pesquisarArtefato(itemModelo.getArtefato());
+			if (retorno.isSucesso()) {
+				lista.addAll(retorno.getParametros().get(Retorno.PARAMERTO_LISTA));
+			}
+		}
+		return lista;
 	}
 
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 import br.ueg.unucet.docscree.modelo.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
+import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.EquipeUsuario;
@@ -213,6 +214,42 @@ public abstract class SuperControle {
 		}
 		return resultado;
 		
+	}
+	
+	/**
+	 * Método que verifica se em alguma Equipe o usuário tem papel de Montador
+	 * 
+	 * @return boolean se o usuário tem papel de montador em alguma Equipe
+	 */
+	protected boolean isUsuarioMontador() {
+		if (listarPapeisDoUsuario().contains(PapelUsuario.MONTADOR)) {
+			return true;
+		} else {
+			getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+			getMensagens().getListaMensagens().add("Somente usuário cadastrados como Montador na equipe podem acessar a funcionalidade!");
+			return false;
+		}
+	}
+	
+	/**
+	 * Método que verifica se o usuário tem papel Preenchedor na Equipe
+	 * 
+	 * @return boolean se o usuário tem papel de Preenchedor na Equipe
+	 */
+	protected boolean isUsuarioPreenchedor() {
+		boolean isPreenchedor = false;
+		for (EquipeUsuario equipeUsuario : getProjeto().getEquipe().getEquipeUsuarios()) {
+			if (equipeUsuario.getUsuario().getCodigo().equals(getUsuarioLogado().getCodigo()) 
+					&& equipeUsuario.getPapelUsuario().equals(PapelUsuario.PREENCHEDOR)) {
+				isPreenchedor = true;
+				break;
+			}
+		}
+		if (!isPreenchedor) {
+			getMensagens().setTipoMensagem(TipoMensagem.ERRO);
+			getMensagens().getListaMensagens().add("Somente usuário com papel Preenchedor no Projeto pode acessar a funcionalidade!");
+		}
+		return isPreenchedor;
 	}
 
 	/**

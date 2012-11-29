@@ -1,0 +1,51 @@
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<window id="modalPreencherArtefato" title="Preencher Artefato"
+	border="normal" apply="${modalArtefatoPreenchidoCompositor }" closable="false"
+	action="show: slideDown;hide: slideUp" position="center,center"
+	width="550px">
+	<vlayout>
+		<radiogroup>
+			<radio id="radioArtefatoModelo" label="Preencher ArtefatoModelo" checked="true"
+					onClick="gerenciador.checkarArtefatoModelo()"/>
+			<radio id="radioArtefatoPreenchido" label="Preencher Artefato Preenchido"
+					onClick="gerenciador.checkarArtefatoPreenchido()"/>
+		</radiogroup>
+		<label value="Selecione o ArtefatoModelo:" />
+		<grid id="gridArtefatoModelo" visible="true">
+			<columns>
+				<column width="100px" />
+				<column width="250px" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Nome:" />
+					<combobox model="@{gerenciador.listaArtefatoModelo}"
+						width="180px" selectedItem="@{gerenciador.artefatoAAbrir }" onOK="gerenciador.abrirArtefatoModelo()">
+						<comboitem self="@{each=item }" value="@{item}"
+							label="@{item.nome }" />
+					</combobox>
+				</row>
+			</rows>
+		</grid>
+		<grid id="gridArtefatoPreenchido" visible="false">
+			<columns>
+				<column width="100px" />
+				<column width="250px" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Nome:" />
+					<combobox model="@{gerenciador.listaArtefatoPreenchido}"
+						width="180px" selectedItem="@{gerenciador.artefatoPreenchidoAAbrir }" onOK="gerenciador.abrirArtefatoModelo()">
+						<comboitem self="@{each=item }" value="@{item}"
+							label="@{item.nome }" />
+					</combobox>
+				</row>
+			</rows>
+		</grid>
+		<cell align="center">
+			<button label="Preencher" onClick="gerenciador.abrirArtefatoModelo();" />
+			<button label="Cancelar" onClick="modalPreencherArtefato.detach();" />
+		</cell>
+	</vlayout>
+</window>

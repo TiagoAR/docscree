@@ -1,10 +1,10 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<window id="modalAbrirArtefato" title="Abrir ArtefatoModelo"
-	border="normal" apply="${artefatoCompositor }" closable="false"
+<window id="modalAbrirModelo" title="Abrir Modelo"
+	border="normal" apply="${modeloCompositor }" closable="false"
 	action="show: slideDown;hide: slideUp" position="center,center"
 	width="550px">
 	<vlayout>
-		<label value="Selecione o ArtefatoModelo:" />
+		<label value="Selecione o Modelo:" />
 		<grid>
 			<columns>
 				<column width="100px" />
@@ -13,8 +13,8 @@
 			<rows>
 				<row>
 					<label value="Nome:" />
-					<combobox model="@{gerenciador.listaArtefatosModelo}"
-						width="180px" selectedItem="@{gerenciador.artefatoAAbrir }" onOK="gerenciador.abrirArtefatoModelo()">
+					<combobox model="@{gerenciador.listaModelos}"
+						width="180px" selectedItem="@{gerenciador.entidade}" onOK="gerenciador.abrirModelo()">
 						<comboitem self="@{each=item }" value="@{item}"
 							label="@{item.nome }" />
 					</combobox>
@@ -22,8 +22,8 @@
 			</rows>
 		</grid>
 		<cell align="center">
-			<button label="Abrir" onClick="gerenciador.abrirArtefatoModelo();" />
-			<button label="Cancelar" onClick="gerenciador.acaoFecharModal();" />
+			<button label="Abrir" onClick="gerenciador.abrirModelo();" />
+			<button label="Cancelar" onClick="gerenciador.acaoFecharModal()" />
 		</cell>
 	</vlayout>
 </window>

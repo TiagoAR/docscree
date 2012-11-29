@@ -27,7 +27,8 @@
 						selectedItem="@{gerenciador.equipeUsuario.papelUsuario }" />
 					<combobox model="@{gerenciador.listaUsuarios }"
 						selectedItem="@{gerenciador.equipeUsuario.usuario }"
-						buttonVisible="false" autocomplete="true" width="180px">
+						buttonVisible="false" autocomplete="true" width="180px"
+						onOK="gerenciador.acaoAdicionarUsuario()">
 						<comboitem self="@{each=item }" value="@{item}"
 							label="@{item.nome }" />
 					</combobox>

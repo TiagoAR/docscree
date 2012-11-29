@@ -3,8 +3,8 @@
 <?page title="Manter Modelo" contentType="text/html;charset=UTF-8"?>
 
 <zk>
-	<groupbox self="@{define(content)}" id="gpBoxModelo" width="650px"
-		closable="false" apply="${modeloCompositor}">
+	<groupbox self="@{define(content)}" id="gpBoxModelo" width="655px"
+		closable="false" apply="${modeloCompositor}" onCreate="gerenciador.carregarDados()">
 		<caption label="Modelo" />
 		<grid sizedByContent="true" style="border: none;">
 			<columns>
@@ -32,9 +32,9 @@
 						</listbox>
 						<vbox>
 							<button label="Adicionar" width="80px" onClick="gerenciador.acaoAdicionarArtefatoModelo()" />
-							<button label="Remover" width="80px" />
+							<button label="Remover" width="80px" onClick="gerenciador.acaoRemoverItemModelo()" />
 						</vbox>
-						<tree	id="treeItemModelo" width="240px" rows="6"
+						<tree	id="treeItemModelo" width="240px" rows="8"
 								treeitemRenderer="@{gerenciador.itemModeloTreeRenderer}"
 								model="@{gerenciador.modelItemModelo}">
 						</tree>

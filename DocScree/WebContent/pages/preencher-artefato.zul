@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<?page title="Preencher Artefato" contentType="text/html;charset=UTF-8"?>
+
+<zk>
+	<div self="@{define(content)}" id="divPncArtefato"
+		apply="${artefatoPreenchidoCompositor}" onCreate="gerenciador.carregarArtefato()">
+			<window width="@{gerenciador.larguraString }" border="none" id="windowArtefato" height="@{gerenciador.alturaString }" 
+					style="position: relative; background-color: white; border: 1px solid; overflow: auto;">
+			</window>
+		<div>
+			<button label="Salvar" onClick="gerenciador.acaoMapearArtefato();"/>
+			<button label="Cancelar" onClick="gerenciador.acaoCancelar();"/>
+		</div>
+	</div>
+</zk>

@@ -19,19 +19,25 @@
 			<menubar >
 				<menuitem label="Usuário" href="/pages/usuario.zul" width="100px;"/>
 				<menuitem label="Equipe" href="/pages/equipe.zul" width="100px;"/>
-				<menuitem label="Modelo" href="/pages/modelo.zul" width="100px;"/>
+				<menu label="Modelo" width="100px;">
+					<menupopup apply="${modeloCompositor }">
+						<menuitem label="Novo"  onClick="gerenciador.acaoNovoModelo()" />
+						<menuitem label="Abrir" onClick="gerenciador.acaoSelecionarAbrirModelo()" />
+					</menupopup>
+				</menu>
 				<menu label="Projeto" width="100px;">
 					<menupopup>
 						<menuitem label="Abrir" apply="${projetoCompositor}" onClick="gerenciador.acaoAbrir()"/>
 						<menuitem label="Novo" href="/pages/projeto.zul"/>
 					</menupopup>
 				</menu>
-				<menu label="Artefato" width="100px;">
+				<menu label="ArtefatoModelo" width="100px;">
 					<menupopup apply="${artefatoCompositor }">
 						<menuitem label="Montar Novo"  onClick="gerenciador.acaoNovoArtefatoModelo()" />
 						<menuitem label="Abrir ArtefatoModelo" onClick="gerenciador.acaoSelecionarArtefatoModelo()" />
 					</menupopup>
 				</menu>
+				<menuitem apply="${modalArtefatoPreenchidoCompositor }" label="Preencher Artefato" onClick="gerenciador.acaoAbrirPreencherArtefato()"/>
 				<menu label="Mapear Componentes" width="150px;">
 					<menupopup>
 						<menuitem label="Mapear TipoMembro" href="/pages/tipomembro.zul"/>

@@ -61,7 +61,7 @@
 		<div sclass="sepEsqcolCentral">
 			<div sclass="colDir">
 				<div sclass="conteudoDir">
-					<window width="210px" title="Propriedades" border="normal"
+					<window width="220px" title="Propriedades" border="normal"
 						id="windowPaleta">
 					</window>
 					<separator />
