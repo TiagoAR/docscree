@@ -211,6 +211,8 @@ public abstract class SuperTipoMembroVisaoZK<E extends IComponenteInterface> ext
 	public Object getValor() {
 		return this.membro.getTipoMembroModelo().getValor();
 	}
+	
+	public abstract Object getValorVisualizacao(Object compomente);
 
 	/* (non-Javadoc)
 	 * @see br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembro#getListaParametros()

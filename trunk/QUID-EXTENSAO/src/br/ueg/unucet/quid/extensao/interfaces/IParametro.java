@@ -48,6 +48,8 @@ public interface IParametro<T> extends Serializable {
 	 *            Valor para ser atribuido
 	 */
 	void setValor(String valor);
+	
+	void setValorClass(T valor);
 
 	/**
 	 * Retorna se determinado parametro e obrigatorio
