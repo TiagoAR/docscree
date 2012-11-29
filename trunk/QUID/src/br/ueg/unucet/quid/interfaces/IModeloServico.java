@@ -55,4 +55,5 @@ public interface IModeloServico<T> extends IServico<T>{
 	 */
 	Retorno<Object, Object> mapearModelo(Modelo modelo);
 	Retorno<String, Collection<Modelo>> listarModelos();
+	Retorno<Object, Object> alterarModelo(Modelo modelo);
 }

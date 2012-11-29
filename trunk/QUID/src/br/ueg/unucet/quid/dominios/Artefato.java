@@ -17,6 +17,7 @@ import br.ueg.unucet.quid.enums.TipoErroEnum;
 import br.ueg.unucet.quid.excessoes.ArtefatoExcessao;
 import br.ueg.unucet.quid.extensao.dominios.Identificavel;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
+import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 import br.ueg.unucet.quid.extensao.interfaces.IServico;
 import br.ueg.unucet.quid.interfaces.IArtefato;
 import br.ueg.unucet.quid.interfaces.IArtefatoControle;
@@ -226,16 +227,23 @@ public class Artefato extends Identificavel implements IArtefato {
 		return retorno;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * br.ueg.unucet.quid.interfaces.IArtefato#executaServico(java.lang.String)
-	 */
+	@SuppressWarnings({"rawtypes" })
 	@Override
-	public Retorno<Object, Object> executaServico(String nomeServico) {
-
-		return null;
+	public Retorno<Object, Object> executaServico(String nomeServico, Collection<IParametro<?>> parametros) {
+		Retorno<Object, Object> retorno = new Retorno<Object, Object>();
+		try {
+			IServico servico = (IServico) Class.forName("br.ueg.unucet.quid.servicosquid." + nomeServico).newInstance();
+			servico.setListaParametros(parametros);
+			Collection<IParametro> executaAcao = servico.executaAcao();
+			retorno.setSucesso(true);
+			retorno.adicionarParametro(Retorno.PARAMETRO_LISTA_PARAMETRO_SERVICO, executaAcao);
+		} catch (Exception e) {
+			retorno.setSucesso(false);
+			retorno.setErro(e);
+			retorno.setMensagem("Não foi possível encontrar a classe do Serviço");
+			retorno.setTipoErro(TipoErroEnum.ERRO_FATAL);
+		} 
+		return retorno;
 	}
 
 	// GETTERS AND SETTERS

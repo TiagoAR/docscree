@@ -96,7 +96,6 @@ public class ServicoControle extends GenericControle<Servico, Long> implements I
 	 * Este metodo tambem realiza a verificacao do diretorio de armazenamento dos servicos.
 	 * @throws ServicoExcessao Excessao caso ocorra alguma falha na inicializacao
 	 */
-	@SuppressWarnings("unused")
 	@PostConstruct
 	private void init() throws ServicoExcessao {
 		this.propertiesConfiguracoesUtil = FabricaProperties.loadConfiguracoes();
@@ -134,7 +133,7 @@ public class ServicoControle extends GenericControle<Servico, Long> implements I
 	 * br.ueg.unucet.quid.interfaces.IServicoControle#mapearServicos(java.io
 	 * .File[])
 	 */
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Transactional(value = "transactionManager1", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public Map<File, String> mapearServicos(File[] arquivos) throws ServicoExcessao {
 		this.arquivosAMapear = arquivos;
 		setSucesso(true);
@@ -150,7 +149,7 @@ public class ServicoControle extends GenericControle<Servico, Long> implements I
 		return this.informacoesArquivos;
 	}
 
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Transactional(value = "transactionManager1", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void remover(IServico iServico) throws ServicoExcessao {
 		Servico servico = construirServico(iServico);
 		servico = getListaServicosCadastrados(servico).iterator().next();

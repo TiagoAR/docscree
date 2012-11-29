@@ -242,11 +242,30 @@ public class ModeloServico extends GenericoServico<Modelo> implements IModeloSer
 	/* (non-Javadoc)
 	 * @see br.ueg.unucet.quid.interfaces.IModeloServico#mapearModelo(br.ueg.unucet.quid.dominios.Modelo)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Retorno<Object, Object> mapearModelo(Modelo modelo) {
 		Retorno<Object, Object> retorno = new Retorno<Object, Object>();
 		try {
-			this.modeloControle.inserir(modelo);
+			if (modeloControle.verificarDuplicidade(modelo)) {
+				this.modeloControle.inserir(modelo);
+				retorno.setSucesso(true);
+			} else {
+				retorno.setSucesso(false);
+				retorno.setMensagem(propertiesMensagensUtil.getValor("modelo_duplicado_framework"));
+			}
+		} catch (QuidExcessao e) {
+			retorno = (Retorno<Object, Object>) construirRetornoErro(e, TipoErroEnum.ERRO_SIMPLES, retorno);
+		}
+		return retorno;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Retorno<Object, Object> alterarModelo(Modelo modelo) {
+		Retorno<Object, Object> retorno = new Retorno<Object, Object>();
+		try {
+			this.modeloControle.alterar(modelo);
 			retorno.setSucesso(true);
 		} catch (QuidExcessao e) {
 			retorno = (Retorno<Object, Object>) construirRetornoErro(e, TipoErroEnum.ERRO_SIMPLES, retorno);

@@ -20,7 +20,7 @@ public class DAOGenerica<T, oid> implements IDAO<T, oid>{
 	/**
 	 * Atributo injetado pelo spring como provedor JPA. 
 	 */
-	@PersistenceContext
+	@PersistenceContext(unitName="persistenceUnit1")
 	protected EntityManager entityManager;
 	
 	/* (non-Javadoc)
@@ -28,8 +28,8 @@ public class DAOGenerica<T, oid> implements IDAO<T, oid>{
 	 */
 	@Override
 	public void inserir(T entidade) {
-		entityManager.persist(entidade);
-		entityManager.flush();
+		getEntityManager().persist(entidade);
+		getEntityManager().flush();
 	}
 
 	/* (non-Javadoc)
@@ -37,8 +37,8 @@ public class DAOGenerica<T, oid> implements IDAO<T, oid>{
 	 */
 	@Override
 	public void alterar(T entidade) {
-		entityManager.merge(entidade);
-		entityManager.flush();
+		getEntityManager().merge(entidade);
+		getEntityManager().flush();
 		
 	}
 
@@ -47,8 +47,8 @@ public class DAOGenerica<T, oid> implements IDAO<T, oid>{
 	 */
 	@Override
 	public void remover(Class<T> classe, oid id) {
-		entityManager.remove(entityManager.getReference(classe, id));
-		entityManager.flush();
+		getEntityManager().remove(getEntityManager().getReference(classe, id));
+		getEntityManager().flush();
 	}
 
 	/* (non-Javadoc)
@@ -56,7 +56,7 @@ public class DAOGenerica<T, oid> implements IDAO<T, oid>{
 	 */
 	@Override
 	public T getPorId(Class<T> classe, oid id) {
-		return (T) entityManager.find(classe, id);
+		return (T) getEntityManager().find(classe, id);
 	}
 
 	/* (non-Javadoc)
@@ -101,9 +101,10 @@ public class DAOGenerica<T, oid> implements IDAO<T, oid>{
 	/* (non-Javadoc)
 	 * @see br.ueg.unucet.quid.interfaces.IDAO#executeQuery(java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object[]> executeQuery(String query) {
-		return this.entityManager.createQuery(query).getResultList();
+		return this.getEntityManager().createQuery(query).getResultList();
 	}
 	
 	//GETTERS AND SETTERS

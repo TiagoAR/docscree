@@ -6,6 +6,7 @@ import br.ueg.unucet.quid.dominios.Categoria;
 import br.ueg.unucet.quid.dominios.Retorno;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
 import br.ueg.unucet.quid.extensao.interfaces.IIdentificavel;
+import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 import br.ueg.unucet.quid.extensao.interfaces.IPersistivel;
 import br.ueg.unucet.quid.extensao.interfaces.IServico;
 
@@ -76,8 +77,9 @@ public interface IArtefato extends IIdentificavel, IPersistivel<Long> {
 	 * O acao de pegar o resultado de um servico e encaminhar para outro dever
 	 * ser implementada aqui.
 	 * @param nomeServico Nome do servico que sera executado.
+	 * @param parametros Parametros do Serviço
 	 */
-	Retorno<Object, Object> executaServico(String nomeServico);
+	Retorno<Object, Object> executaServico(String nomeServico, Collection<IParametro<?>> parametros);
 
 	/** Retorna o titulo do artefato. Esse titulo identifica duas instancias diferentes de um mesmo artefato.
 	 * @return Titulo do artefato

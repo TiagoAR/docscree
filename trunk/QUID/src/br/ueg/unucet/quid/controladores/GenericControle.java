@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.Retorno;
 import br.ueg.unucet.quid.enums.TipoErroEnum;
 import br.ueg.unucet.quid.excessoes.QuidExcessao;
@@ -41,7 +40,7 @@ public abstract class GenericControle<T, oid> implements IControle<T, oid> {
 	 * @see br.ueg.unucet.quid.interfaces.IControle#salvar(java.lang.Object)
 	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Transactional(value = "transactionManager1", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void inserir(T entidade) throws QuidExcessao {
 		if(antesInserir(entidade)){
 			this.dao = getDao();
@@ -55,7 +54,7 @@ public abstract class GenericControle<T, oid> implements IControle<T, oid> {
 	 * @see br.ueg.unucet.quid.interfaces.IControle#alterar(java.lang.Object)
 	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Transactional(value = "transactionManager1", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void alterar(T entidade) throws QuidExcessao {
 		if(antesAlterar(entidade)){
 			this.dao = getDao();
