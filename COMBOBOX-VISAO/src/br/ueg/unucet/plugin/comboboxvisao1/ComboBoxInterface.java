@@ -64,12 +64,12 @@ public class ComboBoxInterface implements IComponenteInterface {
 					for (int i = 0; i < valores.length; i++) {
 						comboParams.add(valores[i]);
 						System.out.println("Parametro("+i+"):"+valores[i]);
-						this.combobox.getItems().add(new Comboitem(valores[i]));
+						//this.combobox.getItems().add(new Comboitem(valores[i]));
 					}
 				}
 			}
 		}
-		//this.combobox.setModel(new BindingListModelListModel<>(new ListModelArray<>(comboParams.toArray())));
+		this.combobox.setModel(new BindingListModelListModel<>(new ListModelArray<>(comboParams.toArray())));
 		return this.combobox;
 	}
 	
