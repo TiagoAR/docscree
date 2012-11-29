@@ -30,7 +30,7 @@ public class InputText extends SuperTipoMembroVisaoZK<InputTextInterface> {
 		this.componente =  new InputTextInterface();
 		setDescricao("Visão Padrão");
 		setVersao(1);
-		setRevisao(8);
+		setRevisao(11);
 	}
 
 	@Override
@@ -73,6 +73,11 @@ public class InputText extends SuperTipoMembroVisaoZK<InputTextInterface> {
 	@Override
 	public String getNomeTipoMembroModelo() {
 		return "inputtext";
+	}
+
+	@Override
+	public Object getValorVisualizacao(Object componente) {
+		return this.componente.getValor(componente);
 	}
 
 }
