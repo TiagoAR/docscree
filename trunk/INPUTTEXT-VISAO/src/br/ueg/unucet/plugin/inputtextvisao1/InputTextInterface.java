@@ -15,6 +15,10 @@ import br.ueg.unucet.quid.extensao.interfaces.IComponenteInterface;
 public class InputTextInterface implements IComponenteInterface {
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 344518551310671764L;
+	/**
 	 * Componente de Preenchimento do InputText
 	 */
 	private Textbox textbox;
@@ -56,7 +60,12 @@ public class InputTextInterface implements IComponenteInterface {
 	}
 	
 	@Override
-	public void getValor() {
-		this.textbox.getText();
+	public Object getValor() {
+		return this.textbox.getText();
+	}
+
+	@Override
+	public Object getValor(Object componente) {
+		return ((Textbox)componente).getText();
 	}
 }
