@@ -18,8 +18,9 @@
 	<context:annotation-config />
 	<context:component-scan base-package="br.ueg.unucet.quid" />
 	
-	<bean id="entityManagerFactory"
+	<bean id="entityManagerFactory1"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="persistenceUnit1"/>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="database" value="POSTGRESQL" />
@@ -29,8 +30,24 @@
 		</property>
 	</bean>
 	
-	<bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	<bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager1">
+		<property name="entityManagerFactory" ref="entityManagerFactory1" />
+	</bean>
+	
+	<bean id="entityManagerFactory2"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="persistenceUnit2"/>
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="database" value="POSTGRESQL" />
+				<property name="showSql" value="true" />
+				<property name="generateDdl" value="false" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager2">
+		<property name="entityManagerFactory" ref="entityManagerFactory2" />
 	</bean>
 	  
 	<tx:annotation-driven/> 

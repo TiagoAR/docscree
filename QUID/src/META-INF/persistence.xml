@@ -3,11 +3,25 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
              version="1.0">
-    <persistence-unit name="persistenceUnit">
+    <persistence-unit name="persistenceUnit1">
+    <class>br.ueg.unucet.quid.dominios.Artefato</class>
+    <class>br.ueg.unucet.quid.dominios.Usuario</class>
+    <class>br.ueg.unucet.quid.dominios.MembroFramework</class>
+    <class>br.ueg.unucet.quid.dominios.EquipeUsuario</class>
+    <class>br.ueg.unucet.quid.dominios.Equipe</class>
+    <class>br.ueg.unucet.quid.dominios.Categoria</class>
+    <class>br.ueg.unucet.quid.dominios.ArtefatoServico</class>
+    <class>br.ueg.unucet.quid.dominios.ArtefatoMembro</class>
+    <class>br.ueg.unucet.quid.dominios.ItemModelo</class>
+    <class>br.ueg.unucet.quid.dominios.Modelo</class>
+    <class>br.ueg.unucet.quid.dominios.Projeto</class>
+    <class>br.ueg.unucet.quid.dominios.Servico</class>
+    <class>br.ueg.unucet.quid.dominios.TipoMembro</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
-            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/quid" />
+            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5433/quid" />
             <property name="hibernate.hbm2ddl.auto" value="update" />
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
             <property name="hibernate.connection.password" value="postgres" />
@@ -16,5 +30,22 @@
 			<property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false" />
         </properties>
-</persistence-unit>
+	</persistence-unit>
+    <persistence-unit name="persistenceUnit2">
+    <class>br.ueg.unucet.quid.dominios.ArtefatoPreenchido</class>
+    <class>br.ueg.unucet.quid.dominios.ValoresArtefato</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
+            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5433/docscree" />
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
+            <property name="hibernate.connection.password" value="postgres" />
+            <property name="hibernate.connection.username" value="postgres" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false" />
+        </properties>
+	</persistence-unit>
 </persistence>

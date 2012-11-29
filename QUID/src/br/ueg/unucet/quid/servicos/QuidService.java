@@ -70,6 +70,12 @@ public class QuidService implements IQUID{
 		return artefatoControle.pesquisarArtefato(categoria, nome, descricao);
 	}
 
+	@Override
+	public Retorno<String, Collection<Artefato>> pesquisarArtefato(Artefato artefato) {
+		IArtefatoControle<Artefato, Long> artefatoControle = (IArtefatoControle<Artefato, Long>) appContext.getBean("ArtefatoControle");
+		return artefatoControle.pesquisarArtefato(artefato);
+	}
+
 	/* (non-Javadoc)
 	 * @see br.ueg.unucet.quid.interfaces.IQUID#removerArtefato(br.ueg.unucet.quid.dominios.Artefato)
 	 */
@@ -366,6 +372,15 @@ public class QuidService implements IQUID{
 	public Retorno<Object, Object> mapearModelo(Modelo modelo) {
 		IModeloServico<Modelo> modeloServico = (IModeloServico<Modelo>) appContext.getBean("ModeloServico");
 		return modeloServico.mapearModelo(modelo);
+	}
+
+	/* (non-Javadoc)
+	 * @see br.ueg.unucet.quid.interfaces.IQUID#mapearModelo(br.ueg.unucet.quid.dominios.Modelo)
+	 */
+	@Override
+	public Retorno<Object, Object> alterarModelo(Modelo modelo) {
+		IModeloServico<Modelo> modeloServico = (IModeloServico<Modelo>) appContext.getBean("ModeloServico");
+		return modeloServico.alterarModelo(modelo);
 	}
 
 	/* (non-Javadoc)

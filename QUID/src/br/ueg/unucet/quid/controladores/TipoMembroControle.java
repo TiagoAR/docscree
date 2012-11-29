@@ -108,7 +108,7 @@ public class TipoMembroControle extends GenericControle<TipoMembro, Long> implem
 	 * br.ueg.unucet.quid.interfaces.ITipoMembroControle#mapearTiposMembro(java
 	 * .io.File[])
 	 */
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Transactional(value = "transactionManager1", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public Map<File, String> mapearTiposMembro(File[] arquivos) throws TipoMembroExcessao {
 		this.arquivosAMapear = arquivos;
 		setSucesso(true);

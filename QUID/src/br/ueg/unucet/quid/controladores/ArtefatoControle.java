@@ -189,7 +189,7 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 	 * @see br.ueg.unucet.quid.interfaces.IArtefatoControle#mapearArtefato(br.ueg.unucet.quid.dominios.Artefato)
 	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Transactional(value = "transactionManager1", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public Retorno<String, Collection<String>> mapearArtefato(Artefato artefato) {
 		this.artefato = artefato;
 		Retorno<String,Collection<String>> retorno = mapear(artefato);
@@ -197,7 +197,7 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 	}
 	
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Transactional(value = "transactionManager1", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public Retorno<String, Collection<String>> alterarArtefato(Artefato artefato) {
 		this.artefato = artefato;
 		Retorno<String,Collection<String>> retorno;
@@ -214,6 +214,11 @@ public class ArtefatoControle extends GenericControle<Artefato, Long> implements
 		artefato.setNome(nome);
 		artefato.setDescricao(descricao);
 		artefato.setCategoria(categoria);
+		return realizarPesquisa(artefato);
+	}
+	
+	@Override
+	public Retorno<String, Collection<Artefato>> pesquisarArtefato(Artefato artefato) {
 		return realizarPesquisa(artefato);
 	}
 	

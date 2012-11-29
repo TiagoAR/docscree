@@ -12,5 +12,14 @@ import br.ueg.unucet.quid.interfaces.IDAOProjeto;
  */
 @Repository
 public class DAOProjeto extends DAOGenerica<Projeto, Long> implements IDAOProjeto<Projeto, Long>{
+
+	/* (non-Javadoc)
+	 * @see br.ueg.unucet.quid.persistencia.DAOGenerica#inserir(java.lang.Object)
+	 */
+	@Override
+	public void inserir(Projeto entidade) {
+		getEntityManager().merge(entidade);
+		getEntityManager().flush();
+	}
 	
 }

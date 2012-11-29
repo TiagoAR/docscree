@@ -56,7 +56,7 @@ public class MembroFrameworkControle extends GenericControle<MembroFramework, Lo
 	 * @see br.ueg.unucet.quid.interfaces.IMembroFrameworkControle#inserir(br.ueg.unucet.quid.extensao.dominios.Membro)
 	 */
 	@Override
-	@Transactional(propagation=Propagation.REQUIRED, noRollbackFor=Exception.class)
+	@Transactional(value = "transactionManager1", propagation=Propagation.REQUIRED, noRollbackFor=Exception.class)
 	public void inserir(Membro membro) throws MembroExcessao{
 		validarMembro(membro);
 		MembroFramework membroFramework = transformarMembro(membro);
@@ -69,7 +69,7 @@ public class MembroFrameworkControle extends GenericControle<MembroFramework, Lo
 	}
 	
 	@Override
-	@Transactional(propagation=Propagation.REQUIRED, noRollbackFor=Exception.class)
+	@Transactional(value = "transactionManager1", propagation=Propagation.REQUIRED, noRollbackFor=Exception.class)
 	public void alterar(Membro membro) throws MembroExcessao{
 		validarMembroAlterar(membro);
 		MembroFramework membroFramework = transformarMembro(membro);
@@ -83,7 +83,7 @@ public class MembroFrameworkControle extends GenericControle<MembroFramework, Lo
 	}
 	
 	@Override
-	@Transactional(propagation=Propagation.REQUIRED, noRollbackFor=Exception.class)
+	@Transactional(value = "transactionManager1", propagation=Propagation.REQUIRED, noRollbackFor=Exception.class)
 	public void remover(Membro membro) throws MembroExcessao{
 		try {
 			remover(MembroFramework.class, membro.getCodigo());
