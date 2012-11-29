@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import br.ueg.unucet.docscree.interfaces.ICRUDControle;
 import br.ueg.unucet.docscree.utilitarios.BloquearArtefatoControle;
-import br.ueg.unucet.docscree.visao.compositor.ArtefatoCompositor;
 import br.ueg.unucet.docscree.visao.compositor.SuperArtefatoCompositor;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Artefato;
@@ -88,7 +87,7 @@ public class SuperArtefatoControle extends GenericoControle<Artefato> {
 	 * @param visao
 	 * @return ArtefatoModelo associado a visão
 	 */
-	protected Artefato lancarArtefatoNaVisao(ArtefatoCompositor visao) {
+	protected Artefato lancarArtefatoNaVisao(SuperArtefatoCompositor<?> visao) {
 		Retorno<String,Collection<Artefato>> retorno = getFramework().pesquisarArtefato(getEntidade().getCategoria(), getEntidade().getNome(), getEntidade().getDescricao());
 		Collection<Artefato> collection = retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
 		Artefato artefato = collection.iterator().next();

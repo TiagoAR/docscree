@@ -258,7 +258,7 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		return null;
 	}
 	
-	protected HtmlBasedComponent getComponentePorId(String id, Component pai) {
+	public HtmlBasedComponent getComponentePorId(String id, Component pai) {
 		return (HtmlBasedComponent) pai.getFellow(id);
 	}
 	

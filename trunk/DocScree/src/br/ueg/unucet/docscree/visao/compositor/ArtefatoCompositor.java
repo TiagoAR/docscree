@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -30,7 +29,6 @@ import org.zkoss.zul.Spinner;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
-import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.ArtefatoControle;
 import br.ueg.unucet.docscree.interfaces.IComponenteDominio;
 import br.ueg.unucet.docscree.modelo.MembroDocScree;
@@ -54,17 +52,12 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	 */
 	private static final long serialVersionUID = 3331698085154478299L;
 
-	private Window areaMontagemWindow = null;
 	private Window areaVisualizacaoWindow = null;
 	protected AnnotateDataBinder binderPaleta;
 	protected AnnotateDataBinder binderArtefato;
 	protected AnnotateDataBinder binderVisualizao;
 	protected AnnotateDataBinder binderMembro;
 	private Integer larguraTotalMembro;
-	@AtributoVisao(nome="tipoMembroVisaoSelecionado", isCampoEntidade = false)
-	private SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado;
-	@AtributoVisao(nome="listaMembrosDocScree", isCampoEntidade = false)
-	private Map<String, MembroDocScree> mapaMembrosAdicionados;
 	
 	private Artefato artefatoAAbrir;
 	private Long codigoAntigo;
@@ -76,11 +69,6 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	private Execution executionAntigo;
 	private org.zkoss.zk.ui.Component componenteAntigo;
 	private AnnotateDataBinder binderAntigo;
-
-	@Override
-	public Class getTipoEntidade() {
-		return Artefato.class;
-	}
 
 	/**
 	 * Não tem campos para serem limpos nesse caso de uso. Chama método responsável para
@@ -158,6 +146,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	
 	public void acaoSelecionarArtefatoModelo() {
 		salvarTelaArtefato();
+		setArtefatoAAbrir(null);
 		this.exibirModalArtefatoModelo("/componentes/modalAbrirArtefato.zul");
 	}
 	
@@ -253,10 +242,6 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		super.binder.loadAll();
 	}
 	
-	public void executarAbrirArtefato() throws Exception {
-		getControle().fazerAcao("abrirArtefato", (SuperCompositor) this);
-	}
-	
 	public void acaoMapearArtefato() {
 		try {
 			boolean retorno = getControle().fazerAcao("mapearArtefato", (SuperCompositor) this);
@@ -269,38 +254,12 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		}
 	}
 	
-	private void inicializarTelasMapeadores() {
-		this.areaMontagemWindow = null;
+	protected void inicializarTelasMapeadores() {
+		this.areaWindowArtefato = null;
 		this.areaVisualizacaoWindow = null;
 		this.binderArtefato = null;
 		this.binderVisualizao = null;
 		setMapaMembrosAdicionados(new HashMap<String, MembroDocScree>());
-	}
-	
-	public boolean mapearMembrosAoArtefato() {
-		this.inicializarTelasMapeadores();
-		boolean retorno = true;
-		for (Membro membro : getMembros()) {
-			// TODO criar método único ver GERARPALETATIPOMEMBRO..
-			SuperTipoMembroVisaoZK<?> superTipoMembroVisaoZK = getControle().getTipoMembroVisaoPeloMembro(membro);
-			SuperTipoMembroVisaoZK<?> novaInstancia = null;
-			try {
-				novaInstancia = superTipoMembroVisaoZK.getClass().newInstance();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			if (novaInstancia != null) {
-				novaInstancia.setMembro(membro);
-				setTipoMembroVisaoSelecionado(novaInstancia);
-				lancarMembroAVisualizacao(true, true);
-			} else {
-				retorno = false;
-				break;
-			}
-		}
-		return retorno;
 	}
 	
 	private void limparTodaTela() {
@@ -319,40 +278,21 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		getControle().setMensagens(mensagens);
 		super.mostrarMensagem(false);
 	}
-	
-	public void carregarArtefato() {
-		if (Executions.getCurrent().getSession().hasAttribute("ArtefatoAbrir")) {
-			setEntidade((Persistivel) Executions.getCurrent().getSession().getAttribute("ArtefatoAbrir"));
-			Executions.getCurrent().getSession().removeAttribute("ArtefatoAbrir");
-			try {
-				executarAbrirArtefato();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		super.binder.loadAll();
-	}
 
 	public List<SuperTipoMembroVisaoZK> getListaTipoMembrosVisao() {
 		return super.getControle().listarTipoMembrosVisao();
 	}
 
-	private HtmlBasedComponent gerarNovaInstancia(String idComponente, Membro membro) {
-		Div div = null;
-		try {
-			HtmlBasedComponent novaInstancia = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisaoPreenchimento().getClass().newInstance();
-			novaInstancia.setId(idComponente);
-			novaInstancia.setStyle(getTipoMembroVisaoSelecionado().getCss(membro) + ESTILOCOMPONENTE);
-			div = new Div();
-			div.setId(idComponente.replace("Componente", "Grid"));
-			div.setWidth(String.valueOf(membro.getComprimento())+"px");
-			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + ESTILODIV + "cursor: pointer;");
-			setarEventDiv(div);
-			div.appendChild(novaInstancia);
-		} catch (InstantiationException e) {
-		} catch (IllegalAccessException e) {
-		}
-		return div;
+	/**
+	 * @see br.ueg.unucet.docscree.visao.compositor.SuperArtefatoCompositor#gerarNovaInstancia(java.lang.String, br.ueg.unucet.quid.extensao.dominios.Membro)
+	 */
+	@Override
+	protected HtmlBasedComponent gerarNovaInstancia(String idComponente,
+			Membro membro) {
+		HtmlBasedComponent novaInstancia = super.gerarNovaInstancia(idComponente, membro);
+		novaInstancia.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + ESTILODIV + "cursor: pointer;");
+		setarEventDiv((Div) novaInstancia);
+		return novaInstancia;
 	}
 
 	private HtmlBasedComponent gerarNovaInstanciaVisualizacao(String idComponente, Membro membro) {
@@ -387,14 +327,6 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			}
 			
 		});
-	}
-
-	protected Window getWindowArtefato() {
-		if (this.areaMontagemWindow == null) {
-			this.areaMontagemWindow = (Window) getComponent().getFellow(
-					"windowArtefato");
-		}
-		return this.areaMontagemWindow;
 	}
 	
 	protected Window getWindowVisualizacaoArtefato() {
@@ -605,18 +537,14 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			chamarMensagemErro();
 		}
 	}
-	
+
 	public void lancarMembroAVisualizacao(boolean novo, boolean abrindoArtefato) {
-		adicionarMembroAoArtefato(getIdMembro(), novo, abrindoArtefato);
+		lancarMembroAoArtefato(getIdMembro(), novo, abrindoArtefato);
 		adicionarMembroAVisualizacao(getIdMembro());
 		setTipoMembroVisaoSelecionado(null);
 		getWindowPaleta().getChildren().clear();
 		getBinderPaleta().loadAll();
 		
-	}
-	
-	private String getIdMembro() {
-		return getTipoMembroVisaoSelecionado().getNome()+String.valueOf(getTipoMembroVisaoSelecionado().getMembro().getCodigo());
 	}
 	
 	public void removerMembro() {
@@ -695,16 +623,12 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		Collection<IParametro<?>> listaParametros = this.getTipoMembroVisaoSelecionado().getListaParametros();
 		boolean parametrosObrigatoriosPreenchidos = true;
 		for (IParametro<?> parametro : listaParametros) {
-			if (parametro.isObrigatorio()) {
+			if (parametro.isObrigatorio() && parametro.getValor() == null) {
 				parametrosObrigatoriosPreenchidos = false;
 				getControle().getMensagens().getListaMensagens().add("O parâmetro " + parametro.getRotulo()+ " é obrigatório!");
 			}
 		}
 		return parametrosObrigatoriosPreenchidos;
-	}
-	
-	private void adicionarMembroAoArtefato(String nomeParcial, boolean novo, boolean abrindoArtefato) {
-		lancarMembroAoArtefato(nomeParcial, novo, abrindoArtefato);
 	}
 	
 	private void adicionarMembroAVisualizacao(String nomeParcial) {
@@ -718,24 +642,8 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 	
 	private void lancarMembroAoArtefato(String nomeParcial, boolean isNovo, boolean abrindoArtefato) {
-		String idComponente = "Componente" + nomeParcial;
-		HtmlBasedComponent componente = gerarNovaInstancia("Componente" + nomeParcial, getTipoMembroVisaoSelecionado().getMembro());
-		if (componente != null) {
-			if (isNovo) {
-				this.getMapaMembrosAdicionados().put(idComponente, new MembroDocScree(getTipoMembroVisaoSelecionado(), idComponente));
-			} else {
-				this.getMapaMembrosAdicionados().get(idComponente).setTipoMembroVisao(getTipoMembroVisaoSelecionado());
-				getMembros().remove(getTipoMembroVisaoSelecionado().getMembro());
-			}
-			if (!abrindoArtefato) {
-				this.getMembros().add(getTipoMembroVisaoSelecionado().getMembro());
-			}
-			componente.setParent(getWindowArtefato());
-			getWindowArtefato().appendChild(componente);
-			getBinderArtefato().loadAll();
-			getWindowPaleta().getChildren().clear();
-			getBinderPaleta().loadAll();
-		} 
+		adicionarComponenteAoArtefato(getTipoMembroVisaoSelecionado(), nomeParcial, isNovo, abrindoArtefato);
+		getBinderArtefato().loadAll();
 	}
 	
 	private void removerMembroAlterados(String nomeParcial) {
@@ -848,37 +756,6 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	/* GETTERS AND SETTERS */
 
 	/**
-	 * @return SuperTipoMembroVisaoZK o(a) tipoMembroVisaoSelecionado
-	 */
-	public SuperTipoMembroVisaoZK getTipoMembroVisaoSelecionado() {
-		return tipoMembroVisaoSelecionado;
-	}
-
-	/**
-	 * @param tipoMembroVisaoSelecionado
-	 *            o(a) tipoMembroVisaoSelecionado a ser setado(a)
-	 */
-	public void setTipoMembroVisaoSelecionado(
-			SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado) {
-		this.tipoMembroVisaoSelecionado = tipoMembroVisaoSelecionado;
-	}
-
-	/**
-	 * @return Map<String,MembroDocScree> o(a) mapaMembrosAdicionados
-	 */
-	public Map<String, MembroDocScree> getMapaMembrosAdicionados() {
-		return mapaMembrosAdicionados;
-	}
-
-	/**
-	 * @param mapaMembrosAdicionados o(a) mapaMembrosAdicionados a ser setado(a)
-	 */
-	public void setMapaMembrosAdicionados(
-			Map<String, MembroDocScree> mapaMembrosAdicionados) {
-		this.mapaMembrosAdicionados = mapaMembrosAdicionados;
-	}
-
-	/**
 	 * @return Artefato o(a) artefatoAAbrir
 	 */
 	public Artefato getArtefatoAAbrir() {
@@ -890,14 +767,6 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	 */
 	public void setArtefatoAAbrir(Artefato artefatoAAbrir) {
 		this.artefatoAAbrir = artefatoAAbrir;
-	}
-	
-	public String getLarguraString() {
-		return String.valueOf(getLargura()) + "px"; 
-	}
-	
-	public String getAlturaString() {
-		return String.valueOf(getAltura()) + "px";
 	}
 	
 	/**

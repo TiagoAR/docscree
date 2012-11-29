@@ -2,14 +2,19 @@ package br.ueg.unucet.docscree.controladores;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import br.ueg.unucet.docscree.interfaces.ICRUDControle;
 import br.ueg.unucet.docscree.modelo.MembroModelo;
+import br.ueg.unucet.docscree.visao.compositor.ModeloCompositor;
 import br.ueg.unucet.docscree.visao.compositor.SuperCompositor;
 import br.ueg.unucet.quid.dominios.Artefato;
+import br.ueg.unucet.quid.dominios.ItemModelo;
 import br.ueg.unucet.quid.dominios.Modelo;
 import br.ueg.unucet.quid.dominios.Retorno;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
+import br.ueg.unucet.quid.utilitarias.SerializadorObjetoUtil;
 
 /**
  * Controlador específico para o caso de uso Manter Modelo
@@ -17,6 +22,7 @@ import br.ueg.unucet.quid.extensao.interfaces.IParametro;
  * @author Diego
  *
  */
+@SuppressWarnings("unchecked")
 public class ModeloControle extends GenericoControle<Modelo> {
 
 	/**
@@ -24,7 +30,25 @@ public class ModeloControle extends GenericoControle<Modelo> {
 	 */
 	@Override
 	public boolean acaoSalvar() {
-		// TODO Auto-generated method stub
+		if (super.isUsuarioMontador()) {
+			Map<String, MembroModelo> itensModelo = (Map<String, MembroModelo>) getMapaAtributos().get("itemModelo");
+			Collection<ItemModelo> listaItens = new ArrayList<ItemModelo>();
+			for (MembroModelo itemModelo : itensModelo.values()) {
+				listaItens.add(transformarItemModelo(itemModelo));
+			}
+			getEntidade().setItemModelo(listaItens);
+			Retorno<Object,Object> retorno;
+			if (getEntidade().getCodigo() == null || getEntidade().getCodigo() == 0) {
+				retorno = getFramework().mapearModelo(getEntidade());
+			} else {
+				retorno = getFramework().alterarModelo(getEntidade());
+			}
+			if (retorno.isSucesso()) {
+				return true;
+			} else {
+				getMensagens().getListaMensagens().add(retorno.getMensagem());
+			}
+		}
 		return false;
 	}
 
@@ -42,8 +66,23 @@ public class ModeloControle extends GenericoControle<Modelo> {
 	 */
 	@Override
 	public void setarEntidadeVisao(SuperCompositor<?> pVisao) {
-		// TODO Auto-generated method stub
-		
+		ModeloCompositor visao = (ModeloCompositor) pVisao;
+		Modelo entidade = (Modelo) visao.getEntidade();
+		visao.setCodigo(entidade.getCodigo());
+		visao.setFldDescricao(entidade.getDescricao());
+		visao.setFldNome(entidade.getNome());
+		for (ItemModelo itemModelo : entidade.getItemModelo()) {
+			MembroModelo membroModelo = new MembroModelo();
+			membroModelo.setArtefato(itemModelo.getArtefato());
+			membroModelo.setCodigo(itemModelo.getCodigo());
+			membroModelo.setGrau(itemModelo.getGrau());
+			membroModelo.setMultiplicidade(itemModelo.getMultiplicidade());
+			membroModelo.setOrdem(itemModelo.getOrdem());
+			membroModelo.setOrdemPai(itemModelo.getOrdemPai());
+			membroModelo.setOrdemPreenchimento(itemModelo.getOrdemPreenchimento());
+			membroModelo.setListaParametros((Collection<IParametro<?>>) SerializadorObjetoUtil.toObject(itemModelo.getParametros()));
+			visao.getItensModelo().put(visao.gerarKeyMembroModelo(membroModelo), membroModelo);
+		}
 	}
 
 	/**
@@ -51,8 +90,41 @@ public class ModeloControle extends GenericoControle<Modelo> {
 	 */
 	@Override
 	protected Retorno<String, Collection<Modelo>> executarListagem() {
-		// TODO Auto-generated method stub
-		return null;
+		return getFramework().listarModelo();
+	}
+	
+	public boolean acaoAbrirModelo() {
+		setarEntidadeVisao(getVisao());
+		((ModeloCompositor) getVisao()).mapearItensModelo();
+		return true;
+	}
+	
+	public List<Modelo> getListaModelos() {
+		Retorno<String, Collection<Modelo>> retorno = executarListagem();
+		List<Modelo> lista = null;
+		if (retorno.isSucesso()) {
+			lista = (List<Modelo>) retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
+		}
+		return lista;
+	}
+	
+	/**
+	 * Método que transforma o MembroModelo em um ItemModelo
+	 * 
+	 * @param membroModelo
+	 * @return item representando a conversão do MembroModelo
+	 */
+	private ItemModelo transformarItemModelo(MembroModelo membroModelo) {
+		ItemModelo item = new ItemModelo();
+		item.setCodigo(membroModelo.getCodigo());
+		item.setArtefato(membroModelo.getArtefato());
+		item.setGrau(membroModelo.getGrau());
+		item.setMultiplicidade(membroModelo.getMultiplicidade());
+		item.setOrdem(membroModelo.getOrdem());
+		item.setOrdemPai(membroModelo.getOrdemPai());
+		item.setOrdemPreenchimento(membroModelo.getOrdemPreenchimento());
+		item.setParametros(SerializadorObjetoUtil.toByteArray(membroModelo.getListaParametros()));
+		return item;
 	}
 	
 	/**
