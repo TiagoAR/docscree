@@ -15,15 +15,12 @@ import br.ueg.unucet.quid.excessoes.QuidExcessao;
 import br.ueg.unucet.quid.interfaces.IArtefatoPreenchidoControle;
 import br.ueg.unucet.quid.interfaces.IDAO;
 import br.ueg.unucet.quid.interfaces.IDAOArtefatoPreenchido;
-import br.ueg.unucet.quid.servicos.QuidService;
 
 @Service("ArtefatoPreenchidoControle")
 public class ArtefatoPreenchidoControle extends GenericControle<ArtefatoPreenchido, Long> implements IArtefatoPreenchidoControle<ArtefatoPreenchido, Long> {
 
 	@Autowired
 	private IDAOArtefatoPreenchido<ArtefatoPreenchido, Long> daoArtefatoPreenchido;
-	
-	QuidService quidService = QuidService.obterInstancia();
 	
 	@Override
 	public IDAO<ArtefatoPreenchido, Long> getDao() {
@@ -66,14 +63,12 @@ public class ArtefatoPreenchidoControle extends GenericControle<ArtefatoPreenchi
 			String id = String.valueOf(artefatoPreenchido.getArtefato()) + "-" + String.valueOf(artefatoPreenchido.getModelo());
 			if (mapa.containsKey(id)) {
 				ArtefatoPreenchido velho = mapa.get(id);
-				if (velho.getVersao().compareTo(artefatoPreenchido.getVersao()) >= 0) {
-					if (velho.getRevisao().compareTo(artefatoPreenchido.getRevisao()) < 0) {
-						retorno.remove(velho);
-						retorno.add(artefatoPreenchido);
-						mapa.put(id, artefatoPreenchido);
-					}
-				} else {
-					
+				if (velho.getVersao().compareTo(artefatoPreenchido.getVersao()) < 0 
+						|| (velho.getVersao().compareTo(artefatoPreenchido.getVersao()) == 0 
+								&& velho.getRevisao().compareTo(artefatoPreenchido.getRevisao()) < 0)) {
+					retorno.remove(velho);
+					retorno.add(artefatoPreenchido);
+					mapa.put(id, artefatoPreenchido);
 				}
 			}
 			retorno.add(artefatoPreenchido);
