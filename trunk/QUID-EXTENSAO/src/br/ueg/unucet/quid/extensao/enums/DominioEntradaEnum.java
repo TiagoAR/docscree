@@ -5,6 +5,6 @@ package br.ueg.unucet.quid.extensao.enums;
  *
  */
 public enum DominioEntradaEnum {
-	NUMERICO, ALFANUMERICO, CARACTERES
+	NUMERICO, ALFANUMERICO, CARACTERES, COMBOALFANUMERICO
 
 }
