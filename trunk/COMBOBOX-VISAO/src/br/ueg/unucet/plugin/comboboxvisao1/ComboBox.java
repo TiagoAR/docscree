@@ -31,7 +31,7 @@ public class ComboBox extends SuperTipoMembroVisaoZK<ComboBoxInterface> {
 		this.componente =  new ComboBoxInterface();
 		setDescricao("Combo box componente");
 		setVersao(1);
-		setRevisao(1);
+		setRevisao(4);
 	}
 
 	@Override
