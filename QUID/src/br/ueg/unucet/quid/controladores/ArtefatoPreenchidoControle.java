@@ -3,6 +3,7 @@ package br.ueg.unucet.quid.controladores;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,17 +11,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.ueg.unucet.quid.dominios.Artefato;
 import br.ueg.unucet.quid.dominios.ArtefatoPreenchido;
+import br.ueg.unucet.quid.dominios.ValoresArtefato;
 import br.ueg.unucet.quid.excessoes.QuidExcessao;
+import br.ueg.unucet.quid.extensao.dominios.Membro;
+import br.ueg.unucet.quid.interfaces.IArtefatoControle;
 import br.ueg.unucet.quid.interfaces.IArtefatoPreenchidoControle;
 import br.ueg.unucet.quid.interfaces.IDAO;
 import br.ueg.unucet.quid.interfaces.IDAOArtefatoPreenchido;
+import br.ueg.unucet.quid.utilitarias.SerializadorObjetoUtil;
 
 @Service("ArtefatoPreenchidoControle")
 public class ArtefatoPreenchidoControle extends GenericControle<ArtefatoPreenchido, Long> implements IArtefatoPreenchidoControle<ArtefatoPreenchido, Long> {
 
 	@Autowired
 	private IDAOArtefatoPreenchido<ArtefatoPreenchido, Long> daoArtefatoPreenchido;
+	
+	@Autowired
+	private IArtefatoControle<Artefato, Long> artefatoControle;
 	
 	@Override
 	public IDAO<ArtefatoPreenchido, Long> getDao() {
@@ -53,10 +62,10 @@ public class ArtefatoPreenchidoControle extends GenericControle<ArtefatoPreenchi
 		
 	}
 	
+	@Override
 	public Collection<ArtefatoPreenchido> pesquisarArtefatoPreenchido(ArtefatoPreenchido entidade) throws QuidExcessao {
-		//FILTRAR PARA LISTAR ULTIMA VERSAO, VERSÃO MAIS REVISÃO
 		Map<String, ArtefatoPreenchido> mapa = new HashMap<String, ArtefatoPreenchido>();
-		Collection<ArtefatoPreenchido> lista = pesquisarPorRestricao(entidade, new String[]{"artefatoPreenchido.codigo"});
+		Collection<ArtefatoPreenchido> lista = pesquisarPorRestricao(entidade, new String[]{"artefatopreenchido.codigo"});
 		Collection<ArtefatoPreenchido> retorno = new ArrayList<ArtefatoPreenchido>();
 		for (ArtefatoPreenchido artefatoPreenchido : lista) {
 			artefatoPreenchido = getPorId(ArtefatoPreenchido.class, artefatoPreenchido.getCodigo());
@@ -70,10 +79,35 @@ public class ArtefatoPreenchidoControle extends GenericControle<ArtefatoPreenchi
 					retorno.add(artefatoPreenchido);
 					mapa.put(id, artefatoPreenchido);
 				}
+			} else {
+				mapa.put(id, artefatoPreenchido);
+				retorno.add(artefatoPreenchido);
 			}
-			retorno.add(artefatoPreenchido);
 		}
 		return retorno;
+	}
+	
+	@Override
+	public Artefato obterArtefato(ArtefatoPreenchido artefatoPreenchido) throws QuidExcessao {
+		Artefato artefato = new Artefato();
+		artefato.setCodigo(artefatoPreenchido.getArtefato());
+		Artefato artefatoCarregado = this.artefatoControle.carregarArtefato(artefato);
+		List<ValoresArtefato> lista = (List<ValoresArtefato>) artefatoPreenchido.getValoresArtefatos();
+		// TODO melhorar desempenho
+		ValoresArtefato valoresArtefato = null;
+		for (Membro membro : artefatoCarregado.getMembros()) {
+			for (ValoresArtefato valor : lista) {
+				if (valor.getMembro().equals(membro.getCodigo())) {
+					valoresArtefato = valor;
+					break;
+				}
+			}
+			if (valoresArtefato != null) {
+				lista.remove(valoresArtefato);
+				membro.getTipoMembroModelo().setValor(SerializadorObjetoUtil.toObject(valoresArtefato.getValor()));
+			}
+		}
+		return artefatoCarregado;
 	}
 
 }

@@ -1,10 +1,12 @@
 package br.ueg.unucet.quid.servicosquid;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.transaction.annotation.Transactional;
 
 import br.ueg.unucet.quid.dominios.ArtefatoPreenchido;
+import br.ueg.unucet.quid.dominios.ValoresArtefato;
 import br.ueg.unucet.quid.excessoes.QuidExcessao;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 import br.ueg.unucet.quid.extensao.interfaces.IServico;
@@ -112,6 +114,7 @@ public abstract class ServicoPersistencia extends SuperServicoSpring {
 		artefatoPreenchido.setRevisao(getParametroRevisao());
 		artefatoPreenchido.setUsuario(getUsuario().getCodigo());
 		artefatoPreenchido.setVersao(getParametroVersao());
+		artefatoPreenchido.setValoresArtefatos(new ArrayList<ValoresArtefato>());
 		if (artefatoPreenchido.getCodigo() == null || artefatoPreenchido.getCodigo().equals(Long.valueOf(0))) {
 			getArtefatoPreenchidoControle().inserir(artefatoPreenchido);
 		} else {
