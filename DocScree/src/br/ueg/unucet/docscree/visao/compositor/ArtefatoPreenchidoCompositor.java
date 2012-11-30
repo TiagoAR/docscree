@@ -1,19 +1,18 @@
 package br.ueg.unucet.docscree.visao.compositor;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Executions;
 
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.ArtefatoControle;
-import br.ueg.unucet.docscree.modelo.MembroDocScree;
 import br.ueg.unucet.docscree.modelo.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.quid.dominios.ArtefatoPreenchido;
-import br.ueg.unucet.quid.extensao.dominios.Membro;
+import br.ueg.unucet.quid.dominios.MembroDocScree;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @org.springframework.stereotype.Component
@@ -25,6 +24,8 @@ public class ArtefatoPreenchidoCompositor extends
 	private ArtefatoPreenchido artefatoPreenchidoAberto;
 	@AtributoVisao(isCampoEntidade=false, nome="gerarRevisao")
 	private Boolean gerarRevisao = Boolean.TRUE;
+	@AtributoVisao(isCampoEntidade=false, nome="mapaValores")
+	private Map<String, Object> mapaValores;
 
 	/**
 	 * 
@@ -86,25 +87,24 @@ public class ArtefatoPreenchidoCompositor extends
 	
 	public void acaoMapearArtefato() {
 		super.binder.saveAll();
-		boolean valido = true;
-		setMembros(new ArrayList<Membro>());
-		for (MembroDocScree membroDocScree : getMapaMembrosAdicionados().values()) {
-			Object valorVisualizacao = membroDocScree.getTipoMembroVisao().getValorVisualizacao(getComponentePorId(membroDocScree.getIdComponente(), getWindowArtefato()));
-			if (membroDocScree.getTipoMembroVisao().isEntradaValida(valorVisualizacao)) {
-				membroDocScree.getTipoMembroVisao().getMembro().getTipoMembroModelo().setValor(valorVisualizacao);
-				getMembros().add(membroDocScree.getTipoMembroVisao().getMembro());
-			} else {
-				valido = false;
-				//TODO informar entrada inválida -- Isso é serviço de validação...
-				break;
+		try {
+			setMapaValores(new HashMap<String, Object>());
+			for (MembroDocScree membroDocScree : getMapaMembrosAdicionados().values()) {
+				Object valorVisualizacao = membroDocScree.getTipoMembroVisao().getValorVisualizacao(getComponentePorId(membroDocScree.getIdComponente(), getWindowArtefato()));
+				getMapaValores().put(membroDocScree.getIdComponente(), valorVisualizacao);
 			}
-		}
-		if (valido) {
-			try {
-				getControle().fazerAcao("chamarServicoPersistencia", (SuperCompositor) this);
-			} catch (Exception e) {
-				
+			boolean valido = getControle().fazerAcao("chamarServicoValidacao",  (SuperCompositor) this);
+			if (valido) {
+				boolean acao = getControle().fazerAcao("chamarServicoPersistencia", (SuperCompositor) this);
+				if (acao) {
+					getComponent().getChildren().clear();
+					// TODO redirecionar para index
+				} else {
+					mostrarMensagem(acao);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -138,6 +138,20 @@ public class ArtefatoPreenchidoCompositor extends
 	 */
 	public void setGerarRevisao(Boolean gerarRevisao) {
 		this.gerarRevisao = gerarRevisao;
+	}
+
+	/**
+	 * @return Map<String,Object> o(a) mapaValores
+	 */
+	public Map<String, Object> getMapaValores() {
+		return mapaValores;
+	}
+
+	/**
+	 * @param mapaValores o(a) mapaValores a ser setado(a)
+	 */
+	public void setMapaValores(Map<String, Object> mapaValores) {
+		this.mapaValores = mapaValores;
 	}
 
 }

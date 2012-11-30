@@ -37,8 +37,8 @@
 					<label value="Nome:" />
 					<combobox model="@{gerenciador.listaArtefatoPreenchido}"
 						width="180px" selectedItem="@{gerenciador.artefatoPreenchidoAAbrir }" onOK="gerenciador.abrirArtefatoModelo()">
-						<comboitem self="@{each=item }" value="@{item}"
-							label="@{item.nome }" />
+						<comboitem self="@{each=item }" value="@{item}" label="@{item }"> 
+						</comboitem>
 					</combobox>
 				</row>
 			</rows>
