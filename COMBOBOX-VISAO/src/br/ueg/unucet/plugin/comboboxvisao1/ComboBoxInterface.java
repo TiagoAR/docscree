@@ -84,8 +84,10 @@ public class ComboBoxInterface implements IComponenteInterface {
 	
 	@Override
 	public void setValor(Object valor) {
-		this.combobox.setText(valor.toString());
-		this.label.setValue(valor.toString());
+		if(valor!=null){
+			this.combobox.setText(valor.toString());
+			this.label.setValue(valor.toString());
+		}
 	}
 	
 	@Override
