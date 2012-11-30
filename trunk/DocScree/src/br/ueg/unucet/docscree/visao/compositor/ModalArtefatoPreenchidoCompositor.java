@@ -27,11 +27,17 @@ public class ModalArtefatoPreenchidoCompositor extends
 	 */
 	private static final long serialVersionUID = 5181980815085895670L;
 	
+	private String nomeSelecionar = "Selecione o ArtefatoModelo";
+	
 	private Artefato artefatoAAbrir;
 	private ArtefatoPreenchido artefatoPreenchidoAAbrir;
 	
+	private List<Artefato> listaArtefatoModelo;
+	private List<ArtefatoPreenchido> listaArtefatoPreenchido;
+	
 	private Grid gridArtefatoModelo;
 	private Grid gridArtefatoPreenchido;
+	
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void acaoAbrirPreencherArtefato() {
@@ -86,29 +92,56 @@ public class ModalArtefatoPreenchidoCompositor extends
 		} else {
 			Executions.getCurrent().getSession().setAttribute("ArtefatoPreenchidoAbrir", getArtefatoPreenchidoAAbrir());
 		}
-		setArtefatoAAbrir(null);
-		setArtefatoPreenchidoAAbrir(null);
-		Executions.sendRedirect("/pages/preencher-artefato.zul");
+		if (getArtefatoAAbrir() != null || getArtefatoPreenchidoAAbrir() != null) {
+			setArtefatoAAbrir(null);
+			setArtefatoPreenchidoAAbrir(null);
+			Executions.sendRedirect("/pages/preencher-artefato.zul");
+		} else {
+			getControle().setMensagens(new Mensagens());
+			getControle().getMensagens().getListaMensagens().add("É necessário escolher um Artefato para preencher!");
+			mostrarMensagem(false);
+		}
+		anularComponentes();
+	}
+	
+	private void anularComponentes() {
+		this.listaArtefatoModelo = null;
+		this.listaArtefatoPreenchido = null;
+		this.gridArtefatoModelo = null;
+		this.gridArtefatoPreenchido = null;
 	}
 	
 	public void checkarArtefatoModelo() {
 		getGridArtefatoModelo().setVisible(true);
 		getGridArtefatoPreenchido().setVisible(false);
+		setNomeSelecionar("Selecione o ArtefatoModelo");
 		super.binder.loadAll();
 	}
 	
 	public void checkarArtefatoPreenchido() {
 		getGridArtefatoModelo().setVisible(false);
 		getGridArtefatoPreenchido().setVisible(true);
+		setNomeSelecionar("Selecione o Artefato Preenchido");
 		super.binder.loadAll();
 	}
 	
-	public List<Artefato> getListaArtefatoModelo() {
-		return getControle().listarArtefatosModeloPorProjeto((Projeto) getProjetoSessao());
+	public void acaoFecharModal() {
+		anularComponentes();
+		getComponent().detach();
 	}
 	
+	public List<Artefato> getListaArtefatoModelo() {
+		if (this.listaArtefatoModelo == null) {
+			this.listaArtefatoModelo = getControle().listarArtefatosModeloPorProjeto((Projeto) getProjetoSessao());
+		}
+		return this.listaArtefatoModelo;
+	}
+
 	public List<ArtefatoPreenchido> getListaArtefatoPreenchido() {
-		return null; //TODO FAZER
+		if (this.listaArtefatoPreenchido == null) {
+			this.listaArtefatoPreenchido = getControle().listarArtefatosPreenchidosProjeto((Projeto)getProjetoSessao());
+		}
+		return this.listaArtefatoPreenchido;
 	}
 
 	/**
@@ -157,6 +190,20 @@ public class ModalArtefatoPreenchidoCompositor extends
 	 */
 	public void setArtefatoPreenchidoAAbrir(ArtefatoPreenchido artefatoPreenchidoAAbrir) {
 		this.artefatoPreenchidoAAbrir = artefatoPreenchidoAAbrir;
+	}
+
+	/**
+	 * @return String o(a) nomeSelecionar
+	 */
+	public String getNomeSelecionar() {
+		return nomeSelecionar;
+	}
+
+	/**
+	 * @param nomeSelecionar o(a) nomeSelecionar a ser setado(a)
+	 */
+	public void setNomeSelecionar(String nomeSelecionar) {
+		this.nomeSelecionar = nomeSelecionar;
 	}
 
 }

@@ -8,6 +8,7 @@ import br.ueg.unucet.docscree.utilitarios.BloquearArtefatoControle;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.docscree.visao.compositor.SuperArtefatoCompositor;
 import br.ueg.unucet.quid.dominios.Artefato;
+import br.ueg.unucet.quid.dominios.ArtefatoPreenchido;
 import br.ueg.unucet.quid.dominios.ItemModelo;
 import br.ueg.unucet.quid.dominios.Projeto;
 import br.ueg.unucet.quid.dominios.Retorno;
@@ -147,15 +148,36 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		}
 	}
 	
+	public Artefato obterArtefatoModelo(ArtefatoPreenchido artefatoPreenchido) {
+		Retorno<String,Artefato> retorno = getFramework().obterArtefatoModelo(artefatoPreenchido);
+		if (retorno.isSucesso()) {
+			return retorno.getParametros().get(Retorno.PARAMETRO_NOVA_INSTANCIA);
+		}
+		return null;
+	}
+	
 	public boolean acaoChamarServicoPersistencia() {
 		
 		Collection<IParametro<?>> parametros = new ArrayList<IParametro<?>>();
+		ArtefatoPreenchido artefatoPreenchido = (ArtefatoPreenchido) getMapaAtributos().get("artefatoPreenchidoAberto");
+		Long idArtefatoPreenchido = null;
+		Integer versao = 1;
+		Integer revisao = 1;
+		if (artefatoPreenchido != null) {
+			versao = artefatoPreenchido.getVersao();
+			revisao = artefatoPreenchido.getRevisao();
+			if ((Boolean) getMapaAtributos().get("gerarRevisao")) {
+				revisao++;
+			} else {
+				idArtefatoPreenchido = artefatoPreenchido.getCodigo();
+			}
+		}
 		parametros.add(criarParametroArtefatoModelo());
 		parametros.add(criarParametroProjeto());
 		parametros.add(criarParametroUsuario());
-		parametros.add(criarParametroLong(ServicoPersistencia.PARAMETRO_ID_ARTEFATO_PREENCHIDO, null));
-		parametros.add(criarParametroInteiro(ServicoPersistencia.PARAMETRO_VERSAO, 1));
-		parametros.add(criarParametroInteiro(ServicoPersistencia.PARAMETRO_REVISAO, 1));
+		parametros.add(criarParametroLong(ServicoPersistencia.PARAMETRO_ID_ARTEFATO_PREENCHIDO, idArtefatoPreenchido));
+		parametros.add(criarParametroInteiro(ServicoPersistencia.PARAMETRO_VERSAO, versao));
+		parametros.add(criarParametroInteiro(ServicoPersistencia.PARAMETRO_REVISAO, revisao));
 		Retorno<Object,Object> retorno = getEntidade().executaServico("ServicoPersistenciaBD", parametros);
 		if (retorno.isSucesso()) {
 			return true;
@@ -319,6 +341,16 @@ public class ArtefatoControle extends SuperArtefatoControle{
 			}
 		}
 		return lista;
+	}
+	
+	public List<ArtefatoPreenchido> listarArtefatosPreenchidosProjeto(Projeto projeto) {
+		ArtefatoPreenchido artefatoPreenchido = new ArtefatoPreenchido();
+		artefatoPreenchido.setModelo(projeto.getModelo().getCodigo());
+		Retorno<String,Collection<ArtefatoPreenchido>> retorno = getFramework().pesquisarArtefatosPreenchidos(artefatoPreenchido);
+		if (retorno.isSucesso()) {
+			return (List<ArtefatoPreenchido>) retorno.getParametros().get(Retorno.PARAMERTO_LISTA);
+		}
+		return new ArrayList<ArtefatoPreenchido>();
 	}
 
 }

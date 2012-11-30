@@ -9,6 +9,10 @@
 					style="position: relative; background-color: white; border: 1px solid; overflow: auto;">
 			</window>
 		<div>
+			<separator />
+			<checkbox label="Gerar revisão de preenchimento" checked="@{gerenciador.gerarRevisao }" 
+					visible="@{gerenciador.checkboxVisible }" />
+			<separator />
 			<button label="Salvar" onClick="gerenciador.acaoMapearArtefato();"/>
 			<button label="Cancelar" onClick="gerenciador.acaoCancelar();"/>
 		</div>
