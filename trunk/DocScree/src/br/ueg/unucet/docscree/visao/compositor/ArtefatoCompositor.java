@@ -31,11 +31,11 @@ import org.zkoss.zul.Window;
 
 import br.ueg.unucet.docscree.controladores.ArtefatoControle;
 import br.ueg.unucet.docscree.interfaces.IComponenteDominio;
-import br.ueg.unucet.docscree.modelo.MembroDocScree;
 import br.ueg.unucet.docscree.modelo.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.Reflexao;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.quid.dominios.Artefato;
+import br.ueg.unucet.quid.dominios.MembroDocScree;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
 import br.ueg.unucet.quid.extensao.dominios.Persistivel;
 import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;

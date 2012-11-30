@@ -3,6 +3,7 @@ package br.ueg.unucet.docscree.controladores;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import br.ueg.unucet.docscree.utilitarios.BloquearArtefatoControle;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
@@ -20,6 +21,7 @@ import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 import br.ueg.unucet.quid.extensao.interfaces.IServico;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroVisao;
 import br.ueg.unucet.quid.servicosquid.ServicoPersistencia;
+import br.ueg.unucet.quid.servicosquid.ServicoValidacao;
 
 /**
  * Controlador específico do caso de uso Montar ArtefatoModelo
@@ -172,9 +174,7 @@ public class ArtefatoControle extends SuperArtefatoControle{
 				idArtefatoPreenchido = artefatoPreenchido.getCodigo();
 			}
 		}
-		parametros.add(criarParametroArtefatoModelo());
-		parametros.add(criarParametroProjeto());
-		parametros.add(criarParametroUsuario());
+		criarParametrosSuperServico(parametros);
 		parametros.add(criarParametroLong(ServicoPersistencia.PARAMETRO_ID_ARTEFATO_PREENCHIDO, idArtefatoPreenchido));
 		parametros.add(criarParametroInteiro(ServicoPersistencia.PARAMETRO_VERSAO, versao));
 		parametros.add(criarParametroInteiro(ServicoPersistencia.PARAMETRO_REVISAO, revisao));
@@ -183,6 +183,43 @@ public class ArtefatoControle extends SuperArtefatoControle{
 			return true;
 		}
 		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean acaoChamarServicoValidacao() {
+		getEntidade().setMembros(new ArrayList<Membro>());
+		Collection<IParametro<?>> parametros = new ArrayList<IParametro<?>>();
+		criarParametrosSuperServico(parametros);
+		parametros.add(criarParametroMapeador((Map) getMapaAtributos().get("listaMembrosDocScree"), ServicoValidacao.PARAMETRO_MEMBROS));
+		parametros.add(criarParametroMapeador((Map) getMapaAtributos().get("mapaValores"), ServicoValidacao.PARAMETRO_VALORES_MEMBROS));
+		Retorno<Object,Object> retorno = getEntidade().executaServico("ServicoValidacaoSimples", parametros);
+		Collection<Membro> listaMembros = null;
+		Collection<String> listaMensagens = null;
+		if (retorno.isSucesso()) {
+			Collection<IParametro> parametrosServico = (Collection<IParametro>) retorno.getParametros().get(Retorno.PARAMETRO_LISTA_PARAMETRO_SERVICO);
+			for (IParametro iParametro : parametrosServico) {
+				if (iParametro.getNome().equals(ServicoValidacao.PARAMETRO_MEMBROS_RESULTADO)) {
+					listaMembros = (Collection<Membro>) iParametro.getValor();
+				} else if (iParametro.getNome().equals(ServicoValidacao.PARAMETRO_LISTA_ERROS)) {
+					listaMensagens = (Collection<String>) iParametro.getValor();
+				}
+			}
+			if (listaMensagens != null && !listaMensagens.isEmpty()) {
+				getMensagens().getListaMensagens().addAll(listaMensagens);
+				return false;
+			}
+			if (listaMembros != null) {
+				((SuperArtefatoCompositor)getVisao()).setMembros(listaMembros);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	private void criarParametrosSuperServico(Collection<IParametro<?>> parametros) {
+		parametros.add(criarParametroArtefatoModelo());
+		parametros.add(criarParametroProjeto());
+		parametros.add(criarParametroUsuario());
 	}
 	
 	protected IParametro<Artefato> criarParametroArtefatoModelo() {
@@ -203,6 +240,13 @@ public class ArtefatoControle extends SuperArtefatoControle{
 		Parametro<Projeto> parametro = new Parametro<Projeto>(Projeto.class);
 		parametro.setNome(IServico.PARAMETRO_PROJETO);
 		parametro.setValorClass(getProjeto());
+		return parametro;
+	}
+	
+	protected IParametro<Map> criarParametroMapeador(Map valor, String nome) {
+		Parametro<Map> parametro = new Parametro<>(Map.class);
+		parametro.setNome(nome);
+		parametro.setValorClass(valor);
 		return parametro;
 	}
 	
