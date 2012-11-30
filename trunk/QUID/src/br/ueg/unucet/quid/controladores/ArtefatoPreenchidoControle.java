@@ -69,12 +69,10 @@ public class ArtefatoPreenchidoControle extends GenericControle<ArtefatoPreenchi
 		Collection<ArtefatoPreenchido> retorno = new ArrayList<ArtefatoPreenchido>();
 		for (ArtefatoPreenchido artefatoPreenchido : lista) {
 			artefatoPreenchido = getPorId(ArtefatoPreenchido.class, artefatoPreenchido.getCodigo());
-			String id = String.valueOf(artefatoPreenchido.getArtefato()) + "-" + String.valueOf(artefatoPreenchido.getModelo());
+			String id = String.valueOf(artefatoPreenchido.getArtefato()) + "-" + String.valueOf(artefatoPreenchido.getModelo()) + "-" + String.valueOf(artefatoPreenchido.getVersao());
 			if (mapa.containsKey(id)) {
 				ArtefatoPreenchido velho = mapa.get(id);
-				if (velho.getVersao().compareTo(artefatoPreenchido.getVersao()) < 0 
-						|| (velho.getVersao().compareTo(artefatoPreenchido.getVersao()) == 0 
-								&& velho.getRevisao().compareTo(artefatoPreenchido.getRevisao()) < 0)) {
+				if (velho.getRevisao().compareTo(artefatoPreenchido.getRevisao()) < 0) {
 					retorno.remove(velho);
 					retorno.add(artefatoPreenchido);
 					mapa.put(id, artefatoPreenchido);

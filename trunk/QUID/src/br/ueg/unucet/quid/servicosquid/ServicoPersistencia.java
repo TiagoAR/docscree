@@ -116,6 +116,19 @@ public abstract class ServicoPersistencia extends SuperServicoSpring {
 		artefatoPreenchido.setVersao(getParametroVersao());
 		artefatoPreenchido.setValoresArtefatos(new ArrayList<ValoresArtefato>());
 		if (artefatoPreenchido.getCodigo() == null || artefatoPreenchido.getCodigo().equals(Long.valueOf(0))) {
+			ArtefatoPreenchido artefatoPesquisar = new ArtefatoPreenchido();
+			artefatoPesquisar.setArtefato(artefatoPreenchido.getArtefato());
+			artefatoPesquisar.setModelo(artefatoPreenchido.getModelo());
+			Collection<ArtefatoPreenchido> respostaPesquisa = getArtefatoPreenchidoControle().pesquisarArtefatoPreenchido(artefatoPesquisar);
+			if (!respostaPesquisa.isEmpty()) {
+				Integer novaVersao = 0;
+				for (ArtefatoPreenchido versaoSalva : respostaPesquisa) {
+					if (versaoSalva.getVersao().compareTo(novaVersao) > 0) {
+						novaVersao = versaoSalva.getVersao();
+					}
+				}
+				artefatoPreenchido.setVersao(novaVersao + 1);
+			}
 			getArtefatoPreenchidoControle().inserir(artefatoPreenchido);
 		} else {
 			getArtefatoPreenchidoControle().alterar(artefatoPreenchido);
