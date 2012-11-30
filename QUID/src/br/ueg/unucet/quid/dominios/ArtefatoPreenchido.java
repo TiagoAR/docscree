@@ -115,4 +115,12 @@ public class ArtefatoPreenchido extends Identificavel {
 		this.valoresArtefatos = valoresArtefatos;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getNome() + " - Versão: " + getVersao();
+	}
+
 }
