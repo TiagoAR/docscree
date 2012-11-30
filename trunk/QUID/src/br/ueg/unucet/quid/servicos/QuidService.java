@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import br.ueg.unucet.quid.dominios.Artefato;
+import br.ueg.unucet.quid.dominios.ArtefatoPreenchido;
 import br.ueg.unucet.quid.dominios.Categoria;
 import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.ItemModelo;
@@ -26,6 +27,7 @@ import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroVisao;
 import br.ueg.unucet.quid.interfaces.IArtefato;
 import br.ueg.unucet.quid.interfaces.IArtefatoControle;
+import br.ueg.unucet.quid.interfaces.IArtefatoPreenchidoServico;
 import br.ueg.unucet.quid.interfaces.IEquipeSevico;
 import br.ueg.unucet.quid.interfaces.IMembroServico;
 import br.ueg.unucet.quid.interfaces.IModeloServico;
@@ -457,6 +459,18 @@ public class QuidService implements IQUID{
 	public Retorno<String, Collection<Modelo>> listarModelo() {
 		IModeloServico<Modelo> modeloServico = (IModeloServico<Modelo>) appContext.getBean("ModeloServico");
 		return modeloServico.listarModelos();
+	}
+	
+	@Override
+	public Retorno<String, Collection<ArtefatoPreenchido>> pesquisarArtefatosPreenchidos(ArtefatoPreenchido artefatoPreenchido) {
+		IArtefatoPreenchidoServico<ArtefatoPreenchido> artefatoPreenchidoServico = (IArtefatoPreenchidoServico<ArtefatoPreenchido>) appContext.getBean("ArtefatoPreenchidoServico");
+		return artefatoPreenchidoServico.pesquisarArtefatoPreenchido(artefatoPreenchido);
+	}
+	
+	@Override
+	public Retorno<String, Artefato> obterArtefatoModelo (ArtefatoPreenchido artefatoPreenchido) {
+		IArtefatoPreenchidoServico<ArtefatoPreenchido> artefatoPreenchidoServico = (IArtefatoPreenchidoServico<ArtefatoPreenchido>) appContext.getBean("ArtefatoPreenchidoServico");
+		return artefatoPreenchidoServico.obterArtefatoModelo(artefatoPreenchido);
 	}
 
 }

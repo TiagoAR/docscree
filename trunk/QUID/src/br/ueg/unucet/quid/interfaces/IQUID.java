@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Collection;
 
 import br.ueg.unucet.quid.dominios.Artefato;
+import br.ueg.unucet.quid.dominios.ArtefatoPreenchido;
 import br.ueg.unucet.quid.dominios.Categoria;
 import br.ueg.unucet.quid.dominios.Equipe;
 import br.ueg.unucet.quid.dominios.ItemModelo;
@@ -261,4 +262,10 @@ public interface IQUID {
 	Retorno<Object, Object> alterarModelo(Modelo modelo);
 
 	Retorno<String, Collection<Artefato>> pesquisarArtefato(Artefato artefato);
+
+	Retorno<String, Collection<ArtefatoPreenchido>> pesquisarArtefatosPreenchidos(
+			ArtefatoPreenchido artefatoPreenchido);
+
+	Retorno<String, Artefato> obterArtefatoModelo(
+			ArtefatoPreenchido artefatoPreenchido);
 }
