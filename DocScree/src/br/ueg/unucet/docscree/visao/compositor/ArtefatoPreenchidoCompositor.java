@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.context.annotation.Scope;
+import org.zkoss.zk.ui.Executions;
 
+import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.ArtefatoControle;
 import br.ueg.unucet.docscree.modelo.MembroDocScree;
 import br.ueg.unucet.docscree.modelo.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
+import br.ueg.unucet.quid.dominios.ArtefatoPreenchido;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -17,6 +20,11 @@ import br.ueg.unucet.quid.extensao.dominios.Membro;
 @Scope("session")
 public class ArtefatoPreenchidoCompositor extends
 		SuperArtefatoCompositor<ArtefatoControle> {
+	
+	@AtributoVisao(isCampoEntidade=false, nome="artefatoPreenchidoAberto")
+	private ArtefatoPreenchido artefatoPreenchidoAberto;
+	@AtributoVisao(isCampoEntidade=false, nome="gerarRevisao")
+	private Boolean gerarRevisao = Boolean.TRUE;
 
 	/**
 	 * 
@@ -28,6 +36,13 @@ public class ArtefatoPreenchidoCompositor extends
 	 */
 	@Override
 	public boolean carregarArtefato() {
+		this.setArtefatoPreenchidoAberto(null);
+		this.setGerarRevisao(Boolean.TRUE);
+		if (Executions.getCurrent().getSession().hasAttribute("ArtefatoPreenchidoAbrir")) {
+			this.setArtefatoPreenchidoAberto((ArtefatoPreenchido) Executions.getCurrent().getSession().getAttribute("ArtefatoPreenchidoAbrir"));
+			Executions.getCurrent().getSession().removeAttribute("ArtefatoPreenchidoAbrir");
+			Executions.getCurrent().getSession().setAttribute("ArtefatoAbrir", getControle().obterArtefatoModelo(getArtefatoPreenchidoAberto()));
+		}
 		if( !super.carregarArtefato()) {
 			getControle().setMensagens(new Mensagens());
 			getControle().getMensagens().getListaMensagens().add("É necessário escolher um ArtefatoModelo para preencher!");
@@ -91,6 +106,38 @@ public class ArtefatoPreenchidoCompositor extends
 				
 			}
 		}
+	}
+	
+	public Boolean getCheckboxVisible() {
+		return this.getArtefatoPreenchidoAberto() != null;
+	}
+
+	/**
+	 * @return ArtefatoPreenchido o(a) artefatoPreenchidoAberto
+	 */
+	public ArtefatoPreenchido getArtefatoPreenchidoAberto() {
+		return artefatoPreenchidoAberto;
+	}
+
+	/**
+	 * @param artefatoPreenchidoAberto o(a) artefatoPreenchidoAberto a ser setado(a)
+	 */
+	public void setArtefatoPreenchidoAberto(ArtefatoPreenchido artefatoPreenchidoAberto) {
+		this.artefatoPreenchidoAberto = artefatoPreenchidoAberto;
+	}
+
+	/**
+	 * @return Boolean o(a) gerarRevisao
+	 */
+	public Boolean getGerarRevisao() {
+		return gerarRevisao;
+	}
+
+	/**
+	 * @param gerarRevisao o(a) gerarRevisao a ser setado(a)
+	 */
+	public void setGerarRevisao(Boolean gerarRevisao) {
+		this.gerarRevisao = gerarRevisao;
 	}
 
 }

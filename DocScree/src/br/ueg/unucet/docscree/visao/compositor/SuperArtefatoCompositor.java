@@ -121,6 +121,8 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 			}
 			if (!abrindoArtefato) {
 				this.getMembros().add(tipoMembro.getMembro());
+			} else {
+				tipoMembro.setValor(tipoMembro.getMembro().getTipoMembroModelo().getValor());
 			}
 			novaInstancia.setParent(getWindowArtefato());
 			getWindowArtefato().appendChild(novaInstancia);

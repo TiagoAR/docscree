@@ -10,7 +10,7 @@
 			<radio id="radioArtefatoPreenchido" label="Preencher Artefato Preenchido"
 					onClick="gerenciador.checkarArtefatoPreenchido()"/>
 		</radiogroup>
-		<label value="Selecione o ArtefatoModelo:" />
+		<label id="labelSelecionar" value="@{gerenciador.nomeSelecionar }" />
 		<grid id="gridArtefatoModelo" visible="true">
 			<columns>
 				<column width="100px" />
@@ -45,7 +45,7 @@
 		</grid>
 		<cell align="center">
 			<button label="Preencher" onClick="gerenciador.abrirArtefatoModelo();" />
-			<button label="Cancelar" onClick="modalPreencherArtefato.detach();" />
+			<button label="Cancelar" onClick="gerenciador.acaoFecharModal();" />
 		</cell>
 	</vlayout>
 </window>
