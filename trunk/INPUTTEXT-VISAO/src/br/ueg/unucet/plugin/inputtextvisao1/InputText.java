@@ -30,7 +30,7 @@ public class InputText extends SuperTipoMembroVisaoZK<InputTextInterface> {
 		this.componente =  new InputTextInterface();
 		setDescricao("Visão Padrão");
 		setVersao(1);
-		setRevisao(11);
+		setRevisao(12);
 	}
 
 	@Override
