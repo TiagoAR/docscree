@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.zkoss.zkplus.databind.BindingListModelListModel;
-import org.zkoss.zul.Combobox;
-import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelArray;
 import org.zkoss.zul.Textbox;
@@ -21,6 +19,7 @@ import br.ueg.unucet.quid.extensao.interfaces.IParametro;
  * @author Diego
  *
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class ComboBoxInterface implements IComponenteInterface {
 	
 	
@@ -31,7 +30,7 @@ public class ComboBoxInterface implements IComponenteInterface {
 	/**
 	 * Componente de Preenchimento do ComboBox
 	 */
-	private Combobox combobox;
+	private org.zkoss.zul.Combobox combobox;
 	/**
 	 * Componente de Visualização do ComboBox
 	 */
@@ -41,7 +40,7 @@ public class ComboBoxInterface implements IComponenteInterface {
 	 * Construtor DEFAULT
 	 */
 	public ComboBoxInterface() {
-		this.combobox = new Combobox();
+		this.combobox = new org.zkoss.zul.Combobox();
 		this.label = new Label("");
 	}
 	
@@ -97,6 +96,6 @@ public class ComboBoxInterface implements IComponenteInterface {
 
 	@Override
 	public Object getValor(Object componente) {
-		return ((Textbox)componente).getText();
+		return ((org.zkoss.zul.Combobox)componente).getText();
 	}
 }
