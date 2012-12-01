@@ -10,6 +10,7 @@ import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroModelo;
 
 
+@SuppressWarnings("serial")
 public class StaticText extends SuperTipoMembroModelo implements ITipoMembroModelo {
 
 	public static final String TEXTO_FIXO = "TEXTO_FIXO";

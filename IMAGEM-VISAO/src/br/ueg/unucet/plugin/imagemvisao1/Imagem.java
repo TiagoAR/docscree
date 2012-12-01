@@ -3,8 +3,9 @@ package br.ueg.unucet.plugin.imagemvisao1;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.zkoss.zul.Label;
+import org.zkoss.zul.Image;
 
+import sun.awt.image.ToolkitImage;
 import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 
 /**
@@ -32,7 +33,7 @@ public class Imagem extends SuperTipoMembroVisaoZK<ImagemInterface> {
 		this.componente =  new ImagemInterface();
 		setDescricao("Imagem componente");
 		setVersao(1);
-		setRevisao(11);
+		setRevisao(13);
 	}
 
 	@Override
@@ -57,8 +58,8 @@ public class Imagem extends SuperTipoMembroVisaoZK<ImagemInterface> {
 	
 	@Override
 	public Object getVisualizacaoExemplo(Object componente, Object valorExemplo) {
-		Label visualizacao = (Label) componente;
-		visualizacao.setValue(valorExemplo.toString());
+		Image visualizacao = (Image) componente;
+		visualizacao.setContent(((ToolkitImage) new ImageIcon(getClass().getResource("/no_image.png")).getImage()).getBufferedImage());
 		return visualizacao;
 	}
 

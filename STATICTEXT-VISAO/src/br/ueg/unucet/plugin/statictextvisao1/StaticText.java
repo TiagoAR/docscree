@@ -34,7 +34,7 @@ public class StaticText extends SuperTipoMembroVisaoZK<StaticTextInterface> {
 		this.componente =  new StaticTextInterface();
 		setDescricao("Visão Padrão");
 		setVersao(1);
-		setRevisao(2);
+		setRevisao(4);
 	}
 
 	@Override
@@ -49,18 +49,22 @@ public class StaticText extends SuperTipoMembroVisaoZK<StaticTextInterface> {
 
 	@Override
 	public Object getVisaoPreenchimento() {
-		return getComponente().getPreenchimento(this);
+		Label preenchimento = getComponente().getPreenchimento(this);
+		preenchimento.setValue(String.valueOf(getParametroPorNome(TEXTO_FIXO).getValor()));
+		return preenchimento;
 	}
 
 	@Override
 	public Object getVisaoVisualizacao() {
-		return getComponente().getVisualizacao(this);
+		Label preenchimento = getComponente().getVisualizacao(this);
+		preenchimento.setValue(String.valueOf(getParametroPorNome(TEXTO_FIXO).getValor()));
+		return preenchimento;
 	}
 	
 	@Override
 	public Object getVisualizacaoExemplo(Object componente, Object valorExemplo) {
 		Label visualizacao = (Label) componente;
-		visualizacao.setValue(valorExemplo.toString());
+		visualizacao.setValue(String.valueOf(getParametroPorNome(TEXTO_FIXO).getValor()));
 		return visualizacao;
 	}
 
