@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.HtmlBasedComponent;
+import org.zkoss.zkplus.databind.AnnotateDataBinder;
 
 import br.ueg.unucet.docscree.anotacao.AtributoVisao;
 import br.ueg.unucet.docscree.controladores.ArtefatoControle;
@@ -13,6 +15,8 @@ import br.ueg.unucet.docscree.modelo.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.enumerador.TipoMensagem;
 import br.ueg.unucet.quid.dominios.ArtefatoPreenchido;
 import br.ueg.unucet.quid.dominios.MembroDocScree;
+import br.ueg.unucet.quid.extensao.dominios.Membro;
+import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @org.springframework.stereotype.Component
@@ -26,6 +30,8 @@ public class ArtefatoPreenchidoCompositor extends
 	private Boolean gerarRevisao = Boolean.TRUE;
 	@AtributoVisao(isCampoEntidade=false, nome="mapaValores")
 	private Map<String, Object> mapaValores;
+	
+	protected AnnotateDataBinder binderVisualizao;
 
 	/**
 	 * 
@@ -106,6 +112,48 @@ public class ArtefatoPreenchidoCompositor extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void abrirWindowVisualizacao() {
+		getWindowVisualizacaoArtefato().getChildren().clear();
+		for (Membro membro : getMembros()) {
+			// TODO criar método único ver GERARPALETATIPOMEMBRO..
+			SuperTipoMembroVisaoZK<?> superTipoMembroVisaoZK = getControle().getTipoMembroVisaoPeloMembro(membro);
+			SuperTipoMembroVisaoZK<?> novaInstancia = null;
+			try {
+				novaInstancia = superTipoMembroVisaoZK.getClass().newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			if (novaInstancia != null) {
+				novaInstancia.setMembro(membro);
+				setTipoMembroVisaoSelecionado(novaInstancia);
+				adicionarMembroAVisualizacao(getIdMembro());// TODO se precisar analisar
+				setTipoMembroVisaoSelecionado(null);
+				
+			}
+		}
+		getBinderVisualizacaoArtefato().loadAll();
+	}
+	
+	/* (non-Javadoc)
+	 * @see br.ueg.unucet.docscree.visao.compositor.SuperArtefatoCompositor#gerarNovaInstanciaVisualizacao(java.lang.String, br.ueg.unucet.quid.extensao.dominios.Membro)
+	 */
+	@Override
+	protected HtmlBasedComponent gerarNovaInstanciaVisualizacao(
+			String idComponente, Membro membro) {
+		HtmlBasedComponent div = super.gerarNovaInstanciaVisualizacao(idComponente, membro);
+		getTipoMembroVisaoSelecionado().setValor(getTipoMembroVisaoSelecionado().getValorVisualizacao(getWindowArtefato().getFellow(idComponente.replace("Visualizacao", "Componente"))));
+		return div;
+	}
+
+	protected AnnotateDataBinder getBinderVisualizacaoArtefato() {
+		if (this.binderVisualizao == null) {
+			this.binderVisualizao = new AnnotateDataBinder(getWindowVisualizacaoArtefato());
+		}
+		return this.binderVisualizao;
 	}
 	
 	public Boolean getCheckboxVisible() {

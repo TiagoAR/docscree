@@ -34,7 +34,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	protected static final String PARAMETROPOSY = "idParametroY";
 	protected static final String PARAMETRONOME = "idParametroNome";
 	protected static final String PARAMETRODESC = "idParametroDescricao";
-	protected static final String ESTILODIV = " position: absolute; display: table; ";
+	protected static final String ESTILODIV = " position: absolute; display: table ";
 	protected static final String ESTILOCOMPONENTE = " padding: 0px; margin: 0px; padding-top: 1px;";
 
 	@AtributoVisao(nome="nome", isCampoEntidade = true)
@@ -59,9 +59,10 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	@AtributoVisao(nome="listaMembrosDocScree", isCampoEntidade = false)
 	protected Map<String, MembroDocScree> mapaMembrosAdicionados;
 	@AtributoVisao(nome="tipoMembroVisaoSelecionado", isCampoEntidade = false)
-	private SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado;
+	protected SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado;
 
 	protected Window areaWindowArtefato = null;
+	protected Window areaVisualizacaoWindow = null;
 	
 	public boolean mapearMembrosAoArtefato() {
 		this.inicializarTelasMapeadores();
@@ -128,6 +129,15 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 			getWindowArtefato().appendChild(novaInstancia);
 		}
 	}
+	
+	protected void adicionarMembroAVisualizacao(String nomeParcial) {
+		String idVisualizacao = "Visualizacao" + nomeParcial;
+		HtmlBasedComponent componenteVisualizacao = gerarNovaInstanciaVisualizacao(idVisualizacao, getTipoMembroVisaoSelecionado().getMembro());
+		if (componenteVisualizacao != null) {
+			componenteVisualizacao.setParent(getWindowVisualizacaoArtefato());
+			getWindowVisualizacaoArtefato().appendChild(componenteVisualizacao);
+		} 
+	}
 
 	protected HtmlBasedComponent gerarNovaInstancia(String idComponente, Membro membro) {
 		Div div = null;
@@ -137,6 +147,23 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 			novaInstancia.setStyle(getTipoMembroVisaoSelecionado().getCss(membro) + ESTILOCOMPONENTE);
 			div = new Div();
 			div.setId(idComponente.replace("Componente", "Grid"));
+			div.setWidth(String.valueOf(membro.getComprimento())+"px");
+			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + ESTILODIV);
+			novaInstancia.setParent(div);
+			div.appendChild(novaInstancia);
+		} catch (Exception e) {
+		}
+		return div;
+	}
+
+	protected HtmlBasedComponent gerarNovaInstanciaVisualizacao(String idComponente, Membro membro) {
+		Div div = null;
+		try {
+			HtmlBasedComponent novaInstancia = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisaoVisualizacao();
+			novaInstancia.setId(idComponente);
+			novaInstancia.setStyle(getTipoMembroVisaoSelecionado().getCss(membro) + ESTILOCOMPONENTE);
+			div = new Div();
+			div.setId(idComponente.replace("Visualizacao", "Grid"));
 			div.setWidth(String.valueOf(membro.getComprimento())+"px");
 			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + ESTILODIV);
 			div.appendChild(novaInstancia);
@@ -167,6 +194,14 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 					"windowArtefato");
 		}
 		return this.areaWindowArtefato;
+	}
+	
+	protected Window getWindowVisualizacaoArtefato() {
+		if (this.areaVisualizacaoWindow == null) {
+			this.areaVisualizacaoWindow = (Window) getComponent().getFellow(
+					"windowArtefatoVisualizacao");
+		}
+		return this.areaVisualizacaoWindow;
 	}
 	
 	protected String getIdMembro() {

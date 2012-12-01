@@ -49,10 +49,20 @@
 						<listheader label="TipoMembro" />
 					</listhead>
 					<listitem self="@{each=item }" value="@{item}" tooltiptext="@{item.nome }">
-						<listcell onClick="gerenciador.gerarPaletaParametros(true)">
+						<listcell>
 							<image content="@{item.imagemZK }" />
+							<attribute name="onClick">
+								gerenciador.setTipoMembroVisaoSelecionado(null);
+								self.getParent().setSelected(true);
+								gerenciador.gerarPaletaParametros(true);
+							</attribute>
 						</listcell>
-						<listcell label="@{item.nome }" onClick="gerenciador.gerarPaletaParametros(true)" >
+						<listcell label="@{item.nome }" >
+							<attribute name="onClick">
+								gerenciador.setTipoMembroVisaoSelecionado(null);
+								self.getParent().setSelected(true);
+								gerenciador.gerarPaletaParametros(true);
+							</attribute>
 						</listcell>
 					</listitem>
 				</listbox>

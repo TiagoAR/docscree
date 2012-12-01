@@ -52,7 +52,6 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	 */
 	private static final long serialVersionUID = 3331698085154478299L;
 
-	private Window areaVisualizacaoWindow = null;
 	protected AnnotateDataBinder binderPaleta;
 	protected AnnotateDataBinder binderArtefato;
 	protected AnnotateDataBinder binderVisualizao;
@@ -78,6 +77,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	 */
 	@Override
 	protected void limparCampos() {
+		getComponent().getChildren().clear();
 		abrirTelaMontarArtefato();
 	}
 
@@ -295,22 +295,12 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return novaInstancia;
 	}
 
-	private HtmlBasedComponent gerarNovaInstanciaVisualizacao(String idComponente, Membro membro) {
-		Div div = null;
-		try {
-			HtmlBasedComponent novaInstancia = (HtmlBasedComponent) getTipoMembroVisaoSelecionado().getVisaoVisualizacao();
-			novaInstancia.setId(idComponente);
-			novaInstancia.setStyle(getTipoMembroVisaoSelecionado().getCss(membro) + ESTILOCOMPONENTE);
-			div = new Div();
-			div.setId(idComponente.replace("Visualizacao", "Grid"));
-			div.setWidth(String.valueOf(membro.getComprimento())+"px");
-			div.setStyle(getTipoMembroVisaoSelecionado().getPosicionamento(membro, 1) + ESTILODIV + "cursor: pointer;");
-			setarEventDiv(div);
-			div.appendChild(novaInstancia);
-			getTipoMembroVisaoSelecionado().getVisualizacaoExemplo(novaInstancia, "Exemplo");
-		} catch (Exception e) {
-		}
-		return div;
+	@Override
+	protected HtmlBasedComponent gerarNovaInstanciaVisualizacao(String idComponente, Membro membro) {
+		HtmlBasedComponent novaInstancia = super.gerarNovaInstanciaVisualizacao(idComponente, membro);
+		setarEventDiv((Div) novaInstancia);
+		getTipoMembroVisaoSelecionado().getVisualizacaoExemplo(novaInstancia.getFirstChild(), "Exemplo");
+		return novaInstancia;
 	}
 	
 	private void setarEventDiv(Div div) {
@@ -326,14 +316,6 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			}
 			
 		});
-	}
-	
-	protected Window getWindowVisualizacaoArtefato() {
-		if (this.areaVisualizacaoWindow == null) {
-			this.areaVisualizacaoWindow = (Window) getComponent().getFellow(
-					"windowArtefatoVisualizacao");
-		}
-		return this.areaVisualizacaoWindow;
 	}
 	
 	protected AnnotateDataBinder getBinderArtefato() {
@@ -402,6 +384,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			}
 			windowPaleta.appendChild(gerarButtonPropriedades(isNovo));
 			if (!isNovo) {
+				windowPaleta.appendChild(new Separator());
 				windowPaleta.appendChild(gerarButtonRemover());
 			}
 			getBinderPaleta().loadAll();
@@ -545,7 +528,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 
 	public void lancarMembroAVisualizacao(boolean novo, boolean abrindoArtefato) {
 		lancarMembroAoArtefato(getIdMembro(), novo, abrindoArtefato);
-		adicionarMembroAVisualizacao(getIdMembro());
+		lancarMembroAVisualizacao(getIdMembro());
 		setTipoMembroVisaoSelecionado(null);
 		getWindowPaleta().getChildren().clear();
 		getBinderPaleta().loadAll();
@@ -636,19 +619,14 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return parametrosObrigatoriosPreenchidos;
 	}
 	
-	private void adicionarMembroAVisualizacao(String nomeParcial) {
-		String idVisualizacao = "Visualizacao" + nomeParcial;
-		HtmlBasedComponent componenteVisualizacao = gerarNovaInstanciaVisualizacao(idVisualizacao, getTipoMembroVisaoSelecionado().getMembro());
-		if (componenteVisualizacao != null) {
-			componenteVisualizacao.setParent(getWindowVisualizacaoArtefato());
-			getWindowVisualizacaoArtefato().appendChild(componenteVisualizacao);
-			getBinderVisualizacaoArtefato().loadAll();
-		} 
-	}
-	
 	private void lancarMembroAoArtefato(String nomeParcial, boolean isNovo, boolean abrindoArtefato) {
 		adicionarComponenteAoArtefato(getTipoMembroVisaoSelecionado(), nomeParcial, isNovo, abrindoArtefato);
 		getBinderArtefato().loadAll();
+	}
+	
+	private void lancarMembroAVisualizacao(String nomeParcial) {
+		adicionarMembroAVisualizacao(nomeParcial);
+		getBinderVisualizacaoArtefato().loadAll();
 	}
 	
 	private void removerMembroAlterados(String nomeParcial) {
