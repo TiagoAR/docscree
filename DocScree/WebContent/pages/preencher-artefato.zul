@@ -5,9 +5,24 @@
 <zk>
 	<div self="@{define(content)}" id="divPncArtefato"
 		apply="${artefatoPreenchidoCompositor}" onCreate="gerenciador.carregarArtefato()">
-			<window width="@{gerenciador.larguraString }" border="none" id="windowArtefato" height="@{gerenciador.alturaString }" 
-					style="position: relative; background-color: white; border: 1px solid; overflow: auto;">
-			</window>
+			<tabbox>
+				<tabs>
+					<tab label="Visão de Preenchimento" />
+					<tab label="Visão de Visualização" onClick="gerenciador.abrirWindowVisualizacao()" />
+				</tabs>
+				<tabpanels>
+					<tabpanel>
+						<window width="@{gerenciador.larguraString }" border="none" id="windowArtefato" height="@{gerenciador.alturaString }" 
+								style="position: relative; background-color: white; border: 1px solid; overflow: auto;">
+						</window>
+					</tabpanel>
+					<tabpanel >
+						<window width="@{gerenciador.larguraString }" border="none" id="windowArtefatoVisualizacao" height="@{gerenciador.alturaString }"
+								style="position: relative; background-color: white; border: 1px solid; overflow: auto;">
+						</window>
+					</tabpanel>
+				</tabpanels>
+			</tabbox>
 		<div>
 			<separator />
 			<checkbox label="Gerar revisão de preenchimento" checked="@{gerenciador.gerarRevisao }" 
