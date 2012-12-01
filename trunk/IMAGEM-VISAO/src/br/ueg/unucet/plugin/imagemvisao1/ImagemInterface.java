@@ -1,6 +1,5 @@
 package br.ueg.unucet.plugin.imagemvisao1;
 
-import java.awt.Toolkit;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -11,11 +10,8 @@ import org.zkoss.zul.Div;
 import org.zkoss.zul.Image;
 
 import sun.awt.image.ToolkitImage;
-
 import br.ueg.unucet.quid.extensao.interfaces.IComponenteInterface;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
-//import org.zkoss.zk.ui.event.EventListener;
-//import org.zkoss.zk.ui.event.UploadEvent;
 
 /**
  * Interface do ComboBox, contém os componentes que serão exibidos
