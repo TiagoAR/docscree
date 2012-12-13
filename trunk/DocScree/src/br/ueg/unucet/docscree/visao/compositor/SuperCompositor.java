@@ -68,7 +68,7 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	
 	
 
-	/**
+	/* (No-JavaDoc
 	 * 
 	 * @see
 	 * org.zkoss.zk.ui.util.GenericForwardComposer#doAfterCompose(org.zkoss.

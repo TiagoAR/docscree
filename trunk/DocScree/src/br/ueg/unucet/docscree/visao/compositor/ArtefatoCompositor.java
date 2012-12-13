@@ -177,7 +177,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	 * Método que cria Modal de uma janela e a joga sobre o componente
 	 * 
 	 * @param zulModal
-	 * @return
+	 * @return retorno se ação ocorreu com sucesso
 	 */
 	private boolean exibirModalArtefatoModelo(String zulModal) {
 		boolean retorno = false;
@@ -384,7 +384,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	/**
 	 * Retorna lista de TipoMembro-Visão cadastrados no Framework para o DocScree
 	 * 
-	 * @return
+	 * @return lista dos TipoMembro visão cadastrados
 	 */
 	public List<SuperTipoMembroVisaoZK> getListaTipoMembrosVisao() {
 		return super.getControle().listarTipoMembrosVisao();
@@ -565,7 +565,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	/**
 	 * Respónsavel por gerar a Grid com os parâmetros a serem preenchidos do MEMBRO
 	 * 
-	 * @return
+	 * @return grid dos membros
 	 */
 	private Grid gerarGridMembros() {
 		Grid grid = new Grid();
@@ -600,7 +600,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	/**
 	 * Gerar o botão para Remover o Membro selecionado
 	 * 
-	 * @return
+	 * @return button de remoção
 	 */
 	private Button gerarButtonRemover() {
 		Button button = new Button();
@@ -629,7 +629,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	 * Responsável por gerar o botão para adicionar/alterar o Membro
 	 * 
 	 * @param isNovo se o botão é para um Membro novo ou não
-	 * @return
+	 * @return button gerado
 	 */
 	private Button gerarButtonPropriedades(boolean isNovo) {
 		Button button = new Button();
@@ -890,7 +890,7 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	/**
 	 * Método que gerar a Grid de Propriedades, ou Paleta do TipoMembro
 	 * 
-	 * @return
+	 * @return grid das propriedades
 	 */
 	private Grid gerarGridPropriedades() {
 		Grid grid = new Grid();

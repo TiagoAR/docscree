@@ -95,18 +95,18 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	protected SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado;
 
 	/**
-	 * Área de montagem - preenchimento
+	 * Area de montagem - preenchimento
 	 */
 	protected Window areaWindowArtefato = null;
 	/**
-	 * Área de montagem - visuazliação
+	 * Area de montagem - visuazliação
 	 */
 	protected Window areaVisualizacaoWindow = null;
 	
 	/**
 	 * Mapea Membro ao Artefato
 	 * 
-	 * @return
+	 * @return retorno se ação foi executada
 	 */
 	public boolean mapearMembrosAoArtefato() {
 		this.inicializarTelasMapeadores();
@@ -136,7 +136,7 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	
 	/**
 	 * Método que carrega a tela de Artefato, abrindo um ou limpando para um novo
-	 * @return
+	 * @return retorno se ação foi executada
 	 */
 	public boolean carregarArtefato() {
 		boolean retorno = false;

@@ -363,7 +363,7 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 	 * Método que carrega o Item Modelo à árvore
 	 * 
 	 * @param itemModelo
-	 * @return
+	 * @return booleano se ação foi executada
 	 */
 	private boolean renderizarNaArvore(MembroModelo itemModelo) {
 		if (itemModelo.getOrdem() == 0) {
@@ -410,7 +410,7 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 	
 	/**
 	 * ListModel do ZK da lista de Artefatos
-	 * @return
+	 * @return listModel da lista de ARtefatos
 	 */
 	public BindingListModelListModel<Artefato> getModelArtefatoModelo() {
 		return new BindingListModelListModel<Artefato>(new SimpleListModel<Artefato>(new ArrayList(getListaArtefatos())));
@@ -418,7 +418,7 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 	
 	/**
 	 * 
-	 * @returntreeRenderer
+	 * @return treeRenderer
 	 */
 	public MembroModeloTreeRenderer getItemModeloTreeRenderer() {
 		if (this.treeRenderer == null) {

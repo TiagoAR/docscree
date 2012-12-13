@@ -146,7 +146,7 @@ public class ModeloControle extends GenericoControle<Modelo> {
 	/**
 	 * Método responsável por validar os campos do Item Modelo
 	 * 
-	 * @return
+	 * @return retorno se ação foi executada
 	 */
 	public boolean acaoValidarItemModelo() {
 		MembroModelo membroModelo = (MembroModelo) super.getMapaAtributos().get("membroModeloSelecionado");
