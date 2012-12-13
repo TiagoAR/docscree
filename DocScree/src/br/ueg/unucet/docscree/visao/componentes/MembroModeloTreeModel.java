@@ -5,7 +5,7 @@ import org.zkoss.zul.DefaultTreeModel;
 import br.ueg.unucet.docscree.modelo.MembroModelo;
 
 /**
- * Modelo de Árvore na visão ZK	 para o MembroModelo (Item módelo)
+ * Modelo de Arvore na visão ZK	 para o MembroModelo (Item módelo)
  * 
  * @author Diego
  *

@@ -112,7 +112,7 @@ public class TipoMembroCompositor extends
 	
 	/**
 	 * Cria lista dos arquivos a serem mapeados
-	 * @return
+	 * @return arquivoCarregados lista dos ArquivosCarregados
 	 */
 	public List<ArquivoCarregado> getArquivosCarregados() {
 		List<ArquivoCarregado> arquivoCarregados = new ArrayList<ArquivoCarregado>();
