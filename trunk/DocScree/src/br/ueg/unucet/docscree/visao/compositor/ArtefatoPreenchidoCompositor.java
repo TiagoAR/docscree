@@ -18,25 +18,43 @@ import br.ueg.unucet.quid.dominios.MembroDocScree;
 import br.ueg.unucet.quid.extensao.dominios.Membro;
 import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 
+/**
+ * Compositor que representa a tela de Preencher ArtefatoModelo
+ * 
+ * @author Diego
+ *
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @org.springframework.stereotype.Component
 @Scope("session")
 public class ArtefatoPreenchidoCompositor extends
 		SuperArtefatoCompositor<ArtefatoControle> {
+
+	/**
+	 * DEFAULT SERIAL ID
+	 */
+	private static final long serialVersionUID = -7603950653212496809L;
 	
+	/**
+	 * Representa o ArtefatoPreenchido a ser persistido
+	 */
 	@AtributoVisao(isCampoEntidade=false, nome="artefatoPreenchidoAberto")
 	private ArtefatoPreenchido artefatoPreenchidoAberto;
+	/**
+	 * Boolean para gerar revisão ou não caso seja um ArtefatoPreenchido aberto
+	 */
 	@AtributoVisao(isCampoEntidade=false, nome="gerarRevisao")
 	private Boolean gerarRevisao = Boolean.TRUE;
+	/**
+	 * Conjunto de valores do Membro a ser persistido
+	 */
 	@AtributoVisao(isCampoEntidade=false, nome="mapaValores")
 	private Map<String, Object> mapaValores;
 	
-	protected AnnotateDataBinder binderVisualizao;
-
 	/**
-	 * 
+	 * Binder da tela de visualização
 	 */
-	private static final long serialVersionUID = -7603950653212496809L;
+	protected AnnotateDataBinder binderVisualizao;
 
 	/**
 	 * @see br.ueg.unucet.docscree.visao.compositor.SuperArtefatoCompositor#carregarArtefato()
@@ -60,29 +78,35 @@ public class ArtefatoPreenchidoCompositor extends
 	}
 
 	@Override
+	@Deprecated
 	protected void limparCampos() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
+	@Deprecated
 	protected void limparFiltros() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
+	@Deprecated
 	public void acaoFiltrar() {
-		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * @see SuperArtefatoCompositor#inicializarTelasMapeadores()
+	 */
 	@Override
 	protected void inicializarTelasMapeadores() {
 		this.areaWindowArtefato = null;
 		setMapaMembrosAdicionados(new HashMap<String, MembroDocScree>());
 	}
 
+	/**
+	 * @see SuperArtefatoCompositor#lancarMembroAVisualizacao(boolean, boolean)
+	 */
 	@Override
 	protected void lancarMembroAVisualizacao(boolean novo,
 			boolean abrindoArtefato) {
@@ -91,6 +115,9 @@ public class ArtefatoPreenchidoCompositor extends
 		super.binder.loadAll();
 	}
 	
+	/**
+	 * Método responsável por Mapear ArtefatoModelo sobre a visão
+	 */
 	public void acaoMapearArtefato() {
 		super.binder.saveAll();
 		try {
@@ -114,6 +141,9 @@ public class ArtefatoPreenchidoCompositor extends
 		}
 	}
 	
+	/**
+	 * Método responsável por abrir a tela de visualização do Artefato, carregando os dados do ArtefatoModelo sobre a tela
+	 */
 	public void abrirWindowVisualizacao() {
 		getWindowVisualizacaoArtefato().getChildren().clear();
 		for (Membro membro : getMembros()) {
@@ -138,7 +168,7 @@ public class ArtefatoPreenchidoCompositor extends
 		getBinderVisualizacaoArtefato().loadAll();
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see br.ueg.unucet.docscree.visao.compositor.SuperArtefatoCompositor#gerarNovaInstanciaVisualizacao(java.lang.String, br.ueg.unucet.quid.extensao.dominios.Membro)
 	 */
 	@Override
@@ -149,6 +179,10 @@ public class ArtefatoPreenchidoCompositor extends
 		return div;
 	}
 
+	/**
+	 * 
+	 * @return binderVisualizao
+	 */
 	protected AnnotateDataBinder getBinderVisualizacaoArtefato() {
 		if (this.binderVisualizao == null) {
 			this.binderVisualizao = new AnnotateDataBinder(getWindowVisualizacaoArtefato());
@@ -156,6 +190,10 @@ public class ArtefatoPreenchidoCompositor extends
 		return this.binderVisualizao;
 	}
 	
+	/**
+	 * 
+	 * @return boolean se o checkbox de escolha de gerar revisão ou não deve ser exibido
+	 */
 	public Boolean getCheckboxVisible() {
 		return this.getArtefatoPreenchidoAberto() != null;
 	}

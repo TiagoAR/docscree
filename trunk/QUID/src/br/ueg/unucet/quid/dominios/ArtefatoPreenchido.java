@@ -11,17 +11,42 @@ import javax.persistence.Table;
 
 import br.ueg.unucet.quid.extensao.dominios.Identificavel;
 
+/**
+ * POJO que representa o ArtefatoModelo com seus valores a ser persistido como
+ * ArtefatoPreenchido no Serviço de Persistência
+ * 
+ * @author Diego
+ *
+ */
 @SuppressWarnings("serial")
 @Entity
 @Table(name="artefato_preenchido")
 public class ArtefatoPreenchido extends Identificavel {
 	
+	/**
+	 * ID do Artefato
+	 */
 	private Long artefato;
+	/**
+	 * ID do Modelo
+	 */
 	private Long modelo;
+	/**
+	 * ID do usuário que solicitou a ação
+	 */
 	private Long usuario;
+	/**
+	 * Versão do ArtefatoPreenchido
+	 */
 	private Integer versao;
+	/**
+	 * Revisão do ArtefatoPreenchido
+	 */
 	private Integer revisao;
 	
+	/**
+	 * Coleção de Valores dos Membros associados ao Artefato
+	 */
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval= true)
 	@JoinColumn(name="id_preenchimento", nullable=false)
 	private Collection<ValoresArtefato> valoresArtefatos;

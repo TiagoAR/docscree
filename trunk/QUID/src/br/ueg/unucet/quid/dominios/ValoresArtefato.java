@@ -5,12 +5,24 @@ import javax.persistence.Table;
 
 import br.ueg.unucet.quid.extensao.dominios.Persistivel;
 
+/**
+ * POJO que representa os Valores do Artefato a serem persistidos pelo Serviço de Persistência
+ * 
+ * @author Diego
+ *
+ */
 @SuppressWarnings("serial")
 @Entity
 @Table(name="valores_artefato")
 public class ValoresArtefato extends Persistivel {
 	
+	/**
+	 * ID do Membro no Artefato
+	 */
 	private Long membro;
+	/**
+	 * Valor associado ao membro
+	 */
 	private byte[] valor;
 
 	/**

@@ -17,21 +17,41 @@ import br.ueg.unucet.quid.extensao.interfaces.IComponenteInterface;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 import br.ueg.unucet.quid.extensao.interfaces.ITipoMembroVisao;
 
+/**
+ * Representa as operações básicas de qualquer TipoMembro-Visão utilizado pelo framework
+ * Todo TipoMembro-Visão que utilize o ZK como visão deve herdar essa classe
+ * 
+ * @author Diego
+ *
+ * @param <E>
+ */
 public abstract class SuperTipoMembroVisaoZK<E extends IComponenteInterface> extends SuperTipoMembro implements ITipoMembroVisao {
 	
+	/**
+	 * Instancia do Membro a ser/já adicionado no Artefato
+	 */
 	protected Membro membro;
+	/**
+	 * Componente da visão que será jogando sobre a área de montagem
+	 */
 	protected E componente;
 
 	/**
-	 * 
+	 * DEFAULT SERIAL ID
 	 */
 	private static final long serialVersionUID = 1555313869957854697L;
 	
+	/**
+	 * @see ITipoMembroVisao#getPlataforma()
+	 */
 	@Override
 	public String getPlataforma() {
 		return "ZK";
 	}
 	
+	/**
+	 * @return imagem a ser adicionado ao atributo content do ZK
+	 */
 	public BufferedImage getImagemZK() {
 		ImageIcon icone = (ImageIcon) getImagemIlustrativa();
 		if (icone != null) {
@@ -40,6 +60,11 @@ public abstract class SuperTipoMembroVisaoZK<E extends IComponenteInterface> ext
 		return gerarImagemNula();
 	}
 	
+	/**
+	 * Método que retorna uma imagem default para TipoMembro-Visão que não tem imagens definidas
+	 * 
+	 * @return bi imagem
+	 */
 	private BufferedImage gerarImagemNula() {
 		BufferedImage bi = new BufferedImage(25, 25, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = bi.createGraphics();
@@ -67,6 +92,12 @@ public abstract class SuperTipoMembroVisaoZK<E extends IComponenteInterface> ext
 		return sb.toString();
 	}
 	
+	/**
+	 * Cria o CSS do componente através do parâmetros do Membro
+	 * 
+	 * @param membro
+	 * @return string css
+	 */
 	public String getCss(Membro membro) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getCss());
@@ -74,6 +105,13 @@ public abstract class SuperTipoMembroVisaoZK<E extends IComponenteInterface> ext
 		return sb.toString();
 	}
 	
+	/**
+	 * Retorna a String representando o posicionamento do componente em forma de CSS
+	 * 
+	 * @param membro
+	 * @param addPadding
+	 * @return
+	 */
 	public String getPosicionamento(Membro membro, Integer addPadding) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(converterAltura(membro.getAltura() + addPadding));
@@ -99,24 +137,48 @@ public abstract class SuperTipoMembroVisaoZK<E extends IComponenteInterface> ext
 		return param;
 	}
 	
+	/**
+	 * Converte valor da altura em css para height
+	 * 
+	 * @param valor
+	 * @return
+	 */
 	private String converterAltura(Integer valor) {
 		if (valor > 0)
 			return "height: " + String.valueOf(valor) + "px; ";
 		return " ";
 	}
 	
+	/**
+	 * Converte o comprimento em css para width
+	 * 
+	 * @param valor
+	 * @return
+	 */
 	private String converterComprimento(Integer valor) {
 		if (valor > 0)
 			return "width: " + String.valueOf(valor) + "px; ";
 		return " ";
 	}
 	
+	/**
+	 * Converte a posição X em css para deslocamento a esquerda
+	 * 
+	 * @param valor
+	 * @return
+	 */
 	private String converterPosX(Integer valor) {
 		if (valor > 0)
 			return "left: " + String.valueOf(valor) + "px; ";
 		return " ";
 	}
 	
+	/**
+	 * Converte a posição Y em css para deslocamento do topo
+	 * 
+	 * @param valor
+	 * @return
+	 */
 	private String converterPosY(Integer valor) {
 		if (valor > 0)
 			return "top: " + String.valueOf(valor) + "px; ";

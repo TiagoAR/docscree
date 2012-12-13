@@ -42,31 +42,79 @@ import br.ueg.unucet.quid.extensao.implementacoes.SuperTipoMembroVisaoZK;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 import br.ueg.unucet.quid.extensao.interfaces.IServico;
 
+/**
+ * Compositor que representa a página de montar Artefato Modelo
+ * 
+ * @author Diego
+ *
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Component
 @Scope("session")
 public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle> {
 
 	/**
-	 * 
+	 * DEFAULT SERIAL ID
 	 */
 	private static final long serialVersionUID = 3331698085154478299L;
 
+	/**
+	 * Binder da Paleta
+	 */
 	protected AnnotateDataBinder binderPaleta;
+	/**
+	 * Binder da área de Montagem de Preenchimento
+	 */
 	protected AnnotateDataBinder binderArtefato;
+	/**
+	 * Binde da área de Montagem de Visualização
+	 */
 	protected AnnotateDataBinder binderVisualizao;
+	/**
+	 * Binder do Paleta dos Membros
+	 */
 	protected AnnotateDataBinder binderMembro;
+	/**
+	 * Atributo que representa a largura máxima permitida para adicionar um Membro
+	 */
 	private Integer larguraTotalMembro;
 	
+	/**
+	 * Artefato que deve ser aberto ao carregar a página (carregar ArtefatoModelo)
+	 */
 	private Artefato artefatoAAbrir;
+	/**
+	 * Código do Artefato Antigo caso ocorra o cancelamento de alguma ação do Menu
+	 */
 	private Long codigoAntigo;
+	/**
+	 * Nome do Artefato Antigo caso ocorra o cancelamento de alguma ação do Menu
+	 */
 	private String nomeAntigo;
+	/**
+	 * Descrição do Artefato Antigo caso ocorra o cancelamento de alguma ação do Menu
+	 */
 	private String descricaoAntiga;
+	/**
+	 * Altura do Artefato Antigo caso ocorra o cancelamento de alguma ação do Menu
+	 */
 	private int alturaAntiga;
+	/**
+	 * Largura do Artefato Antigo caso ocorra o cancelamento de alguma ação do Menu
+	 */
 	private int larguraAntiga;
 	
+	/**
+	 * Representa o Execution Artefato Antigo caso ocorra o cancelamento de alguma ação do Menu
+	 */
 	private Execution executionAntigo;
+	/**
+	 * Representa o Componente contendo todas os Membros associado ao Artefato Antigo caso ocorra o cancelamento de alguma ação do Menu
+	 */
 	private org.zkoss.zk.ui.Component componenteAntigo;
+	/**
+	 * Representa o antigo Binder da tela
+	 */
 	private AnnotateDataBinder binderAntigo;
 
 	/**
@@ -82,25 +130,35 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 	}
 
 	@Override
+	@Deprecated
 	protected void limparFiltros() {
 
 	}
 
+	@Deprecated
 	@Override
 	public void acaoFiltrar() {
 
 	}
 	
+	/**
+	 * Método que redireciona para a página de montagem do Artefato
+	 */
 	private void abrirTelaMontarArtefato() {
 		//getComponent().detach();
 		Executions.sendRedirect("/pages/montar-artefato.zul");
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @return lista de ArtefatosModelo salvo no framework
+	 */
 	public List<Artefato> getListaArtefatosModelo() {
 		return getControle().listarArtefatosModelo();
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see br.ueg.unucet.docscree.visao.compositor.SuperCompositor#gerarWindowMensagem()
 	 */
 	@Override
@@ -115,6 +173,12 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return super.gerarWindowMensagem();
 	}
 	
+	/**
+	 * Método que cria Modal de uma janela e a joga sobre o componente
+	 * 
+	 * @param zulModal
+	 * @return
+	 */
 	private boolean exibirModalArtefatoModelo(String zulModal) {
 		boolean retorno = false;
 		try {
@@ -138,18 +202,27 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		
 	}
 
+	/**
+	 * Método que exibe Modal para Criar um novo Artefato Modelo
+	 */
 	public void acaoNovoArtefatoModelo() {
 		salvarTelaArtefato();
 		inicializarVariaveisNovoArtefato();
 		this.exibirModalArtefatoModelo("/componentes/modalNovoArtefato.zul");
 	}
 	
+	/**
+	 * Exibe Modal para Abrir um ArtefatoModelo já criado
+	 */
 	public void acaoSelecionarArtefatoModelo() {
 		salvarTelaArtefato();
 		setArtefatoAAbrir(null);
 		this.exibirModalArtefatoModelo("/componentes/modalAbrirArtefato.zul");
 	}
 	
+	/**
+	 * Método que guarda a Tela em execução em memória para restaurá-la caso a ação solicitada seja cancelada
+	 */
 	private void salvarTelaArtefato() {
 		binderArtefato = null;
 		binderMembro = null;
@@ -166,6 +239,9 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		setDescricaoAntiga(getDescricao());
 	}
 	
+	/**
+	 * Método que fecha o Modal em exibição e restaura componentes da Tela anterior]
+	 */
 	public void acaoFecharModal() {
 		String requestPath = Executions.getCurrent().getDesktop().getRequestPath();
 		getComponent().detach();
@@ -182,6 +258,9 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		}
 	}
 	
+	/**
+	 * Método responsável por inicializar todas as variáveis necessárias para criar um novo ArtefatoModelo
+	 */
 	private void inicializarVariaveisNovoArtefato() {
 		this.setCodigo(null);
 		this.setLargura(0);
@@ -190,12 +269,18 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		this.setDescricao("");
 	}
 	
+	/**
+	 * Método responsável por inicializar as variáveis para abrir um ArtefatoModelo
+	 */
 	private void inicializarVariaveisCriarArtefato() {
 		this.inicializarTelasMapeadores();
 		setMembros(new ArrayList<Membro>());
 		setServicos(new ArrayList<IServico>());
 	}
 	
+	/**
+	 * Responsável por exibir o ArtefatoModelo criado no Modal
+	 */
 	public void exibirNovoArtefato() {
 		super.binder.saveAll();
 		inicializarVariaveisCriarArtefato();
@@ -223,6 +308,9 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		}
 	}
 	
+	/**
+	 * Responsável por Carregar e Exibir o ArtefatoModelo selecionado a ser aberto
+	 */
 	public void abrirArtefatoModelo() {
 		try {
 			Persistivel antigoArtefato = getEntidade();
@@ -242,6 +330,9 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		super.binder.loadAll();
 	}
 	
+	/**
+	 * Responsável por Mapear ArtefatoModelo, criando um novo para ser exibido ou o alterando para adicionar lista de Membros
+	 */
 	public void acaoMapearArtefato() {
 		try {
 			boolean retorno = getControle().fazerAcao("mapearArtefato", (SuperCompositor) this);
@@ -254,6 +345,9 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		}
 	}
 	
+	/**
+	 * @see SuperArtefatoCompositor#inicializarTelasMapeadores()
+	 */
 	protected void inicializarTelasMapeadores() {
 		this.areaWindowArtefato = null;
 		this.areaVisualizacaoWindow = null;
@@ -262,6 +356,9 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		setMapaMembrosAdicionados(new HashMap<String, MembroDocScree>());
 	}
 	
+	/**
+	 * Método que limpa toda a tela de Montar Artefato, retirando todos componentes associados
+	 */
 	private void limparTodaTela() {
 		List<org.zkoss.zk.ui.Component> children = getComponent().getChildren();
 		for (org.zkoss.zk.ui.Component component : children) {
@@ -271,6 +368,11 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		}
 	}
 	
+	/**
+	 * Responsável por criar Modal de erro para o usuário
+	 * 
+	 * @param mensagem
+	 */
 	private void exibirMensagemErro(String mensagem) {
 		Mensagens mensagens = new Mensagens();
 		mensagens.setTipoMensagem(TipoMensagem.ERRO);
@@ -279,6 +381,11 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		super.mostrarMensagem(false);
 	}
 
+	/**
+	 * Retorna lista de TipoMembro-Visão cadastrados no Framework para o DocScree
+	 * 
+	 * @return
+	 */
 	public List<SuperTipoMembroVisaoZK> getListaTipoMembrosVisao() {
 		return super.getControle().listarTipoMembrosVisao();
 	}
@@ -295,6 +402,9 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return novaInstancia;
 	}
 
+	/**
+	 * @see SuperArtefatoCompositor#gerarNovaInstanciaVisualizacao(String, Membro)
+	 */
 	@Override
 	protected HtmlBasedComponent gerarNovaInstanciaVisualizacao(String idComponente, Membro membro) {
 		HtmlBasedComponent novaInstancia = super.gerarNovaInstanciaVisualizacao(idComponente, membro);
@@ -303,6 +413,11 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return novaInstancia;
 	}
 	
+	/**
+	 * Método responsável por setar evento onClick na Div
+	 * 
+	 * @param div
+	 */
 	private void setarEventDiv(Div div) {
 		div.addEventListener("onClick", new EventListener<Event>() {
 
@@ -318,6 +433,10 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		});
 	}
 	
+	/**
+	 * 
+	 * @return binderArtefato
+	 */
 	protected AnnotateDataBinder getBinderArtefato() {
 		if (this.binderArtefato == null) {
 			this.binderArtefato = new AnnotateDataBinder(getWindowArtefato());
@@ -325,6 +444,10 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return this.binderArtefato;
 	}
 	
+	/**
+	 * 
+	 * @return binderVisualizao
+	 */
 	protected AnnotateDataBinder getBinderVisualizacaoArtefato() {
 		if (this.binderVisualizao == null) {
 			this.binderVisualizao = new AnnotateDataBinder(getWindowVisualizacaoArtefato());
@@ -332,6 +455,10 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return this.binderVisualizao;
 	}
 	
+	/**
+	 * 
+	 * @return binderPaleta
+	 */
 	protected AnnotateDataBinder getBinderPaleta() {
 		if (this.binderPaleta == null) {
 			this.binderPaleta = new AnnotateDataBinder(getWindowPaleta());
@@ -339,14 +466,27 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return this.binderPaleta;
 	}
 	
+	/**
+	 * 
+	 * @return window da Paleta
+	 */
 	protected Window getWindowPaleta() {
 		return (Window) getComponent().getFellow("windowPaleta");
 	}
 	
+	/**
+	 * 
+	 * @return window modal de Abrir ArtefatoModelo
+	 */
 	protected Window getWindowAbrirArtefatoModelo() {
 		return (Window) getComponent().getFellow("modalAbrirArtefato");
 	}
 
+	/**
+	 * Método que gerar a Paleta de Parâmetros de acordo com o TipoMembro-Visão selecionado
+	 * 
+	 * @param isNovo se é para um Membro novo ou não
+	 */
 	public void gerarPaletaParametros(boolean isNovo) {
 		if (isNovo) {
 			super.binder.saveAll();
@@ -391,6 +531,11 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		}
 	}
 	
+	/**
+	 * Responsável por gerar a Grid de opções de reaproveitamento de Membros
+	 * 
+	 * @return grid
+	 */
 	private Grid gerarGridOpcao() {
 		Grid grid = new Grid();
 		Rows rows = new Rows();
@@ -417,6 +562,11 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return grid;
 	}
 	
+	/**
+	 * Respónsavel por gerar a Grid com os parâmetros a serem preenchidos do MEMBRO
+	 * 
+	 * @return
+	 */
 	private Grid gerarGridMembros() {
 		Grid grid = new Grid();
 		grid.setVisible(false);
@@ -447,6 +597,11 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return grid;
 	}
 	
+	/**
+	 * Gerar o botão para Remover o Membro selecionado
+	 * 
+	 * @return
+	 */
 	private Button gerarButtonRemover() {
 		Button button = new Button();
 		button.setLabel("Remover Membro");
@@ -470,6 +625,12 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return button;
 	}
 	
+	/**
+	 * Responsável por gerar o botão para adicionar/alterar o Membro
+	 * 
+	 * @param isNovo se o botão é para um Membro novo ou não
+	 * @return
+	 */
 	private Button gerarButtonPropriedades(boolean isNovo) {
 		Button button = new Button();
 		String labelButton;
@@ -499,6 +660,11 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return button;
 	}
 	
+	/**
+	 * Método responsável por gerar/alterar um Membro e o lançar a tela de Preenchimento e Visualização
+	 * 
+	 * @param isNovo
+	 */
 	public void gerarMembro(boolean isNovo) {
 		getControle().setMensagens(new Mensagens());
 		if (puxarValorParametrosMembro() &&  puxarValorParametrosModelo()) {
@@ -525,7 +691,10 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 			chamarMensagemErro();
 		}
 	}
-
+	
+	/**
+	 * @see SuperArtefatoCompositor#lancarMembroAVisualizacao(boolean, boolean)
+	 */
 	public void lancarMembroAVisualizacao(boolean novo, boolean abrindoArtefato) {
 		lancarMembroAoArtefato(getIdMembro(), novo, abrindoArtefato);
 		lancarMembroAVisualizacao(getIdMembro());
@@ -535,6 +704,9 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		
 	}
 	
+	/**
+	 * Método responsável por remover o Membro do framework
+	 */
 	public void removerMembro() {
 		try {
 			boolean retorno = this.getControle().fazerAcao("removerMembro", (SuperCompositor) this);
@@ -552,12 +724,24 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		}
 	}
 	
+	/**
+	 * Método responsável por pedir para o componente exibir a mensagem de erro.
+	 */
 	private void chamarMensagemErro() {
 		getControle().getMensagens().setTipoMensagem(TipoMensagem.ERRO);
 		super.mostrarMensagem(false);
 		super.binder.loadAll();
 	}
 	
+	/**
+	 * Método que traz o valor inteiro de um componente 
+	 * 
+	 * @param parametroID
+	 * @param nomeParametro
+	 * @param camposInformados
+	 * @param validarMaior0
+	 * @return objeto valor do parametro
+	 */
 	private Integer puxarValorInteiro(String parametroID, String nomeParametro, Boolean camposInformados, boolean validarMaior0) {
 		Object objeto = getParametroMembroPorId(parametroID);
 		if (objeto != null && !objeto.toString().isEmpty()) {
@@ -574,6 +758,11 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return 0;
 	}
 	
+	/**
+	 * Método responsável pegar todos os valores associados aos parâmetros do Membro
+	 * 
+	 * @return camposInformados se todos Parâmetros obrigatórios foram informados
+	 */
 	private boolean puxarValorParametrosMembro() {
 		Object objeto = null;
 		Integer valorInteiro;
@@ -604,6 +793,11 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return camposInformados.booleanValue();
 	}
 	
+	/**
+	 * Método que puxa todos os valores dos parâmetros do TipoMembro
+	 * 
+	 * @return parametrosObrigatoriosPreenchidos se parametros obrigatórios foram preenchidos
+	 */
 	// TODO dar uma olhada
 	private boolean puxarValorParametrosModelo() {
 		super.setarValorAListaParametros(this.getTipoMembroVisaoSelecionado().getListaParametros(), getWindowPaleta());
@@ -619,16 +813,33 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return parametrosObrigatoriosPreenchidos;
 	}
 	
+	/**
+	 * Método responsável por lançar o Membro ao Artefato, adicionando o componente a entidade
+	 * 
+	 * @param nomeParcial
+	 * @param isNovo
+	 * @param abrindoArtefato
+	 */
 	private void lancarMembroAoArtefato(String nomeParcial, boolean isNovo, boolean abrindoArtefato) {
 		adicionarComponenteAoArtefato(getTipoMembroVisaoSelecionado(), nomeParcial, isNovo, abrindoArtefato);
 		getBinderArtefato().loadAll();
 	}
 	
+	/**
+	 * Método responsável por lançar o Membro a tela de visualização do Artefato
+	 * 
+	 * @param nomeParcial
+	 */
 	private void lancarMembroAVisualizacao(String nomeParcial) {
 		adicionarMembroAVisualizacao(nomeParcial);
 		getBinderVisualizacaoArtefato().loadAll();
 	}
 	
+	/**
+	 * Método responsável por remover os Membros antigos, o qual seus valores foram alterados.
+	 * 
+	 * @param nomeParcial
+	 */
 	private void removerMembroAlterados(String nomeParcial) {
 		String idGrid = "Grid" + nomeParcial;
 		
@@ -636,6 +847,12 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		getWindowVisualizacaoArtefato().getFellow(idGrid).detach();
 	}
 	
+	/**
+	 * Método que puxa o Componente do Parametro do TipoMembro através de seu ID
+	 * 
+	 * @param id
+	 * @return componente representando o Parametro do Membro
+	 */
 	private Object getParametroMembroPorId(String id) {
 		HtmlBasedComponent componente = getComponentePorId(id, getWindowPaleta());
 		Object resultado = "";
@@ -650,6 +867,12 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return resultado;
 	}
 	
+	/**
+	 * Método responsável por setar o valor do componente de um Parâmetro do TipoMembro
+	 * 
+	 * @param id
+	 * @param parametro
+	 */
 	private void setarParametroModeloPorId(String id, IParametro<?> parametro) {
 		HtmlBasedComponent componente = getComponentePorId(id, getWindowPaleta());
 		try {
@@ -664,6 +887,11 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		}
 	}
 	
+	/**
+	 * Método que gerar a Grid de Propriedades, ou Paleta do TipoMembro
+	 * 
+	 * @return
+	 */
 	private Grid gerarGridPropriedades() {
 		Grid grid = new Grid();
 		grid.setHeight("400px;");
@@ -674,6 +902,9 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return grid;
 	}
 	
+	/**
+	 * Método responsável por setar os valores aos componentes do Parametros do Membro
+	 */
 	private void setarValoresParametrosMembro() {
 		Textbox textbox = (Textbox) getWindowPaleta().getFellow(PARAMETRONOME);
 		textbox.setDisabled(true);
@@ -692,12 +923,21 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		spinner.setValue(getTipoMembroVisaoSelecionado().getMembro().getY());
 	}
 	
+	/**
+	 * Método responsável por setar os valores de todos os componentes que representam os parâmetros do TipoMembro
+	 * usado quando abre um ArtefatoModelo
+	 */
 	private void setarValoresParametrosTipoMembro() {
 		for (IParametro<?> parametro : getTipoMembroVisaoSelecionado().getMembro().getTipoMembroModelo().getListaParametros()) {
 			setarParametroModeloPorId("PARAMETRO"+parametro.getNome(), parametro);
 		}
 	}
 	
+	/**
+	 * Método responsável por adicionar a Rows vinda como parâmetro os componentes do Parametro do Membro
+	 * 
+	 * @param rows
+	 */
 	private void gerarParametrosMembro(Rows rows) {
 		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarLabel("Nome do membro")}));
 		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {gerarTextbox(PARAMETRONOME, "Digite o Nome do Membro")}));
@@ -716,6 +956,14 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		rows.appendChild(gerarRow(new org.zkoss.zk.ui.Component[] {separator}));
 	}
 	
+	/**
+	 * Método que gerar Spinner através dos parâmetros
+	 * 
+	 * @param id
+	 * @param tooltip
+	 * @param maxlength
+	 * @return spinner
+	 */
 	private Spinner gerarSpinner(String id, String tooltip, int maxlength) {
 		Spinner spinner = new Spinner();
 		spinner.setId(id);
@@ -727,6 +975,13 @@ public class ArtefatoCompositor extends SuperArtefatoCompositor<ArtefatoControle
 		return spinner;
 	}
 	
+	/**
+	 * Método que cria um Textbox através dos Parâmetros
+	 * 
+	 * @param id
+	 * @param tooltip
+	 * @return textbox
+	 */
 	private Textbox gerarTextbox(String id, String tooltip) {
 		
 		Textbox textbox = new Textbox();

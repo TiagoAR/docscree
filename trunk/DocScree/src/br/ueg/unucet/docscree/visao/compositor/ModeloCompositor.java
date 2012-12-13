@@ -36,48 +36,102 @@ import br.ueg.unucet.quid.extensao.dominios.Persistivel;
 import br.ueg.unucet.quid.extensao.enums.MultiplicidadeEnum;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 
+/**
+ * Compositor da tela de Modelo
+ * 
+ * @author Diego
+ *
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Component
 @Scope("session")
 public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 
 	/**
-	 * 
+	 * DEFAULT SERIAL ID
 	 */
 	private static final long serialVersionUID = 2525900582986637489L;
 	
 	//Atributos do BEAN
+	/**
+	 * Campo de nome
+	 */
 	@AtributoVisao(isCampoEntidade=true, nome="nome")
 	private String fldNome;
+	/**
+	 * Campo da descrição
+	 */
 	@AtributoVisao(isCampoEntidade=true, nome="descricao")
 	private String fldDescricao;
+	/**
+	 * mapa de itensModelo
+	 */
 	@AtributoVisao(isCampoEntidade=false, nome="itemModelo")
 	private Map<String, MembroModelo> itensModelo;
 	//Atributos auxiliares para visão
+	/**
+	 * ArtefatoModelo selecionado para criar instancia de Item Modelo 
+	 */
 	@AtributoVisao(isCampoEntidade=false, nome="artefatoModeloSelecionado")
 	private Artefato artefatoModeloSelecionado;
+	/**
+	 * Item(Membro)Modelo selecionado
+	 */
 	@AtributoVisao(isCampoEntidade=false, nome="membroModeloSelecionado")
 	private MembroModelo membroModeloSelecionado;
 	
+	/**
+	 * Instancia do componente da árvore a ser desenhada
+	 */
 	private MembroModeloTreeModel modelItemModelo;
+	/**
+	 * instancia do Renderizador a ser usado pela árvore
+	 */
 	private MembroModeloTreeRenderer treeRenderer = null;
 	
+	/**
+	 * Binder da árvore
+	 */
 	private AnnotateDataBinder binderModalArtefatoModelo = null;
 	
+	/**
+	 * Codigo antigo do Modelo caso ocorra algum cancelamento de ação
+	 */
 	private Long codigoAntigo;
+	/**
+	 * Antigo nome do Modelo caso ocorra algum cancelamento de ação
+	 */
 	private String nomeAntigo;
+	/**
+	 * Antiga descrição do Modelo caso ocorra algum cancelamento de ação
+	 */
 	private String descricaoAntiga;
 
+	/**
+	 * Antigo Binder da tela caso ocorra algum cancelamento de ação
+	 */
 	private AnnotateDataBinder binderAntigo;
+	/**
+	 * Antiga Execution caso ocorra algum cancelamento de ação
+	 */
 	private Execution executionAntigo;
+	/**
+	 * Antigo Componente caso ocorra algum cancelamento de ação
+	 */
 	private org.zkoss.zk.ui.Component componenteAntigo;
 	
 
+	/**
+	 * @see GenericoCompositor#getTipoEntidade()
+	 */
 	@Override
 	public Class<?> getTipoEntidade() {
 		return Modelo.class;
 	}
 
+	/**
+	 * @see GenericoCompositor#limparCampos()
+	 */
 	@Override
 	protected void limparCampos() {
 		setCodigo(null);
@@ -89,18 +143,23 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		super.binder.loadAll();
 	}
 
+	@Deprecated
 	@Override
 	protected void limparFiltros() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Deprecated
 	@Override
 	public void acaoFiltrar() {
 		// TODO Auto-generated method stub
 		
 	}
 	
+	/**
+	 * Carrega os dados para exibição da tela, ou para um novo modelo ou para abrir um
+	 */
 	public void carregarDados() {
 		if (Executions.getCurrent().getSession().hasAttribute("ModeloAbrir")) {
 			setArtefatoModeloSelecionado(null);
@@ -119,16 +178,26 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		}
 	}
 	
+	/**
+	 * Método que retorna página de novo Modelo
+	 */
 	public void acaoNovoModelo() {
 		Executions.sendRedirect("/pages/modelo.zul");
 	}
 	
+	/**
+	 * Ação usada pelo modal de Abrir Modelo para adicionar a instancia do Modelo selecionado a ser aberto na sessão
+	 */
 	public void acaoSelecionarAbrirModelo() {
 		salvarTela();
 		setEntidade(null);
 		this.exibirModalModelo("/componentes/modalAbrirModelo.zul");
 	}
 	
+	/**
+	 * Exibe window de Abrir Modelo
+	 * @param zulModal
+	 */
 	public void exibirModalModelo(String zulModal) {
 		org.zkoss.zk.ui.Component comp = Executions.createComponents(
 				zulModal, null, null);
@@ -138,6 +207,10 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		}
 	}
 	
+	/**
+	 * Grava os dados da tela antes de abrir Modal de Abrir Modelo e
+	 * recupera-los caso a ação seja cancelada
+	 */
 	private void salvarTela() {
 		codigoAntigo = getCodigo();
 		nomeAntigo = fldNome;
@@ -149,6 +222,9 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		binderModalArtefatoModelo = null;
 	}
 	
+	/**
+	 * Fecha Modal de Abrir Modelo
+	 */
 	public void acaoFecharModal() {
 		String requestPath = Executions.getCurrent().getDesktop().getRequestPath();
 		getComponent().detach();
@@ -163,11 +239,17 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		}
 	}
 	
+	/**
+	 * Método que abre tela de Modelo para carregar dados do Modelo a abrir
+	 */
 	public void abrirModelo (){
 		Executions.sendRedirect("/pages/modelo.zul");
 		Executions.getCurrent().getSession().setAttribute("ModeloAbrir", getEntidade());
 	}
 	
+	/**
+	 * Método que mapeia o ItemModelo ao Modelo
+	 */
 	public void mapearItensModelo() {
 		List<MembroModelo> listaItemModelo = new ArrayList<MembroModelo>(getItensModelo().values());
 		Collections.sort(listaItemModelo, new Comparator<MembroModelo>() {
@@ -190,6 +272,11 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		}
 	}
 	
+	/**
+	 * Joga o valor do Modelo a ser aberto sobre a tela
+	 * 
+	 * @throws Exception
+	 */
 	private void acaoExibirModelo() throws Exception {
 		getControle().fazerAcao("abrirModelo", (SuperCompositor) this);
 	}
@@ -228,6 +315,9 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		}
 	}
 	
+	/**
+	 * Método que adiciona um ItemModelo ao Modelo e a árvore
+	 */
 	public void acaoAdicionarItemModelo() {
 		super.binder.saveAll();
 		super.setarValorAListaParametros(getMembroModeloSelecionado().getListaParametros(), getModalItemModelo());
@@ -252,6 +342,9 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		mostrarMensagem(retorno);
 	}
 	
+	/**
+	 * Remove ItemModelo do modelo e da árvore
+	 */
 	public void acaoRemoverItemModelo() {
 		Set<TreeNode<MembroModelo>> selecionado = getModelItemModelo().getSelection();
 		for (TreeNode<MembroModelo> treeNode : selecionado) {
@@ -266,6 +359,12 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		super.binder.loadAll();
 	}
 	
+	/**
+	 * Método que carrega o Item Modelo à árvore
+	 * 
+	 * @param itemModelo
+	 * @return
+	 */
 	private boolean renderizarNaArvore(MembroModelo itemModelo) {
 		if (itemModelo.getOrdem() == 0) {
 			getModelItemModelo().add(getModelItemModelo().getRaiz(), new MembroModeloTreeNode(itemModelo, new MembroModeloTreeNode[] {}));
@@ -282,6 +381,10 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @return isntancia de MembroModelo através do Artefato selecionado
+	 */
 	private MembroModelo criarItemModeloDoArtefato() {
 		MembroModelo modelo = new MembroModelo();
 		modelo.setArtefato(getArtefatoModeloSelecionado());
@@ -289,18 +392,34 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		return modelo;
 	}
 	
+	/**
+	 * Abre window modal de preenchimento dos dados do Item Modelo
+	 */
 	public void abrirModalItemModelo() {
 		getModalItemModelo().doModal();
 	}
 	
+	/**
+	 * 
+	 * @param itemModelo
+	 * @return string chave do ItemModelo a ser adicionada ao HashMap
+	 */
 	public String gerarKeyMembroModelo(MembroModelo itemModelo) {
 		return itemModelo.getGrau() + "-" + itemModelo.getOrdem();
 	}
 	
+	/**
+	 * ListModel do ZK da lista de Artefatos
+	 * @return
+	 */
 	public BindingListModelListModel<Artefato> getModelArtefatoModelo() {
 		return new BindingListModelListModel<Artefato>(new SimpleListModel<Artefato>(new ArrayList(getListaArtefatos())));
 	}
 	
+	/**
+	 * 
+	 * @returntreeRenderer
+	 */
 	public MembroModeloTreeRenderer getItemModeloTreeRenderer() {
 		if (this.treeRenderer == null) {
 			this.treeRenderer = new MembroModeloTreeRenderer();
@@ -308,10 +427,18 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		return this.treeRenderer;
 	}
 
+	/**
+	 * 
+	 * @return listagem de Multiplicidade
+	 */
 	public MultiplicidadeEnum[] getMultiplicidadeEnum() {
 		return MultiplicidadeEnum.values();
 	}
 	
+	/**
+	 * 
+	 * @return lista dos modelos salvos no framework
+	 */
 	public List<Modelo> getListaModelos() {
 		return getControle().getListaModelos();
 	}
@@ -325,14 +452,26 @@ public class ModeloCompositor extends GenericoCompositor<ModeloControle> {
 		return getControle().listarArtefatosModelo();
 	}
 	
+	/**
+	 * 
+	 * @return linhas do modal de preenchimento dos dados do Item Modelo
+	 */
 	public Rows getRowsItemModelo() {
 		return (Rows) getModalItemModelo().getFellow("rowsItemModelo");
 	}
 	
+	/**
+	 * 
+	 * @return modal de Preenchimento dos dados do ItemModelo
+	 */
 	public Window getModalItemModelo() {
 		return (Window) getComponent().getFellow("modalItemModelo");
 	}
 	
+	/**
+	 * 
+	 * @return binderModalArtefatoModelo
+	 */
 	public AnnotateDataBinder getBinderItemModelo() {
 		if (this.binderModalArtefatoModelo == null) {
 			this.binderModalArtefatoModelo = new AnnotateDataBinder(getModalItemModelo());
