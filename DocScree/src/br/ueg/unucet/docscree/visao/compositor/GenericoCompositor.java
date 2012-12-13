@@ -133,6 +133,10 @@ public abstract class GenericoCompositor<E extends GenericoControle> extends Sup
 		}
 	}
 	
+	/**
+	 * 
+	 * @return window de listagem
+	 */
 	protected Window getWindowLista() {
 		try {
 			return (Window) super.getComponent().getFellow("windowLista");

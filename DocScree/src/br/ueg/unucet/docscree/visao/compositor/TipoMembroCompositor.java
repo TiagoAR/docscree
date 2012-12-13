@@ -22,6 +22,12 @@ import br.ueg.unucet.docscree.modelo.ArquivoCarregado;
 import br.ueg.unucet.docscree.modelo.Mensagens;
 import br.ueg.unucet.docscree.utilitarios.UploadArquivo;
 
+/**
+ * Compositor da tela de upload de TipoMembro
+ * 
+ * @author Diego
+ *
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Component
 @Scope("session")
@@ -29,16 +35,26 @@ public class TipoMembroCompositor extends
 		SuperCompositor<TipoMembroControle> {
 
 	/**
-	 * 
+	 * DEFAULT SERIAL ID
 	 */
 	private static final long serialVersionUID = 955019688639995178L;
 	private static final String pendente = "Pendente!";
 	
+	/**
+	 * Mapa de arquivos a serem salvos no framework
+	 */
 	@AtributoVisao(isCampoEntidade= false, nome="tipoMembros")
 	private Map<File, String> tipoMembros = new HashMap<File, String>();
 	
+	/**
+	 * Arquivo selecionado para ser removido
+	 */
 	private ArquivoCarregado arquivoSelecionado;
 
+	/**
+	 * Efetua o upload do arquivo para o servidor
+	 * @param event
+	 */
 	public void uploadTipoMembro(UploadEvent event) {
 		try {
 			String pasta = UploadArquivo.criarDiretorio(((ServletContext)Executions.getCurrent().getDesktop().getWebApp().getServletContext()).getRealPath("/"), "temp");
@@ -69,6 +85,9 @@ public class TipoMembroCompositor extends
 		}
 	}
 	
+	/**
+	 * Mapea a lista de arquivos de TipoMembro para o framework
+	 */
 	public void mapearTipoMembro() {
 		try {
 			boolean fazerAcao = getControle().fazerAcao("mapearTipoMembro", (SuperCompositor) this);
@@ -79,6 +98,9 @@ public class TipoMembroCompositor extends
 		}
 	}
 	
+	/**
+	 * Remove o arquivo do TipoMembro selecionado
+	 */
 	public void removerTipoMembro() {
 		try {
 			super.binder.saveAll();
@@ -88,6 +110,10 @@ public class TipoMembroCompositor extends
 		}
 	}
 	
+	/**
+	 * Cria lista dos arquivos a serem mapeados
+	 * @return
+	 */
 	public List<ArquivoCarregado> getArquivosCarregados() {
 		List<ArquivoCarregado> arquivoCarregados = new ArrayList<ArquivoCarregado>();
 		for (File arquivo : getTipoMembros().keySet()) {
@@ -100,6 +126,9 @@ public class TipoMembroCompositor extends
 		return arquivoCarregados;
 	}
 	
+	/**
+	 * Cancela ação de mapeamento do TipoMembro
+	 */
 	public void acaoCancelar() {
 		setTipoMembros(new HashMap<File, String>());
 		super.binder.loadAll();

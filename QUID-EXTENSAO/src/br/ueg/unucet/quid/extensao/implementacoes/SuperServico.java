@@ -6,6 +6,12 @@ import java.util.Collection;
 import br.ueg.unucet.quid.extensao.interfaces.IParametro;
 import br.ueg.unucet.quid.extensao.interfaces.IServico;
 
+/**
+ * Classe abstrata que representa os Serviços que podem ser executados pelo QUID
+ * 
+ * @author Diego
+ *
+ */
 @SuppressWarnings("rawtypes")
 public abstract class SuperServico implements IServico {
 
@@ -14,11 +20,17 @@ public abstract class SuperServico implements IServico {
 	 */
 	private Collection<IParametro<?>> listaParametros;
 
+	/**
+	 * Construtor default
+	 */
 	public SuperServico() {
 		setListaParametros(new ArrayList<IParametro<?>>());
 		inicializacaoConstrutor();
 	}
 
+	/**
+	 * @see IServico#executaAcao()
+	 */
 	@Override
 	public Collection<IParametro> executaAcao() {
 		Collection<IParametro> retorno = new ArrayList<IParametro>();
@@ -39,11 +51,19 @@ public abstract class SuperServico implements IServico {
 		return retorno;
 	}
 
+	/**
+	 * 
+	 * @return retorna o Parametro que representa o resultado da execução de um Serviço
+	 */
 	protected IParametro<Boolean> getParametroRespostaResultado() {
 		return getParametroBoolean(PARAMETRO_RESPOSTA_RESULTADO, "Resultado",
 				true);
 	}
 
+	/**
+	 * 
+	 * @return parametro que representa a exceção causada pela execução do Serviço
+	 */
 	protected IParametro<Exception> getParametroRespostaExcecao() {
 		Parametro<Exception> parametro = new Parametro<Exception>(
 				Exception.class);
@@ -92,8 +112,18 @@ public abstract class SuperServico implements IServico {
 		return param;
 	}
 
+	/**
+	 * Método chamado dentro do ExecutarServico, responsável por executar a ação específica do Serviço
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	protected abstract Collection<IParametro> efetuaAcao() throws Exception;
 
+	/**
+	 * Método chamado dentro do construtor do Serviço,
+	 * serve para inicializar variáveis e outras operações
+	 */
 	protected abstract void inicializacaoConstrutor();
 
 	// GETTERS AND SETTERS

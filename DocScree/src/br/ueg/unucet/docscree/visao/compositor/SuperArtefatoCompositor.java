@@ -37,33 +37,77 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 	protected static final String ESTILODIV = " position: absolute; display: table ";
 	protected static final String ESTILOCOMPONENTE = " padding: 0px; margin: 0px; padding-top: 1px;";
 
+	/**
+	 * Nome do Artefato
+	 */
 	@AtributoVisao(nome="nome", isCampoEntidade = true)
 	private String nome;
+	/**
+	 * Descrição do Artefato
+	 */
 	@AtributoVisao(nome="descricao", isCampoEntidade = true)
 	private String descricao;
+	/**
+	 * Categoria do ARtefato
+	 */
 	@AtributoVisao(nome="categoria", isCampoEntidade = true)
 	private Categoria categoria = null;
+	/**
+	 * Título do Artefato
+	 */
 	@AtributoVisao(nome="titulo", isCampoEntidade = true)
 	private String titulo;
+	/**
+	 * Lista de Membros do Artefato
+	 */
 	@AtributoVisao(nome="membros", isCampoEntidade = true)
 	private Collection<Membro> membros;
+	/**
+	 * Lista de Serviços do ARtefato
+	 */
 	@AtributoVisao(nome="servicos", isCampoEntidade = true)
 	private Collection<IServico> servicos;
+	/**
+	 * instancia do Controlador que fica dentro do Artefato
+	 */
 	@AtributoVisao(nome="artefatoControle", isCampoEntidade = true)
 	private IArtefatoControle<Artefato, Long> artefatoControle;
+	/**
+	 * Altura do artefato
+	 */
 	@AtributoVisao(nome="altura", isCampoEntidade = true)
 	private int altura;
+	/**
+	 * largura do artefato
+	 */
 	@AtributoVisao(nome="largura", isCampoEntidade = true)
 	private int largura;
 	
+	/**
+	 * Mapa dos TipoMembro-visão mapeados ao Artefato
+	 */
 	@AtributoVisao(nome="listaMembrosDocScree", isCampoEntidade = false)
 	protected Map<String, MembroDocScree> mapaMembrosAdicionados;
+	/**
+	 * TipoMembro-visão selecionado
+	 */
 	@AtributoVisao(nome="tipoMembroVisaoSelecionado", isCampoEntidade = false)
 	protected SuperTipoMembroVisaoZK tipoMembroVisaoSelecionado;
 
+	/**
+	 * Área de montagem - preenchimento
+	 */
 	protected Window areaWindowArtefato = null;
+	/**
+	 * Área de montagem - visuazliação
+	 */
 	protected Window areaVisualizacaoWindow = null;
 	
+	/**
+	 * Mapea Membro ao Artefato
+	 * 
+	 * @return
+	 */
 	public boolean mapearMembrosAoArtefato() {
 		this.inicializarTelasMapeadores();
 		boolean retorno = true;
@@ -90,6 +134,10 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 		return retorno;
 	}
 	
+	/**
+	 * Método que carrega a tela de Artefato, abrindo um ou limpando para um novo
+	 * @return
+	 */
 	public boolean carregarArtefato() {
 		boolean retorno = false;
 		if (Executions.getCurrent().getSession().hasAttribute("ArtefatoAbrir")) {
@@ -106,10 +154,23 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 		return retorno;
 	}
 	
+	/**
+	 * Chama método do controlador para mapear os dados do Artefato sobre a visão
+	 * 
+	 * @throws Exception
+	 */
 	protected void executarAbrirArtefato() throws Exception {
 		getControle().fazerAcao("abrirArtefato", (SuperCompositor) this);
 	}
 	
+	/**
+	 * Adiciona TipoMembro-visão a tela de preenchimento
+	 * 
+	 * @param tipoMembro
+	 * @param nomeParcial
+	 * @param isNovo
+	 * @param abrindoArtefato
+	 */
 	protected void adicionarComponenteAoArtefato(SuperTipoMembroVisaoZK<?> tipoMembro, String nomeParcial, boolean isNovo, boolean abrindoArtefato) {
 		String idComponente = "Componente" + nomeParcial;
 		HtmlBasedComponent novaInstancia = gerarNovaInstancia(idComponente, tipoMembro.getMembro());
@@ -130,6 +191,10 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 		}
 	}
 	
+	/**
+	 * Adiciona TipoMembro-visão selecionado a tela de visualização
+	 * @param nomeParcial
+	 */
 	protected void adicionarMembroAVisualizacao(String nomeParcial) {
 		String idVisualizacao = "Visualizacao" + nomeParcial;
 		HtmlBasedComponent componenteVisualizacao = gerarNovaInstanciaVisualizacao(idVisualizacao, getTipoMembroVisaoSelecionado().getMembro());
@@ -139,6 +204,12 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 		} 
 	}
 
+	/**
+	 * 
+	 * @param idComponente
+	 * @param membro
+	 * @return novaInstancia do TipoMembro-visão para preenchimento a ser adicionado
+	 */
 	protected HtmlBasedComponent gerarNovaInstancia(String idComponente, Membro membro) {
 		Div div = null;
 		try {
@@ -156,6 +227,11 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 		return div;
 	}
 
+	/**
+	 * @param idComponente
+	 * @param membro
+	 * @return novaInstancia do TipoMembro-visão para visualização a ser adicionado
+	 */
 	protected HtmlBasedComponent gerarNovaInstanciaVisualizacao(String idComponente, Membro membro) {
 		Div div = null;
 		try {
@@ -172,22 +248,45 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 		return div;
 	}
 	
+	/**
+	 * Método que inicializa os componentes responsáveis por controlar a exibição visão e mapeamento de Membros
+	 */
 	protected abstract void inicializarTelasMapeadores();
+	/**
+	 * Método responsável por lançar Membro a área de montagem (visualização e preenchimento)
+	 * 
+	 */
 	protected abstract void lancarMembroAVisualizacao(boolean novo, boolean abrindoArtefato);
 	
+	/**
+	 * @see GenericoCompositor#getTipoEntidade()
+	 */
 	@Override
 	public Class getTipoEntidade() {
 		return Artefato.class;
 	}
 	
+	/**
+	 * 
+	 * @return string css da largura
+	 */
 	public String getLarguraString() {
 		return String.valueOf(getLargura()) + "px"; 
 	}
+	
+	/**
+	 * 
+	 * @return string css da altura
+	 */
 	
 	public String getAlturaString() {
 		return String.valueOf(getAltura()) + "px";
 	}
 
+	/**
+	 * 
+	 * @return areaWindowArtefato
+	 */
 	protected Window getWindowArtefato() {
 		if (this.areaWindowArtefato == null) {
 			this.areaWindowArtefato = (Window) getComponent().getFellow(
@@ -196,6 +295,10 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 		return this.areaWindowArtefato;
 	}
 	
+	/**
+	 *  
+	 * @return areaVisualizacaoWindow
+	 */
 	protected Window getWindowVisualizacaoArtefato() {
 		if (this.areaVisualizacaoWindow == null) {
 			this.areaVisualizacaoWindow = (Window) getComponent().getFellow(
@@ -204,6 +307,10 @@ public abstract class SuperArtefatoCompositor<E extends ArtefatoControle> extend
 		return this.areaVisualizacaoWindow;
 	}
 	
+	/**
+	 * 
+	 * @return ID do Membro selecionado
+	 */
 	protected String getIdMembro() {
 		return getTipoMembroVisaoSelecionado().getNome()+String.valueOf(getTipoMembroVisaoSelecionado().getMembro().getCodigo());
 	}

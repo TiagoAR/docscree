@@ -15,6 +15,12 @@ import br.ueg.unucet.docscree.interfaces.IAbrirProjetoVisao;
 import br.ueg.unucet.quid.dominios.Projeto;
 import br.ueg.unucet.quid.dominios.Retorno;
 
+/**
+ * Compositor que representa o Modal para Abrir projeto
+ * 
+ * @author Diego
+ *
+ */
 @Component
 @Scope("session")
 @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -22,13 +28,22 @@ public class ModalProjetoCompositor extends
 		SuperCompositor<ModalProjetoControle> implements IAbrirProjetoVisao {
 
 	/**
-	 * 
+	 * DEFAULT SERIAL ID
 	 */
 	private static final long serialVersionUID = 8461942723989650170L;
 	
+	/**
+	 * instancia da entidade
+	 */
 	private Projeto entidade;
+	/**
+	 * listagem de projetos possíveis a serem abertos
+	 */
 	private List<Projeto> listaEntidade;
 
+	/**
+	 * Método que abre Projeto, adicionando-o a sessão
+	 */
 	public void acaoAbrirProjeto() {
 		super.binder.saveAll();
 		try {
@@ -43,7 +58,7 @@ public class ModalProjetoCompositor extends
 		}
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see br.ueg.unucet.docscree.visao.compositor.SuperCompositor#gerarWindowMensagem()
 	 */
 	@Override
@@ -58,12 +73,18 @@ public class ModalProjetoCompositor extends
 		return super.gerarWindowMensagem();
 	}
 
+	/**
+	 * @see IAbrirProjetoVisao#salvarSessaoProjeto()
+	 */
 	@Override
 	public void salvarSessaoProjeto() {
 		Executions.getCurrent().getSession()
 				.setAttribute("projeto", this.getEntidade());
 	}
 
+	/**
+	 * @see IAbrirProjetoVisao#getListaProjetos()
+	 */
 	@Override
 	public List<Projeto> getListaProjetos() {
 		try {

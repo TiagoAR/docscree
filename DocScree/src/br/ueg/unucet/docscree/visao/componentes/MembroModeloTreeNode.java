@@ -5,6 +5,7 @@ import org.zkoss.zul.DefaultTreeNode;
 import br.ueg.unucet.docscree.modelo.MembroModelo;
 
 /**
+ *	Representa o Nó a ser visualizado sobre a árvore na visão ZK
  * 
  * @author Diego
  *
@@ -12,22 +13,43 @@ import br.ueg.unucet.docscree.modelo.MembroModelo;
 public class MembroModeloTreeNode extends DefaultTreeNode<MembroModelo> {
 
 	/**
-	 * 
+	 * DEFAULT SERIAL ID
 	 */
 	private static final long serialVersionUID = -8571345271208006125L;
+	/**
+	 * Atributo que representa se o nó deve aparecer aberto ou não
+	 */
 	private boolean aberto = true;
 	
+	/**
+	 * Construtor 1
+	 * 
+	 * @param data
+	 * @param children
+	 */
 	public MembroModeloTreeNode(MembroModelo data,
 			DefaultTreeNode<MembroModelo>[] children) {
 		super(data, children);
 	}
 
+	/**
+	 * Construtor 2
+	 * 
+	 * @param data
+	 * @param children
+	 * @param open
+	 */
 	public MembroModeloTreeNode(MembroModelo data,
 			DefaultTreeNode<MembroModelo>[] children, boolean open) {
 		super(data, children);
 		setAberto(open);
 	}
 
+	/**
+	 * Construtor principal
+	 * 
+	 * @param data
+	 */
 	public MembroModeloTreeNode(MembroModelo data) {
 		super(data);
 	}

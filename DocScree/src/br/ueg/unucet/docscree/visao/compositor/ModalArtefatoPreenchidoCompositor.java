@@ -17,28 +17,58 @@ import br.ueg.unucet.quid.dominios.ArtefatoPreenchido;
 import br.ueg.unucet.quid.dominios.Projeto;
 import br.ueg.unucet.quid.dominios.Usuario;
 
+/**
+ * Compositor que representa o Modal de escolha do ArtefatoPreenchido a ser aberto
+ * 
+ * @author Diego
+ *
+ */
 @org.springframework.stereotype.Component
 @Scope("session")
 public class ModalArtefatoPreenchidoCompositor extends
 		SuperCompositor<ArtefatoControle> {
 
 	/**
-	 * 
+	 * DEFAULT SERIAL ID
 	 */
 	private static final long serialVersionUID = 5181980815085895670L;
 	
+	/**
+	 * String para aparecer na window de seleção de Artefato
+	 */
 	private String nomeSelecionar = "Selecione o ArtefatoModelo";
 	
+	/**
+	 * ArtefatoModelo a ser aberto
+	 */
 	private Artefato artefatoAAbrir;
+	/**
+	 * ArtefatoPreenchido a ser aberto
+	 */
 	private ArtefatoPreenchido artefatoPreenchidoAAbrir;
 	
+	/**
+	 * listagem de ArtefatoModelos que podem ser abertos
+	 */
 	private List<Artefato> listaArtefatoModelo;
+	/**
+	 * listagem de ArtefatosPreenchidos que podem ser abertos para alteração
+	 */
 	private List<ArtefatoPreenchido> listaArtefatoPreenchido;
 	
+	/**
+	 * Grid para escolha de ArtefatoModelo
+	 */
 	private Grid gridArtefatoModelo;
+	/**
+	 * Grid para escolha de ArtefatoPreenchido
+	 */
 	private Grid gridArtefatoPreenchido;
 	
 	
+	/**
+	 * Método que abre modal para escolha do ArtefatoModelo ou Preenchido a ser aberto
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void acaoAbrirPreencherArtefato() {
 		boolean retorno = false;
@@ -70,7 +100,7 @@ public class ModalArtefatoPreenchidoCompositor extends
 		}
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see br.ueg.unucet.docscree.visao.compositor.SuperCompositor#gerarWindowMensagem()
 	 */
 	@Override
@@ -85,6 +115,9 @@ public class ModalArtefatoPreenchidoCompositor extends
 		return super.gerarWindowMensagem();
 	}
 	
+	/**
+	 * Metódo que abre ArtefatoModelo para ser preenchido
+	 */
 	public void abrirArtefatoModelo() {
 		Radio radioModelo = (Radio) getComponent().getFellow("radioArtefatoModelo");
 		if (radioModelo.isChecked()) {
@@ -104,6 +137,9 @@ public class ModalArtefatoPreenchidoCompositor extends
 		anularComponentes();
 	}
 	
+	/**
+	 * Método que seta nulo as variáveis que são pegadas via método Singleton
+	 */
 	private void anularComponentes() {
 		this.listaArtefatoModelo = null;
 		this.listaArtefatoPreenchido = null;
@@ -111,6 +147,9 @@ public class ModalArtefatoPreenchidoCompositor extends
 		this.gridArtefatoPreenchido = null;
 	}
 	
+	/**
+	 * Método chamado ao clicar em Abrir ArtefatoModelo e muda a mensagem e grid para a do ArtefatoModelo
+	 */
 	public void checkarArtefatoModelo() {
 		getGridArtefatoModelo().setVisible(true);
 		getGridArtefatoPreenchido().setVisible(false);
@@ -118,6 +157,9 @@ public class ModalArtefatoPreenchidoCompositor extends
 		super.binder.loadAll();
 	}
 	
+	/**
+	 * Método chamado ao clicar em Abrir ArtefatoPreenchido e muda a mensagem e grid para a do ArtefatoPreenchido
+	 */
 	public void checkarArtefatoPreenchido() {
 		getGridArtefatoModelo().setVisible(false);
 		getGridArtefatoPreenchido().setVisible(true);
@@ -125,11 +167,17 @@ public class ModalArtefatoPreenchidoCompositor extends
 		super.binder.loadAll();
 	}
 	
+	/**
+	 * Fecha o modal de abertura do ARtefato
+	 */
 	public void acaoFecharModal() {
 		anularComponentes();
 		getComponent().detach();
 	}
 	
+	/**
+	 * @return listaArtefatoModelo listagem de ARtefatosModelos possívels de serem abertos
+	 */
 	public List<Artefato> getListaArtefatoModelo() {
 		if (this.listaArtefatoModelo == null) {
 			this.listaArtefatoModelo = getControle().listarArtefatosModeloPorProjeto((Projeto) getProjetoSessao());
@@ -137,6 +185,10 @@ public class ModalArtefatoPreenchidoCompositor extends
 		return this.listaArtefatoModelo;
 	}
 
+	/**
+	 * 
+	 * @return listaArtefatoPreenchido listagem de ARtefatoPreenchido possíveis de serem abertos
+	 */
 	public List<ArtefatoPreenchido> getListaArtefatoPreenchido() {
 		if (this.listaArtefatoPreenchido == null) {
 			this.listaArtefatoPreenchido = getControle().listarArtefatosPreenchidosProjeto((Projeto)getProjetoSessao());

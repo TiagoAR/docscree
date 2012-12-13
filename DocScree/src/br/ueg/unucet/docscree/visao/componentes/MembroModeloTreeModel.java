@@ -5,6 +5,7 @@ import org.zkoss.zul.DefaultTreeModel;
 import br.ueg.unucet.docscree.modelo.MembroModelo;
 
 /**
+ * Modelo de Árvore na visão ZK	 para o MembroModelo (Item módelo)
  * 
  * @author Diego
  *
@@ -12,12 +13,20 @@ import br.ueg.unucet.docscree.modelo.MembroModelo;
 public class MembroModeloTreeModel extends DefaultTreeModel<MembroModelo> {
 
 	/**
-	 * 
+	 * DEFAULT SERIAL
 	 */
 	private static final long serialVersionUID = 4498400566868961514L;
 	
+	/**
+	 * Nó Raiz
+	 */
 	private MembroModeloTreeNode raiz;
 
+	/**
+	 * Construtor default
+	 * 
+	 * @param root nó raiz
+	 */
 	public MembroModeloTreeModel(MembroModeloTreeNode root) {
 		super(root);
 		raiz = root;
@@ -45,6 +54,12 @@ public class MembroModeloTreeModel extends DefaultTreeModel<MembroModelo> {
             }
     }
  
+    /**
+     * Remove o nó vindo como parâmetro e seus filho da árvore
+     * 
+     * @param target nó
+     * @throws IndexOutOfBoundsException
+     */
     public void remove(MembroModeloTreeNode target) throws IndexOutOfBoundsException {
         int index = 0;
         MembroModeloTreeNode parent = null;

@@ -68,8 +68,7 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 	
 	
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see
 	 * org.zkoss.zk.ui.util.GenericForwardComposer#doAfterCompose(org.zkoss.
@@ -210,6 +209,13 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		}
 	}
 	
+	/**
+	 * Método responsável por gerar Paleta de parâmetros do TipoMembro
+	 * 
+	 * @param rows
+	 * @param componenteComParametro
+	 * @param width
+	 */
 	protected void gerarParametrosTipoMembro(Rows rows, IContemParametro componenteComParametro, String width) {
 		Collection<IParametro<?>> listaParametros = componenteComParametro.getListaParametros();
 		for (IParametro<?> parametro : listaParametros) {
@@ -229,6 +235,14 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		}
 	}
 	
+	/**
+	 * @param parametro
+	 * @param width
+	 * @return componente parâmetro da paleta
+	 * @throws ClassNotFoundException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
 	protected HtmlBasedComponent getComponentePorDominio(IParametro<?> parametro, String width) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		try {
 			IComponenteDominio componente = this.getInstanciaComponente(parametro);
@@ -238,6 +252,12 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		}
 	}
 	
+	/**
+	 * Seta valor ao componente do Parâmetro
+	 * 
+	 * @param listaParametros
+	 * @param pai componente que contém o parâmetro
+	 */
 	protected void setarValorAListaParametros(Collection<IParametro<?>> listaParametros, Component pai) {
 		for (IParametro<?> parametro : listaParametros) {
 			Object objeto = getValorParametroPorId("PARAMETRO"+parametro.getNome(), parametro, pai);
@@ -247,6 +267,13 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		}
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @param parametro
+	 * @param pai componente que contém o parâmetro
+	 * @return valor setado no componente do Parâmetro
+	 */
 	protected Object getValorParametroPorId(String id, IParametro<?> parametro, Component pai) {
 		HtmlBasedComponent componente = getComponentePorId(id, pai);
 		try {
@@ -258,10 +285,22 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @param pai
+	 * @return componente pelo seu ID
+	 */
 	public HtmlBasedComponent getComponentePorId(String id, Component pai) {
 		return (HtmlBasedComponent) pai.getFellow(id);
 	}
 	
+	/**
+	 * Gera componente Textbox genérico
+	 * 
+	 * @param width
+	 * @return textbox
+	 */
 	protected Textbox gerarTextBoxGenerico(String width) {
 		Textbox textbox = new Textbox();
 		textbox.setWidth(width);
@@ -293,6 +332,11 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		return mensagens;
 	}
 	
+	/**
+	 * Adiciona botão para fechar ao modal de mensagens
+	 * 
+	 * @param mensagens
+	 */
 	private void adicionarBotaoFechar(Window mensagens) {
 		Button button = new Button();
 		button.setLabel("Ok");
@@ -326,6 +370,11 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		});
 	}
 	
+	/**
+	 * 
+	 * @param componente
+	 * @return row com a lista de componentes encapsulados sobre o mesmo
+	 */
 	protected Row gerarRow(org.zkoss.zk.ui.Component[] componente) {
 		Row row = new Row();
 		for (Component component : componente) {
@@ -334,12 +383,26 @@ public abstract class SuperCompositor<E extends SuperControle> extends
 		return row;
 	}
 	
+	/**
+	 * Gera label com o valor passado como parâmetro
+	 * 
+	 * @param valor
+	 * @return label
+	 */
 	protected Label gerarLabel(String valor) {
 		Label label = new Label();
 		label.setValue(valor+":");
 		return label;
 	}
 	
+	/**
+	 * 
+	 * @param parametro
+	 * @return novaInstancia do componente ParÂmetro
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
 	public IComponenteDominio getInstanciaComponente(IParametro<?> parametro) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		String nomeClass = "";
 		if (parametro.getDominioEntrada() == null) {

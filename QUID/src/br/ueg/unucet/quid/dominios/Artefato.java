@@ -39,8 +39,14 @@ import br.ueg.unucet.quid.utilitarias.LeitoraPropertiesUtil;
 @Scope("prototype")
 public class Artefato extends Identificavel implements IArtefato {
 
+	/**
+	 * Representa a altura do Artefato
+	 */
 	private int altura;
 
+	/**
+	 * Representa a largura do Artefato
+	 */
 	private int largura;
 
 	/**
@@ -95,8 +101,7 @@ public class Artefato extends Identificavel implements IArtefato {
 		this.servicos = servicos;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see br.ueg.unucet.quid.interfaces.IArtefato#getListaMembro()
 	 */
@@ -105,8 +110,7 @@ public class Artefato extends Identificavel implements IArtefato {
 		return this.membros;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see
 	 * br.ueg.unucet.quid.interfaces.IArtefato#setListaMembro(java.util.Collection
@@ -118,8 +122,7 @@ public class Artefato extends Identificavel implements IArtefato {
 
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see
 	 * br.ueg.unucet.quid.interfaces.IArtefato#addMembro(br.ueg.unucet.quid.
@@ -143,8 +146,7 @@ public class Artefato extends Identificavel implements IArtefato {
 		return retorno;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see
 	 * br.ueg.unucet.quid.interfaces.IArtefato#removerMembro(br.ueg.unucet.quid
@@ -164,8 +166,7 @@ public class Artefato extends Identificavel implements IArtefato {
 		return retorno;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see br.ueg.unucet.quid.interfaces.IArtefato#getListaServico()
 	 */
@@ -174,8 +175,7 @@ public class Artefato extends Identificavel implements IArtefato {
 		return this.servicos;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see
 	 * br.ueg.unucet.quid.interfaces.IArtefato#setListaServico(java.util.Collection
@@ -187,8 +187,7 @@ public class Artefato extends Identificavel implements IArtefato {
 
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see
 	 * br.ueg.unucet.quid.interfaces.IArtefato#addServico(br.ueg.unucet.quid
@@ -204,8 +203,7 @@ public class Artefato extends Identificavel implements IArtefato {
 		return retorno;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see
 	 * br.ueg.unucet.quid.interfaces.IArtefato#removerServico(br.ueg.unucet.
@@ -227,6 +225,9 @@ public class Artefato extends Identificavel implements IArtefato {
 		return retorno;
 	}
 
+	/**
+	 * @see IArtefato#executaServico(String, Collection)
+	 */
 	@SuppressWarnings({"rawtypes" })
 	@Override
 	public Retorno<Object, Object> executaServico(String nomeServico, Collection<IParametro<?>> parametros) {

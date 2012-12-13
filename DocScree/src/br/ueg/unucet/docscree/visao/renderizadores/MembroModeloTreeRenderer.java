@@ -10,8 +10,18 @@ import org.zkoss.zul.Treerow;
 import br.ueg.unucet.docscree.modelo.MembroModelo;
 import br.ueg.unucet.docscree.visao.componentes.MembroModeloTreeNode;
 
+/**
+ * Renderizador de uma árvore de MembroModelo
+ * Desenha cada linha/nó da árvore
+ * 
+ * @author Diego
+ *
+ */
 public class MembroModeloTreeRenderer implements TreeitemRenderer<MembroModeloTreeNode> {
 
+	/**
+	 * Método que renderiza os nós da árvore
+	 */
 	@Override
 	public void render(Treeitem treeItem, MembroModeloTreeNode treeNode, int index)
 			throws Exception {

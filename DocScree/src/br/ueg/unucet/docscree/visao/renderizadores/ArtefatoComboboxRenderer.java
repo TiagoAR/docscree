@@ -5,6 +5,13 @@ import org.zkoss.zul.ComboitemRenderer;
 
 import br.ueg.unucet.quid.dominios.Artefato;
 
+/**
+ * Renderiza o Objeto Artefato sobre um comboBox
+ * 
+ * @author Diego
+ *
+ */
+@Deprecated
 public class ArtefatoComboboxRenderer implements ComboitemRenderer<Artefato>{
 
 	@Override
